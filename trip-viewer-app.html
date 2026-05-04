@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Trip Planner v0.12">
+<meta name="apple-mobile-web-app-title" content="Trip Planner v0.184">
 <meta name="theme-color" content="#0f0f1a">
-<title>Trip Planner v0.12</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<title>Trip Planner v0.184</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 :root{--bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#16213e;--card:#1e1e35;--card2:#252540;--border:rgba(255,255,255,0.08);--accent:#e8a84c;--accent2:#c97d2e;--blue:#4a9eff;--green:#4caf82;--red:#e85c4a;--yellow:#f0c040;--text:#f0ede8;--text2:#a8a4b8;--text3:#6b6880;--radius:16px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);}
@@ -38,7 +36,6 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .day-strip::-webkit-scrollbar{display:none;}
 .day-chip{flex-shrink:0;scroll-snap-align:start;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:8px 12px;cursor:pointer;transition:all 0.15s;min-width:76px;text-align:center;position:relative;}
 .day-chip.active{background:var(--accent);border-color:var(--accent);}
-.day-chip.done{opacity:0.45;}
 .day-chip.unbooked{border-color:var(--red);}
 .day-chip.today-day{border-color:var(--blue);box-shadow:0 0 0 2px rgba(74,158,255,0.2);}
 .day-chip-num{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;}
@@ -47,7 +44,6 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .day-chip.active .day-chip-city{color:#1a0e00;}
 .day-chip-date{font-size:10px;color:var(--text3);margin-top:1px;}
 .day-chip.active .day-chip-date{color:rgba(0,0,0,0.45);}
-.done-tick{position:absolute;top:-5px;right:-5px;background:var(--green);color:#fff;width:16px;height:16px;border-radius:50%;font-size:9px;display:flex;align-items:center;justify-content:center;}
 
 /* TAB PANELS */
 .tab-panel{display:none;flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(var(--safe-bottom) + 16px);scrollbar-width:none;}
@@ -63,11 +59,13 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .action-btn{flex:1;border:none;border-radius:12px;padding:11px 10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:transform 0.15s;font-family:'DM Sans',sans-serif;}
 .action-btn:active{transform:scale(0.96);}
 .gmaps-btn{background:linear-gradient(135deg,#4285F4,#34A853);color:#fff;}
-.done-btn{background:var(--card);border:1.5px solid var(--border);color:var(--text2);}
-.done-btn.is-done{background:rgba(76,175,130,0.15);border-color:rgba(76,175,130,0.4);color:var(--green);}
 .map-section{margin-bottom:14px;}
-.map-container{border-radius:14px;overflow:hidden;border:1px solid var(--border);height:200px;position:relative;}
-#leaflet-map{height:100%;width:100%;}
+.map-container{border-radius:14px;overflow:hidden;border:1px solid var(--border);height:260px;position:relative;}
+.gmap-frame{width:100%;height:100%;border:0;display:block;}
+.map-offline{height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--card);border-radius:14px;border:1px solid var(--border);}
+.map-offline-icon{font-size:28px;}
+.map-offline-title{font-size:13px;font-weight:600;color:var(--text2);}
+.map-offline-sub{font-size:11px;color:var(--text3);text-align:center;max-width:200px;line-height:1.5;}
 .drive-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
 .drive-icon{font-size:20px;}
 .drive-info{flex:1;}
@@ -167,6 +165,24 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .tab-btn svg{width:20px;height:20px;}
 .tab-label{font-size:10px;font-weight:500;}
 
+
+.map-toggle-row{display:flex;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:10px;gap:3px;}
+.map-toggle-btn{flex:1;border:none;border-radius:8px;padding:7px 10px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--text2);background:transparent;transition:all 0.2s;}
+.map-toggle-btn.active{background:var(--accent);color:#1a0e00;box-shadow:0 2px 8px rgba(232,168,76,0.3);}
+
+.fulltrip-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:16px;}
+.fulltrip-map-preview{display:flex;flex-direction:row;align-items:center;gap:16px;}
+.fulltrip-route{display:flex;flex-direction:column;align-items:flex-start;gap:0;flex:1;}
+.fulltrip-stop{font-size:13px;font-weight:500;color:var(--text);padding:4px 0;}
+.fulltrip-stop.start{color:#D85A30;font-weight:700;}
+.fulltrip-stop.end{color:#533CB7;font-weight:700;}
+.fulltrip-line{width:2px;height:16px;background:var(--border);margin-left:7px;}
+.fulltrip-meta{font-size:12px;color:var(--text3);line-height:1.6;text-align:right;max-width:100px;}
+.fulltrip-open-btn{display:block;background:linear-gradient(135deg,#4285F4,#34A853);color:#fff;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;text-decoration:none;border-radius:12px;padding:12px 16px;text-align:center;box-shadow:0 4px 16px rgba(66,133,244,0.25);}
+
+.map-legend{display:flex;flex-direction:column;gap:6px;padding:10px 4px;}
+.map-legend-item{display:flex;align-items:flex-start;gap:8px;}
+.map-pin-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
 /* OFFLINE */
 .offline-badge{position:fixed;bottom:calc(var(--safe-bottom) + 72px);left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--text2);display:none;z-index:1000;white-space:nowrap;}
 .offline-badge.show{display:block;}
@@ -295,7 +311,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 
     <div class="settings-section">
       <div class="settings-section-title">Reset</div>
-      <button class="danger-btn" id="reset-to-default-btn">↩️ Reset to Built-in Trip (v0.12)</button>
+      <button class="danger-btn" id="reset-to-default-btn">↩️ Reset to Built-in Trip (v0.184)</button>
     </div>
 
   </div>
@@ -313,7 +329,7 @@ const BUILTIN_TRIP = {"tripName":"Málaga to Barcelona Road Trip","dates":"May 2
 // ═══════════════════════════════════════════
 // STATE & STORAGE
 // ═══════════════════════════════════════════
-let tripData = null, currentDay = 0, doneDays = new Set(), dayMap = null, fullLeafletMap = null;
+let tripData = null, currentDay = 0, mapView = 'day';
 let prefs = { dark: true, textSize: 'normal', jumpToToday: true };
 let usingBuiltin = true;
 
@@ -326,7 +342,6 @@ function load(k){try{const d=localStorage.getItem(k);return d?JSON.parse(d):null
 window.addEventListener('load',()=>{
   const p=load('prefs'); if(p) prefs={...prefs,...p};
   applyPrefs();
-  const dd=load('done_days'); if(dd) doneDays=new Set(dd);
 
   // Use saved custom trip if available, otherwise built-in
   const saved=load('trip_data');
@@ -365,10 +380,9 @@ document.getElementById('file-input').addEventListener('change',function(e){
   reader.onload=ev=>{
     try{
       tripData=JSON.parse(ev.target.result);
-      doneDays=new Set();
-      usingBuiltin=false;
+          usingBuiltin=false;
       save('trip_data',tripData);
-      save('done_days',[]);
+    
       renderTrip();
       showScreen('trip');
     } catch(err){alert('Could not read trip file. Make sure it\'s a valid .json from Claude.');}
@@ -380,8 +394,8 @@ document.getElementById('load-new-trip-btn').addEventListener('click',()=>docume
 // Reset to built-in
 document.getElementById('reset-to-default-btn').addEventListener('click',()=>{
   if(confirm('Reset to the built-in Málaga → Barcelona trip?')){
-    try{localStorage.removeItem('trip_data');localStorage.removeItem('done_days');}catch(e){}
-    tripData=BUILTIN_TRIP; doneDays=new Set(); usingBuiltin=true;
+    try{localStorage.removeItem('trip_data');}catch(e){}
+    tripData=BUILTIN_TRIP; usingBuiltin=true;
     renderTrip(); showScreen('trip');
   }
 });
@@ -436,8 +450,8 @@ function renderTrip(){
   const strip=document.getElementById('day-strip'); strip.innerHTML='';
   d.days.forEach((day,i)=>{
     const chip=document.createElement('div');
-    chip.className='day-chip'+(day.hotelStatus==='unbooked'?' unbooked':'')+(doneDays.has(i)?' done':'')+(i===todayIdx?' today-day':'');
-    chip.innerHTML=`${doneDays.has(i)?'<div class="done-tick">✓</div>':''}<div class="day-chip-num">${day.day}</div><div class="day-chip-city">${day.city.split('→')[0].split('(')[0].trim()}</div><div class="day-chip-date">${day.date.split(' ').slice(0,2).join(' ')}</div>`;
+    chip.className='day-chip'+(day.hotelStatus==='unbooked'?' unbooked':'')+(i===todayIdx?' today-day':'');
+    chip.innerHTML=`<div class="day-chip-num">${day.day}</div><div class="day-chip-city">${day.city.split('→')[0].split('(')[0].trim()}</div><div class="day-chip-date">${day.date.split(' ').slice(0,2).join(' ')}</div>`;
     chip.addEventListener('click',()=>selectDay(i));
     strip.appendChild(chip);
   });
@@ -473,7 +487,7 @@ function selectDay(i){
   const chips=document.querySelectorAll('.day-chip');
   chips.forEach((c,ci)=>c.classList.toggle('active',ci===i));
   chips[i]?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
-  const day=tripData.days[i], isDone=doneDays.has(i);
+  const day=tripData.days[i];
   const from=day.city.split('→')[0].trim(), to=day.city.includes('→')?day.city.split('→')[1].trim():day.city.split('(')[0].trim();
   const gmUrl=day.driveKm?`https://www.google.com/maps/dir/${encodeURIComponent(from)}/${encodeURIComponent(to)}`:`https://www.google.com/maps/search/${encodeURIComponent(to)}`;
   const driveHTML=day.driveKm?`<div class="drive-bar"><div class="drive-icon">🚗</div><div class="drive-info"><div class="drive-route">${day.driveRoute||day.city}</div><div class="drive-meta">${day.driveKm} · ${day.driveTime}</div></div></div>`:day.hotelStatus!=='none'?`<div class="no-drive">🏙️ <span>No driving today</span></div>`:'';
@@ -484,59 +498,259 @@ function selectDay(i){
     <div class="day-header"><div class="dh-day">${day.day} · ${day.date}</div><div class="dh-title">${day.city}</div>${day.tag?`<div class="dh-tag">${day.tag}</div>`:''}</div>
     <div class="action-row">
       <button class="action-btn gmaps-btn" id="gmaps-btn">🗺️ Open in Google Maps</button>
-      <button class="action-btn done-btn${isDone?' is-done':''}" id="done-day-btn">${isDone?'✓ Done':'Mark Done'}</button>
     </div>
-    <div class="map-section"><div class="map-container"><div id="leaflet-map"></div></div></div>
+    <div class="map-section" id="map-section-wrapper"><div class="map-toggle-row"><button class="map-toggle-btn active" id="map-toggle-day">📍 This Day</button><button class="map-toggle-btn" id="map-toggle-trip">🗺 Full Trip</button></div><div id="day-map-section"></div></div>
     ${driveHTML}${hotelH[day.hotelStatus]||''}
     ${day.timeline?.length?`<div class="section-title">Day plan</div><div class="timeline">${tlHTML}</div>`:''}
     ${day.bookings?.length?`<div class="section-title">Reminders</div><div class="bookings">${bkHTML}</div>`:''}
   `;
   document.getElementById('gmaps-btn').addEventListener('click',()=>window.open(gmUrl,'_blank'));
-  document.getElementById('done-day-btn').addEventListener('click',()=>{
-    if(doneDays.has(i)) doneDays.delete(i); else doneDays.add(i);
-    save('done_days',[...doneDays]); renderTrip(); selectDay(i);
-    document.getElementById('panel-days').scrollTop=0;
-  });
-  setTimeout(()=>initDayMap(day),150);
+  setTimeout(()=>{
+    // Wire up toggle buttons fresh every time day is selected
+    const btnDay = document.getElementById('map-toggle-day');
+    const btnTrip = document.getElementById('map-toggle-trip');
+    if(btnDay && btnTrip){
+      // Set correct active state
+      btnDay.classList.toggle('active', mapView==='day');
+      btnTrip.classList.toggle('active', mapView==='trip');
+      // Attach listeners
+      btnDay.onclick = () => {
+        mapView='day';
+        btnDay.classList.add('active');
+        btnTrip.classList.remove('active');
+        initDayMap(tripData.days[currentDay]);
+      };
+      btnTrip.onclick = () => {
+        mapView='trip';
+        btnTrip.classList.add('active');
+        btnDay.classList.remove('active');
+        initFullMapInline();
+      };
+    }
+    if(mapView==='day') initDayMap(day); else initFullMapInline();
+  },100);
   document.getElementById('panel-days').scrollTop=0;
 }
 
 // ═══════════════════════════════════════════
 // MAPS
 // ═══════════════════════════════════════════
+function initFullMapInline(){
+  const sec=document.getElementById('day-map-section');
+  if(!sec) return;
+  if(!navigator.onLine){
+    sec.innerHTML=`<div class="map-offline"><div class="map-offline-icon">🗺️</div><div class="map-offline-title">Map unavailable offline</div><div class="map-offline-sub">Connect to the internet to view the map</div></div>`;
+    return;
+  }
+  const origin=encodeURIComponent('Málaga, Spain');
+  const dest=encodeURIComponent('Barcelona, Spain');
+  const waypoints=encodeURIComponent('Seville, Spain|Granada, Spain|Valencia, Spain|Peñíscola, Spain');
+  const src=`https://www.google.com/maps/embed/v1/directions?key=AIzaSyBwl8qVLFwYbVEd_wYO5j90Bak_6NvEezM&origin=${origin}&destination=${dest}&waypoints=${waypoints}&mode=driving`;
+  sec.innerHTML=`<div class="map-container"><iframe class="gmap-frame" src="${src}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>`;
+}
+
 function initDayMap(day){
-  if(dayMap){dayMap.remove();dayMap=null;}
-  const el=document.getElementById('leaflet-map'); if(!el) return;
-  const from=getCoords(day.city), to=getDestCoords(day);
-  dayMap=L.map('leaflet-map',{zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:true});
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(dayMap);
-  if(day.driveKm){
-    L.circleMarker(from,{radius:8,color:'#fff',weight:2,fillColor:'#e8a84c',fillOpacity:1}).addTo(dayMap).bindPopup(day.city.split('→')[0].trim());
-    L.circleMarker(to,{radius:8,color:'#fff',weight:2,fillColor:'#4a9eff',fillOpacity:1}).addTo(dayMap).bindPopup(day.city.split('→')[1]?.trim()||'');
-    L.polyline([from,to],{color:'#e8a84c',weight:3,opacity:0.8,dashArray:'8 6'}).addTo(dayMap);
-    dayMap.fitBounds(L.latLngBounds([from,to]),{padding:[24,24]});
+  const sec=document.getElementById('day-map-section');
+  if(!sec) return;
+  if(!navigator.onLine){
+    sec.innerHTML=`<div class="map-offline"><div class="map-offline-icon">🗺️</div><div class="map-offline-title">Map unavailable offline</div><div class="map-offline-sub">Connect to the internet to view the map for this day</div></div>`;
+    return;
+  }
+
+  // Per-day pin data with type, icon, label, coordinates
+  const dayPins = {
+    'Day 1': {
+      center:{lat:36.721,lng:-4.419}, zoom:14,
+      pins:[
+        {type:'hotel', lat:37.3855, lng:-5.9953, name:'Alfonso XIII', sub:'Your hotel tonight'},
+        {type:'sight', lat:36.7213, lng:-4.4189, name:'Alcazaba fortress', sub:'9:00am · €3.50'},
+        {type:'sight', lat:36.7201, lng:-4.4188, name:'Málaga Cathedral', sub:'10:30am · €6'},
+        {type:'food',  lat:36.7207, lng:-4.4162, name:'El Pimpi', sub:'12:30pm · Lunch'},
+      ]
+    },
+    'Day 2': {
+      center:{lat:37.383,lng:-5.994}, zoom:15,
+      pins:[
+        {type:'hotel', lat:37.3855, lng:-5.9953, name:'Alfonso XIII', sub:'Your hotel'},
+        {type:'sight', lat:37.3836, lng:-5.9934, name:'Real Alcázar', sub:'9:00am · €14.50'},
+        {type:'sight', lat:37.3858, lng:-5.9930, name:'Seville Cathedral', sub:'11:30am · €12'},
+        {type:'food',  lat:37.3843, lng:-5.9910, name:'Bodega Santa Cruz', sub:'1:30pm · Lunch'},
+        {type:'walk',  lat:37.3830, lng:-5.9905, name:'Barrio Santa Cruz', sub:'3:30pm · Free'},
+        {type:'sight', lat:37.3773, lng:-5.9869, name:'Plaza de España', sub:'5:00pm · Free'},
+        {type:'night', lat:37.3863, lng:-5.9981, name:'Flamenco show', sub:'8:00pm'},
+      ]
+    },
+    'Day 3': {
+      center:{lat:37.283,lng:-4.796}, zoom:9,
+      pins:[
+        {type:'hotel', lat:37.1773, lng:-3.5996, name:'Seda Club Hotel', sub:'Tonight in Granada'},
+        {type:'walk',  lat:37.1812, lng:-3.5919, name:'Albayzín', sub:'3:00pm · Free'},
+        {type:'sight', lat:37.1816, lng:-3.5937, name:'Mirador San Nicolás', sub:'5:30pm · Sunset views'},
+        {type:'food',  lat:37.1764, lng:-3.5997, name:'Bodega Castañeda', sub:'8:30pm · Free tapas'},
+      ]
+    },
+    'Day 4': {
+      center:{lat:38.3,lng:-2.0}, zoom:7,
+      pins:[
+        {type:'hotel', lat:39.4750, lng:-0.3768, name:'Grand Hotel Centenari', sub:'Tonight in Valencia'},
+        {type:'sight', lat:37.1760, lng:-3.5881, name:'Alhambra', sub:'10:00am · BOOKED'},
+      ]
+    },
+    'Day 5': {
+      center:{lat:39.464,lng:-0.352}, zoom:13,
+      pins:[
+        {type:'hotel', lat:39.4750, lng:-0.3768, name:'Grand Hotel Centenari', sub:'Your hotel'},
+        {type:'food',  lat:39.4736, lng:-0.3800, name:'Mercado Central', sub:'9:30am · Free'},
+        {type:'sight', lat:39.4754, lng:-0.3753, name:'Valencia Cathedral', sub:'10:30am · €8'},
+        {type:'sight', lat:39.4534, lng:-0.3480, name:"L'Oceanogràfic", sub:'12:00pm · €32'},
+        {type:'food',  lat:39.4684, lng:-0.3244, name:'La Pepica', sub:'3:00pm · Paella'},
+        {type:'beach', lat:39.4741, lng:-0.3233, name:'Malvarrosa Beach', sub:'5:00pm'},
+      ]
+    },
+    'Day 6': {
+      center:{lat:40.876,lng:1.288}, zoom:8,
+      pins:[
+        {type:'hotel', lat:41.3920, lng:2.1640, name:'Cotton House Hotel', sub:'Tonight in Barcelona'},
+        {type:'sight', lat:40.3594, lng:0.4112, name:'Papa Luna Castle', sub:'10:30am · €5'},
+        {type:'food',  lat:40.3590, lng:0.4115, name:'Lunch Peñíscola', sub:'12:30pm'},
+      ]
+    },
+    'Day 7': {
+      center:{lat:41.398,lng:2.168}, zoom:14,
+      pins:[
+        {type:'hotel', lat:41.3920, lng:2.1640, name:'Cotton House Hotel', sub:'Your hotel'},
+        {type:'walk',  lat:41.3917, lng:2.1649, name:'Passeig de Gràcia', sub:'10:00am · Free'},
+        {type:'sight', lat:41.4036, lng:2.1744, name:'Sagrada Família', sub:'12:15pm · BOOKED'},
+        {type:'sight', lat:41.4079, lng:2.1741, name:'Recinte Modernista', sub:'2:30pm · €16'},
+        {type:'walk',  lat:41.3826, lng:2.1769, name:'Gothic Quarter', sub:'4:00pm · Free'},
+        {type:'sight', lat:41.4203, lng:2.1680, name:'Bunkers del Carmel', sub:'6:30pm · Sunset'},
+      ]
+    },
+    'Day 8': {
+      center:{lat:41.394,lng:2.162}, zoom:13,
+      pins:[
+        {type:'hotel', lat:41.3765, lng:2.1494, name:'Moxy Barcelona', sub:'Your hotel'},
+        {type:'sight', lat:41.4145, lng:2.1527, name:'Park Güell', sub:'9:00am · €10'},
+        {type:'sight', lat:41.3917, lng:2.1649, name:'Casa Batlló', sub:'10:30am · €35'},
+        {type:'sight', lat:41.3851, lng:2.1806, name:'Picasso Museum', sub:'3:00pm · €14'},
+        {type:'beach', lat:41.3784, lng:2.1896, name:'Barceloneta Beach', sub:'5:00pm'},
+      ]
+    },
+    'Day 9': {
+      center:{lat:41.385,lng:2.175}, zoom:14,
+      pins:[
+        {type:'hotel', lat:41.3765, lng:2.1494, name:'Moxy Barcelona', sub:'Your hotel'},
+        {type:'beach', lat:41.3784, lng:2.1896, name:'Barceloneta Beach', sub:'9:30am'},
+        {type:'food',  lat:41.3851, lng:2.1837, name:'El Born', sub:'11:00am · Brunch'},
+        {type:'walk',  lat:41.3920, lng:2.1640, name:'Passeig de Gràcia', sub:'1:00pm'},
+      ]
+    },
+    'Day 10': {
+      center:{lat:41.338,lng:2.136}, zoom:11,
+      pins:[
+        {type:'beach', lat:41.3784, lng:2.1896, name:'Barceloneta Beach', sub:'9:30am · Last stroll'},
+        {type:'flight', lat:41.2974, lng:2.0833, name:'El Prat Airport', sub:'Flight 19:10'},
+      ]
+    },
+  };
+
+  const data = dayPins[day.day];
+  if(!data){
+    const city=day.city.split('→')[0].trim();
+    sec.innerHTML=`<div class="map-container"><iframe class="gmap-frame" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBwl8qVLFwYbVEd_wYO5j90Bak_6NvEezM&q=${encodeURIComponent(city+', Spain')}&zoom=13" allowfullscreen loading="lazy"></iframe></div>`;
+    return;
+  }
+
+  // Render container
+  const mapId = 'gmap_' + day.day.replace(' ','_');
+  sec.innerHTML=`<div class="map-container"><div id="${mapId}" style="width:100%;height:100%;"></div></div><div class="map-legend" id="${mapId}_legend"></div>`;
+
+  // Icon definitions — using Google Maps marker glyphs via SVG data URIs
+  const iconSVGs = {
+    hotel: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#4285F4" stroke="white" stroke-width="2"/><text x="16" y="21" font-family="Arial" font-size="14" font-weight="bold" fill="white" text-anchor="middle">H</text></svg>`,
+    sight: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#EA4335" stroke="white" stroke-width="2"/><text x="16" y="21" font-family="Arial" font-size="14" fill="white" text-anchor="middle">★</text></svg>`,
+    food:  `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#FF9800" stroke="white" stroke-width="2"/><text x="16" y="21" font-family="Arial" font-size="14" fill="white" text-anchor="middle">🍽</text></svg>`,
+    walk:  `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#34A853" stroke="white" stroke-width="2"/><text x="16" y="21" font-family="Arial" font-size="13" fill="white" text-anchor="middle">🚶</text></svg>`,
+    beach: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#00BCD4" stroke="white" stroke-width="2"/><text x="16" y="21" font-family="Arial" font-size="13" fill="white" text-anchor="middle">🏖</text></svg>`,
+    night: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#9C27B0" stroke="white" stroke-width="2"/><text x="16" y="21" font-family="Arial" font-size="13" fill="white" text-anchor="middle">🍸</text></svg>`,
+    flight:`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#607D8B" stroke="white" stroke-width="2"/><text x="16" y="21" font-family="Arial" font-size="13" fill="white" text-anchor="middle">✈️</text></svg>`,
+  };
+
+  const iconColors = {hotel:'#4285F4',sight:'#EA4335',food:'#FF9800',walk:'#34A853',beach:'#00BCD4',night:'#9C27B0',flight:'#607D8B'};
+  const iconEmoji  = {hotel:'🏨',sight:'★',food:'🍽',walk:'🚶',beach:'🏖',night:'🍸',flight:'✈️'};
+
+  // Load Maps JS API dynamically if not already loaded
+  function buildMap(){
+    const map = new google.maps.Map(document.getElementById(mapId), {
+      center: data.center,
+      zoom: data.zoom,
+      mapTypeControl: false,
+      streetViewControl: false,
+      fullscreenControl: false,
+      gestureHandling: 'cooperative',
+    });
+
+    const infoWindow = new google.maps.InfoWindow();
+    const legendEl = document.getElementById(mapId+'_legend');
+    const legendItems = [];
+
+    data.pins.forEach(pin => {
+      const color = iconColors[pin.type] || '#EA4335';
+      const emoji = iconEmoji[pin.type] || '📍';
+
+      const marker = new google.maps.Marker({
+        position: {lat: pin.lat, lng: pin.lng},
+        map: map,
+        title: pin.name,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 14,
+          fillColor: color,
+          fillOpacity: 1,
+          strokeColor: '#ffffff',
+          strokeWeight: 2,
+        },
+        label: {
+          text: emoji,
+          fontSize: '12px',
+        },
+      });
+
+      marker.addListener('click', () => {
+        infoWindow.setContent(`<div style="font-family:sans-serif;padding:4px 2px;"><strong style="font-size:13px;">${pin.name}</strong><br><span style="font-size:12px;color:#666;">${pin.sub}</span></div>`);
+        infoWindow.open(map, marker);
+      });
+
+      legendItems.push(`<div class="map-legend-item"><div class="map-pin-dot" style="background:${color};">${emoji}</div><div><div style="font-size:11px;font-weight:500;color:var(--text);">${pin.name}</div><div style="font-size:10px;color:var(--text3);">${pin.sub}</div></div></div>`);
+    });
+
+    if(legendEl) legendEl.innerHTML = legendItems.join('');
+  }
+
+  if(window.google && window.google.maps){
+    buildMap();
   } else {
-    L.circleMarker(from,{radius:10,color:'#fff',weight:2,fillColor:'#e8a84c',fillOpacity:1}).addTo(dayMap).bindPopup(day.city.split('(')[0].trim());
-    dayMap.setView(from,13);
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBwl8qVLFwYbVEd_wYO5j90Bak_6NvEezM&callback=__mapReady`;
+    script.async = true;
+    window.__mapReady = () => { buildMap(); delete window.__mapReady; };
+    document.head.appendChild(script);
   }
 }
 
 function initFullMap(){
   if(!tripData) return;
-  document.getElementById('map-header-sub').textContent=`${tripData.days.length} stops · ${(tripData.totalKm||0).toLocaleString()} km`;
-  if(fullLeafletMap){fullLeafletMap.remove();fullLeafletMap=null;}
-  fullLeafletMap=L.map('full-map',{zoomControl:true,attributionControl:false});
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(fullLeafletMap);
-  const colors=['#D85A30','#378ADD','#378ADD','#1D9E75','#1D9E75','#EF9F27','#533CB7','#533CB7','#888780'];
-  const allCoords=[];
-  tripData.days.forEach((day,i)=>{
-    const c=getCoords(day.city); allCoords.push(c);
-    const col=colors[i]||'#888';
-    L.circleMarker(c,{radius:10,color:'#fff',weight:2,fillColor:col,fillOpacity:1}).addTo(fullLeafletMap).bindPopup(`<strong>${day.day}</strong><br>${day.city}`);
-    L.marker(c,{icon:L.divIcon({className:'',html:`<div style="background:${col};color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid #fff;margin-top:-30px;margin-left:2px;">${i+1}</div>`,iconSize:[24,24],iconAnchor:[12,12]})}).addTo(fullLeafletMap);
-  });
-  if(allCoords.length>1) L.polyline(allCoords,{color:'#e8a84c',weight:3,opacity:0.7,dashArray:'10 8'}).addTo(fullLeafletMap);
-  fullLeafletMap.fitBounds(L.latLngBounds(allCoords),{padding:[40,40]});
+  document.getElementById('map-header-sub').textContent=`${tripData.days.length} days · ${(tripData.totalKm||0).toLocaleString()} km · full driving route`;
+  const mapDiv=document.getElementById('full-map');
+  if(!navigator.onLine){
+    mapDiv.innerHTML=`<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--bg);"><div style="font-size:40px;">🗺️</div><div style="font-size:15px;font-weight:600;color:var(--text2);">Map unavailable offline</div><div style="font-size:13px;color:var(--text3);text-align:center;max-width:240px;line-height:1.6;">Connect to the internet to view the full route map</div></div>`;
+    return;
+  }
+  const origin=encodeURIComponent('Málaga, Spain');
+  const dest=encodeURIComponent('Barcelona, Spain');
+  const waypoints=encodeURIComponent('Seville, Spain|Granada, Spain|Valencia, Spain|Peñíscola, Spain');
+  const src=`https://www.google.com/maps/embed/v1/directions?key=AIzaSyBwl8qVLFwYbVEd_wYO5j90Bak_6NvEezM&origin=${origin}&destination=${dest}&waypoints=${waypoints}&mode=driving`;
+  mapDiv.innerHTML=`<iframe style="width:100%;height:100%;border:0;" src="${src}" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
 }
 
 // ═══════════════════════════════════════════
@@ -558,7 +772,7 @@ function renderSettingsInfo(){
   const card=document.getElementById('trip-info-card');
   if(!tripData){card.innerHTML='<div style="font-size:13px;color:var(--text2);text-align:center;padding:16px;">No trip loaded</div>';return;}
   const d=tripData;
-  card.innerHTML=`<div class="ti-row"><div class="ti-label">Trip</div><div class="ti-value">${d.tripName||'—'}</div></div><div class="ti-row"><div class="ti-label">Dates</div><div class="ti-value">${d.dates||'—'}</div></div><div class="ti-row"><div class="ti-label">Duration</div><div class="ti-value">${d.totalDays} days · ${d.totalNights} nights</div></div><div class="ti-row"><div class="ti-label">Distance</div><div class="ti-value">~${(d.totalKm||0).toLocaleString()} km</div></div><div class="ti-row"><div class="ti-label">Cities</div><div class="ti-value">${d.cities}</div></div><div class="ti-row"><div class="ti-label">Party</div><div class="ti-value">${d.party||'—'}</div></div><div class="ti-row"><div class="ti-label">Days completed</div><div class="ti-value">${doneDays.size} of ${d.totalDays}</div></div>`;
+  card.innerHTML=`<div class="ti-row"><div class="ti-label">Trip</div><div class="ti-value">${d.tripName||'—'}</div></div><div class="ti-row"><div class="ti-label">Dates</div><div class="ti-value">${d.dates||'—'}</div></div><div class="ti-row"><div class="ti-label">Duration</div><div class="ti-value">${d.totalDays} days · ${d.totalNights} nights</div></div><div class="ti-row"><div class="ti-label">Distance</div><div class="ti-value">~${(d.totalKm||0).toLocaleString()} km</div></div><div class="ti-row"><div class="ti-label">Cities</div><div class="ti-value">${d.cities}</div></div><div class="ti-row"><div class="ti-label">Party</div><div class="ti-value">${d.party||'—'}</div></div>`;
 }
 
 // ═══════════════════════════════════════════
@@ -567,7 +781,7 @@ function renderSettingsInfo(){
 function updateOnline(){document.getElementById('offline-badge').classList.toggle('show',!navigator.onLine);}
 window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);updateOnline();
 if('serviceWorker' in navigator){
-  const sw=`const C='trip-v0.12';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>new Response('Offline',{status:503}))));});`;
+  const sw=`const C='trip-v0.184';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>new Response('Offline',{status:503}))));});`;
   navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
 }
 </script>
