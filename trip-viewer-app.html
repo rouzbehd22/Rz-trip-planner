@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Trip Planner v0.184">
+<meta name="apple-mobile-web-app-title" content="Trip Planner v0.185">
 <meta name="theme-color" content="#0f0f1a">
-<title>Trip Planner v0.184</title>
+<title>Trip Planner v0.185</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 :root{--bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#16213e;--card:#1e1e35;--card2:#252540;--border:rgba(255,255,255,0.08);--accent:#e8a84c;--accent2:#c97d2e;--blue:#4a9eff;--green:#4caf82;--red:#e85c4a;--yellow:#f0c040;--text:#f0ede8;--text2:#a8a4b8;--text3:#6b6880;--radius:16px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);}
@@ -183,6 +183,29 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .map-legend{display:flex;flex-direction:column;gap:6px;padding:10px 4px;}
 .map-legend-item{display:flex;align-items:flex-start;gap:8px;}
 .map-pin-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+
+.menu-item{display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer;transition:background 0.15s;}
+.menu-item:active{background:var(--card2);}
+.menu-item-icon{font-size:20px;min-width:28px;text-align:center;}
+.menu-item-label{font-size:14px;font-weight:500;color:var(--text);}
+.menu-item-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+.summary-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.summary-card-day{font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:1px;}
+.summary-card-date{font-size:11px;color:var(--text3);}
+.summary-card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.summary-card-sub{font-size:13px;color:var(--text2);}
+.summary-card-badge{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:500;margin-top:8px;}
+.badge-booked{background:rgba(76,175,130,0.15);color:var(--green);}
+.badge-unbooked{background:rgba(232,92,74,0.15);color:var(--red);}
+.drive-stat-row{display:flex;gap:10px;margin-top:10px;}
+.drive-stat{flex:1;background:var(--card2);border-radius:10px;padding:10px 12px;text-align:center;}
+.drive-stat-val{font-size:18px;font-weight:700;color:var(--accent);}
+.drive-stat-label{font-size:10px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px;}
+.drives-total{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:flex;gap:12px;}
+.drives-total-item{flex:1;text-align:center;}
+.drives-total-val{font-size:24px;font-weight:700;color:var(--accent);font-family:'Playfair Display',serif;}
+.drives-total-label{font-size:11px;color:var(--text3);margin-top:2px;}
 /* OFFLINE */
 .offline-badge{position:fixed;bottom:calc(var(--safe-bottom) + 72px);left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--text2);display:none;z-index:1000;white-space:nowrap;}
 .offline-badge.show{display:block;}
@@ -195,7 +218,10 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 <div class="screen active" id="trip">
   <div class="trip-header">
     <div class="trip-header-top">
-      <div class="trip-name" id="trip-name-header">Trip Planner</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="hdr-btn" id="menu-btn" style="font-size:18px;padding:4px 6px;">☰</button>
+        <div class="trip-name" id="trip-name-header">Trip Planner</div>
+      </div>
       <div class="header-btns">
         <button class="hdr-btn" id="fullmap-btn">🗺</button>
         <button class="hdr-btn" id="settings-btn">⚙️</button>
@@ -311,7 +337,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 
     <div class="settings-section">
       <div class="settings-section-title">Reset</div>
-      <button class="danger-btn" id="reset-to-default-btn">↩️ Reset to Built-in Trip (v0.184)</button>
+      <button class="danger-btn" id="reset-to-default-btn">↩️ Reset to Built-in Trip (v0.185)</button>
     </div>
 
   </div>
@@ -775,15 +801,195 @@ function renderSettingsInfo(){
   card.innerHTML=`<div class="ti-row"><div class="ti-label">Trip</div><div class="ti-value">${d.tripName||'—'}</div></div><div class="ti-row"><div class="ti-label">Dates</div><div class="ti-value">${d.dates||'—'}</div></div><div class="ti-row"><div class="ti-label">Duration</div><div class="ti-value">${d.totalDays} days · ${d.totalNights} nights</div></div><div class="ti-row"><div class="ti-label">Distance</div><div class="ti-value">~${(d.totalKm||0).toLocaleString()} km</div></div><div class="ti-row"><div class="ti-label">Cities</div><div class="ti-value">${d.cities}</div></div><div class="ti-row"><div class="ti-label">Party</div><div class="ti-value">${d.party||'—'}</div></div>`;
 }
 
+
+// ═══════════════════════════════════════════
+// MENU
+// ═══════════════════════════════════════════
+function openMenu(){
+  const overlay = document.getElementById('menu-overlay');
+  const drawer = document.getElementById('menu-drawer');
+  if(tripData) document.getElementById('menu-trip-name').textContent = tripData.tripName || '';
+  overlay.style.display = 'block';
+  drawer.style.display = 'flex';
+}
+function closeMenu(){
+  document.getElementById('menu-overlay').style.display = 'none';
+  document.getElementById('menu-drawer').style.display = 'none';
+}
+document.getElementById('menu-btn').addEventListener('click', openMenu);
+document.getElementById('menu-overlay').addEventListener('click', closeMenu);
+
+document.getElementById('menu-go-days').addEventListener('click', ()=>{ closeMenu(); showScreen('trip'); switchTab('days'); });
+document.getElementById('menu-go-hotels').addEventListener('click', ()=>{ closeMenu(); renderHotelsSummary(); showScreen('hotels-summary'); });
+document.getElementById('menu-go-drives').addEventListener('click', ()=>{ closeMenu(); renderDrivesSummary(); showScreen('drives-summary'); });
+document.getElementById('menu-go-bookings').addEventListener('click', ()=>{ closeMenu(); showScreen('trip'); switchTab('bookings'); });
+document.getElementById('menu-go-settings').addEventListener('click', ()=>{ closeMenu(); renderSettingsInfo(); showScreen('settings'); });
+document.getElementById('menu-load-trip').addEventListener('click', ()=>{ closeMenu(); document.getElementById('file-input').click(); });
+document.getElementById('hotels-back').addEventListener('click', ()=>showScreen('trip'));
+document.getElementById('drives-back').addEventListener('click', ()=>showScreen('trip'));
+
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.panel===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('visible',p.id==='panel-'+name));
+}
+
+// ── HOTELS SUMMARY
+function renderHotelsSummary(){
+  if(!tripData) return;
+  const el = document.getElementById('hotels-summary-content');
+  let html = '';
+  // Group nights by hotel
+  const groups = [];
+  let cur = null;
+  (tripData.hotels||[]).forEach(h=>{
+    if(cur && cur.hotel===h.hotel && cur.city===h.city){
+      cur.nights++; cur.checkOut=h.date;
+    } else {
+      if(cur) groups.push(cur);
+      cur={hotel:h.hotel,city:h.city,status:h.status,checkIn:h.date,checkOut:h.date,nights:1,night:h.night};
+    }
+  });
+  if(cur) groups.push(cur);
+
+  // Total stats
+  const booked = groups.filter(g=>g.status==='booked').length;
+  html += `<div style="display:flex;gap:10px;margin-bottom:20px;">
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${tripData.totalNights}</div><div class="drive-stat-label">Total nights</div></div>
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${groups.length}</div><div class="drive-stat-label">Hotels</div></div>
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${booked}/${groups.length}</div><div class="drive-stat-label">Booked</div></div>
+  </div>`;
+
+  groups.forEach((g,i)=>{
+    const badgeClass = g.status==='booked'?'badge-booked':'badge-unbooked';
+    const badgeText = g.status==='booked'?'✅ Booked':'⚠️ Not booked';
+    html += `<div class="summary-card">
+      <div class="summary-card-header">
+        <div class="summary-card-day">Night${g.nights>1?'s':''} ${g.night}${g.nights>1?'–'+(g.night+g.nights-1):''}</div>
+        <div class="summary-card-date">${g.nights} night${g.nights>1?'s':''}</div>
+      </div>
+      <div class="summary-card-title">${g.hotel}</div>
+      <div class="summary-card-sub">📍 ${g.city}</div>
+      <div class="summary-card-sub" style="margin-top:4px;">Check in: ${g.checkIn} · Check out: ${g.checkOut}</div>
+      <div class="summary-card-badge ${badgeClass}">${badgeText}</div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
+// ── DRIVES SUMMARY
+function renderDrivesSummary(){
+  if(!tripData) return;
+  const el = document.getElementById('drives-summary-content');
+  const driveDays = tripData.days.filter(d=>d.driveKm);
+  const totalKm = driveDays.reduce((sum,d)=>sum+(parseInt(d.driveKm)||0),0);
+  const totalTime = driveDays.length;
+
+  let html = `<div class="drives-total">
+    <div class="drives-total-item"><div class="drives-total-val">${totalKm.toLocaleString()}</div><div class="drives-total-label">Total km</div></div>
+    <div class="drives-total-item"><div class="drives-total-val">${driveDays.length}</div><div class="drives-total-label">Drive days</div></div>
+    <div class="drives-total-item"><div class="drives-total-val">${tripData.totalDays - driveDays.length}</div><div class="drives-total-label">Rest days</div></div>
+  </div>`;
+
+  driveDays.forEach(d=>{
+    const km = parseInt(d.driveKm)||0;
+    const pct = Math.round((km/totalKm)*100);
+    html += `<div class="summary-card">
+      <div class="summary-card-header">
+        <div class="summary-card-day">${d.day}</div>
+        <div class="summary-card-date">${d.date}</div>
+      </div>
+      <div class="summary-card-title">${d.city}</div>
+      <div class="drive-stat-row">
+        <div class="drive-stat"><div class="drive-stat-val">${d.driveKm}</div><div class="drive-stat-label">Distance</div></div>
+        <div class="drive-stat"><div class="drive-stat-val">${d.driveTime}</div><div class="drive-stat-label">Drive time</div></div>
+        <div class="drive-stat"><div class="drive-stat-val">${pct}%</div><div class="drive-stat-label">Of total</div></div>
+      </div>
+      <div style="margin-top:10px;background:var(--card2);border-radius:6px;height:6px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:var(--accent);border-radius:6px;"></div>
+      </div>
+      <div class="summary-card-sub" style="margin-top:8px;">🛣 ${d.driveRoute||''}</div>
+    </div>`;
+  });
+  el.innerHTML = html;
+}
+
 // ═══════════════════════════════════════════
 // OFFLINE & SERVICE WORKER
 // ═══════════════════════════════════════════
 function updateOnline(){document.getElementById('offline-badge').classList.toggle('show',!navigator.onLine);}
 window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);updateOnline();
 if('serviceWorker' in navigator){
-  const sw=`const C='trip-v0.184';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>new Response('Offline',{status:503}))));});`;
+  const sw=`const C='trip-v0.185';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>new Response('Offline',{status:503}))));});`;
   navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
 }
 </script>
+
+<!-- SIDE MENU OVERLAY -->
+<div id="menu-overlay" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:200;" id="menu-overlay"></div>
+
+<!-- SIDE MENU DRAWER -->
+<div id="menu-drawer" style="display:none;position:absolute;top:0;left:0;bottom:0;width:75%;max-width:280px;background:var(--bg2);z-index:201;flex-direction:column;border-right:1px solid var(--border);">
+  <div style="padding:calc(var(--safe-top) + 20px) 20px 16px;border-bottom:1px solid var(--border);">
+    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);">Trip Menu</div>
+    <div style="font-size:12px;color:var(--text2);margin-top:4px;" id="menu-trip-name"></div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:12px 0;">
+    <div class="menu-item" id="menu-go-days">
+      <div class="menu-item-icon">📅</div>
+      <div><div class="menu-item-label">Day by Day</div><div class="menu-item-sub">Full itinerary</div></div>
+    </div>
+    <div class="menu-item" id="menu-go-hotels">
+      <div class="menu-item-icon">🏨</div>
+      <div><div class="menu-item-label">Hotel Summary</div><div class="menu-item-sub">All stays at a glance</div></div>
+    </div>
+    <div class="menu-item" id="menu-go-drives">
+      <div class="menu-item-icon">🚗</div>
+      <div><div class="menu-item-label">Drive Summary</div><div class="menu-item-sub">All driving days</div></div>
+    </div>
+    <div class="menu-item" id="menu-go-bookings">
+      <div class="menu-item-icon">✅</div>
+      <div><div class="menu-item-label">Bookings</div><div class="menu-item-sub">Confirmed & to-do</div></div>
+    </div>
+    <div style="height:1px;background:var(--border);margin:8px 16px;"></div>
+    <div class="menu-item" id="menu-go-settings">
+      <div class="menu-item-icon">⚙️</div>
+      <div><div class="menu-item-label">Settings</div><div class="menu-item-sub">Theme, text size</div></div>
+    </div>
+    <div class="menu-item" id="menu-load-trip">
+      <div class="menu-item-icon">📂</div>
+      <div><div class="menu-item-label">Load Trip File</div><div class="menu-item-sub">Import a new .json</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOTELS SUMMARY SCREEN -->
+<div class="screen" id="hotels-summary">
+  <div class="trip-header">
+    <div class="trip-header-top">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="hdr-btn" id="hotels-back" style="font-size:16px;">← Back</button>
+        <div class="trip-name">Hotel Summary</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(var(--safe-bottom)+16px);scrollbar-width:none;">
+    <div id="hotels-summary-content"></div>
+  </div>
+</div>
+
+<!-- DRIVES SUMMARY SCREEN -->
+<div class="screen" id="drives-summary">
+  <div class="trip-header">
+    <div class="trip-header-top">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="hdr-btn" id="drives-back" style="font-size:16px;">← Back</button>
+        <div class="trip-name">Drive Summary</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(var(--safe-bottom)+16px);scrollbar-width:none;">
+    <div id="drives-summary-content"></div>
+  </div>
+</div>
 </body>
 </html>
