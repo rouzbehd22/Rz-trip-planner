@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Trip Planner v0.191">
+<meta name="apple-mobile-web-app-title" content="Trip Planner v0.218">
 <meta name="theme-color" content="#0f0f1a">
-<title>Trip Planner v0.191</title>
+<title>Trip Planner v0.218</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 :root{--bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#16213e;--card:#1e1e35;--card2:#252540;--border:rgba(255,255,255,0.08);--accent:#e8a84c;--accent2:#c97d2e;--blue:#4a9eff;--green:#4caf82;--red:#e85c4a;--yellow:#f0c040;--text:#f0ede8;--text2:#a8a4b8;--text3:#6b6880;--radius:16px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);}
@@ -180,9 +180,6 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .fulltrip-meta{font-size:12px;color:var(--text3);line-height:1.6;text-align:right;max-width:100px;}
 .fulltrip-open-btn{display:block;background:linear-gradient(135deg,#4285F4,#34A853);color:#fff;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;text-decoration:none;border-radius:12px;padding:12px 16px;text-align:center;box-shadow:0 4px 16px rgba(66,133,244,0.25);}
 
-.map-legend{display:flex;flex-direction:column;gap:6px;padding:10px 4px;}
-.map-legend-item{display:flex;align-items:flex-start;gap:8px;}
-.map-pin-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
 
 .menu-item{display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer;transition:background 0.15s;}
 .menu-item:active{background:var(--card2);}
@@ -206,6 +203,67 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 .drives-total-item{flex:1;text-align:center;}
 .drives-total-val{font-size:24px;font-weight:700;color:var(--accent);font-family:'Playfair Display',serif;}
 .drives-total-label{font-size:11px;color:var(--text3);margin-top:2px;}
+
+.editor-tab{flex:1;padding:10px 4px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text3);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;}
+.editor-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.editor-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;}
+.editor-card-title{font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.editor-field{margin-bottom:12px;}
+.editor-label{font-size:11px;color:var(--text3);font-weight:500;margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
+.editor-input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s;}
+.editor-input:focus{border-color:var(--accent);}
+.editor-input::placeholder{color:var(--text3);}
+.editor-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;}
+.editor-toggle-label{font-size:14px;color:var(--text);}
+.places-wrap{position:relative;}
+.places-suggestions{position:absolute;top:100%;left:0;right:0;background:var(--card2);border:1px solid var(--border);border-radius:10px;margin-top:4px;z-index:100;max-height:200px;overflow-y:auto;display:none;}
+.places-suggestions.show{display:block;}
+.places-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.1s;}
+.places-item:last-child{border-bottom:none;}
+.places-item:active{background:var(--card);}
+.places-item-name{font-size:13px;font-weight:500;color:var(--text);}
+.places-item-addr{font-size:11px;color:var(--text3);margin-top:2px;}
+.editor-day-header{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--text);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.editor-activity-row{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
+.export-btn{width:100%;background:linear-gradient(135deg,var(--green),#2d8a5e);color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;}
+
+.weather-strip{display:flex;gap:8px;padding:0 16px 10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
+.weather-strip::-webkit-scrollbar{display:none;}
+.weather-chip{flex-shrink:0;min-width:76px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:5px 8px;text-align:center;scroll-snap-align:start;transition:all 0.15s;}
+.weather-chip.active{border-color:var(--accent);}
+.weather-chip-icon{font-size:16px;line-height:1;}
+.weather-chip-temp{font-size:12px;font-weight:700;color:var(--text);margin-top:2px;}
+.weather-chip-rain{font-size:10px;color:var(--blue);margin-top:1px;}
+.weather-chip-na{font-size:9px;color:var(--text3);margin-top:2px;line-height:1.3;}
+.weather-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;}
+.weather-card-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.weather-card-icon{font-size:32px;}
+.weather-card-main{flex:1;}
+.weather-card-condition{font-size:14px;font-weight:600;color:var(--text);}
+.weather-card-temp{font-size:22px;font-weight:700;color:var(--accent);font-family:'Playfair Display',serif;}
+.weather-card-sub{font-size:11px;color:var(--text2);margin-top:2px;}
+.weather-stats{display:flex;gap:8px;flex-wrap:wrap;}
+.weather-stat{flex:1;min-width:70px;background:var(--card2);border-radius:10px;padding:8px 10px;text-align:center;}
+.weather-stat-val{font-size:14px;font-weight:600;color:var(--text);}
+.weather-stat-label{font-size:10px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:0.3px;}
+.weather-na{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text2);}
+.day-chip-weather{font-size:10px;color:var(--text2);margin-top:3px;display:flex;align-items:center;justify-content:center;gap:2px;min-height:14px;}
+.day-chip.active .day-chip-weather{color:rgba(0,0,0,0.6);}
+
+.activity-row-wrap{position:relative;}
+.activity-dots-btn{position:absolute;right:0;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:8px;line-height:1;}
+.activity-dots-btn:active{color:var(--accent);}
+.ai-option{display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--border);cursor:pointer;}
+.ai-option:last-child{border-bottom:none;}
+.ai-option:active{opacity:0.7;}
+.ai-option-icon{font-size:22px;min-width:32px;text-align:center;}
+.ai-option-label{font-size:14px;font-weight:500;color:var(--text);}
+.ai-option-sub{font-size:12px;color:var(--text3);margin-top:2px;}
+.ai-response{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:12px;font-size:13px;color:var(--text);line-height:1.6;}
+.ai-loading{display:flex;align-items:center;gap:10px;padding:16px 4px;font-size:13px;color:var(--text2);}
+.ai-apply-btn{width:100%;background:linear-gradient(135deg,#4285F4,#8B5CF6);color:#fff;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:10px;}
+.gemini-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--text3);margin-top:6px;}
+.setup-generating{text-align:center;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;}
 /* OFFLINE */
 .offline-badge{position:fixed;bottom:calc(var(--safe-bottom) + 72px);left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--text2);display:none;z-index:1000;white-space:nowrap;}
 .offline-badge.show{display:block;}
@@ -319,6 +377,18 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
             <div class="settings-row-sub">Auto-open on today's day of trip</div>
           </div>
           <button class="toggle on" id="today-toggle"></button>
+
+        <div class="settings-row">
+          <div class="settings-row-icon">🌡️</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Temperature Unit</div>
+            <div class="settings-row-sub">Fahrenheit or Celsius</div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="size-btn" id="unit-f" style="min-width:36px;">°F</button>
+            <button class="size-btn" id="unit-c" style="min-width:36px;">°C</button>
+          </div>
+        </div>
         </div>
       </div>
     </div>
@@ -337,7 +407,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 
     <div class="settings-section">
       <div class="settings-section-title">Reset</div>
-      <button class="danger-btn" id="reset-to-default-btn">↩️ Reset to Built-in Trip (v0.191)</button>
+      <button class="danger-btn" id="reset-to-default-btn">↩️ Reset to Built-in Trip (v0.218)</button>
     </div>
 
   </div>
@@ -356,7 +426,7 @@ const BUILTIN_TRIP = {"tripName":"Málaga to Barcelona Road Trip","dates":"May 2
 // STATE & STORAGE
 // ═══════════════════════════════════════════
 let tripData = null, currentDay = 0, mapView = 'day';
-let prefs = { dark: true, textSize: 'normal', jumpToToday: true };
+let prefs = { dark: true, textSize: 'normal', jumpToToday: true, tempUnit: 'F', distUnit: 'mi' };
 let usingBuiltin = true;
 
 function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
@@ -392,6 +462,10 @@ function applyPrefs(){
   document.getElementById('dark-toggle').classList.toggle('on',prefs.dark);
   document.getElementById('today-toggle').classList.toggle('on',prefs.jumpToToday);
   document.querySelectorAll('.size-btn').forEach(b=>b.classList.toggle('active',b.dataset.size===prefs.textSize));
+  document.getElementById('unit-f')?.classList.toggle('active',prefs.tempUnit==='F');
+  document.getElementById('unit-c')?.classList.toggle('active',prefs.tempUnit==='C');
+  document.getElementById('unit-mi')?.classList.toggle('active',prefs.distUnit==='mi');
+  document.getElementById('unit-km')?.classList.toggle('active',prefs.distUnit==='km');
 }
 document.getElementById('dark-toggle').addEventListener('click',()=>{prefs.dark=!prefs.dark;applyPrefs();save('prefs',prefs);});
 document.getElementById('today-toggle').addEventListener('click',()=>{prefs.jumpToToday=!prefs.jumpToToday;applyPrefs();save('prefs',prefs);});
@@ -468,7 +542,7 @@ function renderTrip(){
 
   document.getElementById('trip-meta-row').innerHTML=`
     <div class="meta-chip"><span>${d.totalDays}</span> days</div>
-    <div class="meta-chip"><span>${(d.totalKm||0).toLocaleString()}</span> km</div>
+    <div class="meta-chip"><span>${toTotalDist(d.totalKm||0)}</span></div>
     <div class="meta-chip"><span>${d.cities}</span> cities</div>
     ${todayIdx>=0?`<div class="meta-chip today-chip" id="jump-today-chip"><span>Today</span> Day ${todayIdx+1}</div>`:''}
   `;
@@ -479,10 +553,13 @@ function renderTrip(){
   d.days.forEach((day,i)=>{
     const chip=document.createElement('div');
     chip.className='day-chip'+(day.hotelStatus==='unbooked'?' unbooked':'')+(i===todayIdx?' today-day':'');
-    chip.innerHTML=`<div class="day-chip-num">${day.day}</div><div class="day-chip-city">${day.city.split('→')[0].split('(')[0].trim()}</div><div class="day-chip-date">${day.date.split(' ').slice(0,2).join(' ')}</div>`;
+    chip.innerHTML=`<div class="day-chip-num">${day.day}</div><div class="day-chip-city">${day.city.split('→')[0].split('(')[0].trim()}</div><div class="day-chip-date">${day.date.split(' ').slice(0,2).join(' ')}</div><div class="day-chip-weather" id="wchip-${i}"></div>`;
     chip.addEventListener('click',()=>selectDay(i));
     strip.appendChild(chip);
   });
+
+  // Load weather into day chips async
+  if(navigator.onLine) setTimeout(loadAllWeather, 500);
 
   // bookings tab
   const confList=document.getElementById('confirmed-list'); confList.innerHTML='';
@@ -518,9 +595,9 @@ function selectDay(i){
   const day=tripData.days[i];
   const from=day.city.split('→')[0].trim(), to=day.city.includes('→')?day.city.split('→')[1].trim():day.city.split('(')[0].trim();
   const gmUrl=day.driveKm?`https://www.google.com/maps/dir/${encodeURIComponent(from)}/${encodeURIComponent(to)}`:`https://www.google.com/maps/search/${encodeURIComponent(to)}`;
-  const driveHTML=day.driveKm?`<div class="drive-bar"><div class="drive-icon">🚗</div><div class="drive-info"><div class="drive-route">${day.driveRoute||day.city}</div><div class="drive-meta">${day.driveKm} · ${day.driveTime}</div></div></div>`:day.hotelStatus!=='none'?`<div class="no-drive">🏙️ <span>No driving today</span></div>`:'';
+  const driveHTML=day.driveKm?`<div class="drive-bar"><div class="drive-icon">🚗</div><div class="drive-info"><div class="drive-route">${day.driveRoute||day.city}</div><div class="drive-meta">${toDistDisplay(day.driveKm)} · ${day.driveTime}</div></div></div>`:day.hotelStatus!=='none'?`<div class="no-drive">🏙️ <span>No driving today</span></div>`:'';
   const hotelH={booked:`<div class="hotel-bar booked"><div class="hotel-icon">🏨</div><div><div class="hotel-name">${day.sleep}</div><div class="hotel-status">✅ Booked</div></div></div>`,unbooked:`<div class="hotel-bar unbooked"><div class="hotel-icon">⚠️</div><div><div class="hotel-name">${day.sleep}</div><div class="hotel-status">UNBOOKED — action needed</div></div></div>`,none:`<div class="hotel-bar none"><div class="hotel-icon">✈️</div><div><div class="hotel-name">Departure day</div><div class="hotel-status" style="color:var(--text2)">Fly home</div></div></div>`};
-  const tlHTML=(day.timeline||[]).map(t=>`<div class="tl-item"><div class="tl-time">${t.time}</div><div class="tl-icon">${t.icon||'•'}</div><div class="tl-content"><div class="tl-name ${(t.name||'').includes('BOOKED')||(t.desc||'').startsWith('BOOKED')?'booked':''}">${t.name}</div><div class="tl-desc">${t.desc||''}</div></div></div>`).join('');
+  const tlHTML=(day.timeline||[]).map((t,ti)=>`<div class="tl-item activity-row-wrap"><div class="tl-time">${t.time}</div><div class="tl-icon">${t.icon||'•'}</div><div class="tl-content" style="padding-right:28px;"><div class="tl-name ${(t.name||'').includes('BOOKED')||(t.desc||'').startsWith('BOOKED')?'booked':''}">${t.name}</div><div class="tl-desc">${t.desc||''}</div></div><button class="activity-dots-btn" onclick="openActivityMenu(${i},${ti})">⋯</button></div>`).join('');
   const bkHTML=(day.bookings||[]).map(b=>{const label=b.urgency==='urgent'?'🔴 Book now':b.urgency==='soon'?'🟡 Book soon':'🟢 Can wait';return`<div class="bk-item ${b.urgency}"><div class="bk-icon">${b.icon||'📌'}</div><div><div class="bk-name">${b.name}</div><div class="bk-sub">${b.sub||b.desc||''}</div><div class="bk-badge">${label}</div></div></div>`;}).join('');
   document.getElementById('day-content').innerHTML=`
     <div class="day-header"><div class="dh-day">${day.day} · ${day.date}</div><div class="dh-title">${day.city}</div>${day.tag?`<div class="dh-tag">${day.tag}</div>`:''}</div>
@@ -691,7 +768,7 @@ function initDayMap(day){
 
   // Render container
   const mapId = 'gmap_' + day.day.replace(' ','_');
-  sec.innerHTML=`<div class="map-container"><div id="${mapId}" style="width:100%;height:100%;"></div></div><div class="map-legend" id="${mapId}_legend"></div>`;
+  sec.innerHTML=`<div class="map-container"><div id="${mapId}" style="width:100%;height:100%;"></div></div>`;
 
   // Icon definitions — using Google Maps marker glyphs via SVG data URIs
   const iconSVGs = {
@@ -719,40 +796,6 @@ function initDayMap(day){
     });
 
     const infoWindow = new google.maps.InfoWindow();
-    const legendEl = document.getElementById(mapId+'_legend');
-    const legendItems = [];
-
-    data.pins.forEach(pin => {
-      const color = iconColors[pin.type] || '#EA4335';
-      const emoji = iconEmoji[pin.type] || '📍';
-
-      const marker = new google.maps.Marker({
-        position: {lat: pin.lat, lng: pin.lng},
-        map: map,
-        title: pin.name,
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 14,
-          fillColor: color,
-          fillOpacity: 1,
-          strokeColor: '#ffffff',
-          strokeWeight: 2,
-        },
-        label: {
-          text: emoji,
-          fontSize: '12px',
-        },
-      });
-
-      marker.addListener('click', () => {
-        infoWindow.setContent(`<div style="font-family:sans-serif;padding:4px 2px;"><strong style="font-size:13px;">${pin.name}</strong><br><span style="font-size:12px;color:#666;">${pin.sub}</span></div>`);
-        infoWindow.open(map, marker);
-      });
-
-      legendItems.push(`<div class="map-legend-item"><div class="map-pin-dot" style="background:${color};">${emoji}</div><div><div style="font-size:11px;font-weight:500;color:var(--text);">${pin.name}</div><div style="font-size:10px;color:var(--text3);">${pin.sub}</div></div></div>`);
-    });
-
-    if(legendEl) legendEl.innerHTML = legendItems.join('');
   }
 
   if(window.google && window.google.maps){
@@ -800,7 +843,7 @@ function renderSettingsInfo(){
   const card=document.getElementById('trip-info-card');
   if(!tripData){card.innerHTML='<div style="font-size:13px;color:var(--text2);text-align:center;padding:16px;">No trip loaded</div>';return;}
   const d=tripData;
-  card.innerHTML=`<div class="ti-row"><div class="ti-label">Trip</div><div class="ti-value">${d.tripName||'—'}</div></div><div class="ti-row"><div class="ti-label">Dates</div><div class="ti-value">${d.dates||'—'}</div></div><div class="ti-row"><div class="ti-label">Duration</div><div class="ti-value">${d.totalDays} days · ${d.totalNights} nights</div></div><div class="ti-row"><div class="ti-label">Distance</div><div class="ti-value">~${(d.totalKm||0).toLocaleString()} km</div></div><div class="ti-row"><div class="ti-label">Cities</div><div class="ti-value">${d.cities}</div></div><div class="ti-row"><div class="ti-label">Party</div><div class="ti-value">${d.party||'—'}</div></div>`;
+  card.innerHTML=`<div class="ti-row"><div class="ti-label">Trip</div><div class="ti-value">${d.tripName||'—'}</div></div><div class="ti-row"><div class="ti-label">Dates</div><div class="ti-value">${d.dates||'—'}</div></div><div class="ti-row"><div class="ti-label">Duration</div><div class="ti-value">${d.totalDays} days · ${d.totalNights} nights</div></div><div class="ti-row"><div class="ti-label">Distance</div><div class="ti-value">~${toTotalDist(d.totalKm||0)}</div></div><div class="ti-row"><div class="ti-label">Cities</div><div class="ti-value">${d.cities}</div></div><div class="ti-row"><div class="ti-label">Party</div><div class="ti-value">${d.party||'—'}</div></div>`;
 }
 function switchTab(name){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.panel===name));
@@ -848,7 +891,7 @@ function renderDrivesSummary(){
   const driveDays=tripData.days.filter(d=>d.driveKm);
   const totalKm=driveDays.reduce((sum,d)=>sum+(parseInt(d.driveKm)||0),0);
   let html=`<div style="display:flex;gap:10px;margin-bottom:20px;">
-    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${totalKm.toLocaleString()}</div><div class="drive-stat-label">Total km</div></div>
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${toTotalDist(totalKm)}</div><div class="drive-stat-label">Total dist</div></div>
     <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${driveDays.length}</div><div class="drive-stat-label">Drive days</div></div>
     <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${tripData.totalDays-driveDays.length}</div><div class="drive-stat-label">Rest days</div></div>
   </div>`;
@@ -869,7 +912,7 @@ function renderDrivesSummary(){
           </div>
         </div>
         <div style="display:flex;gap:8px;margin-bottom:10px;">
-          <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${day.driveKm}</div><div class="drive-stat-label">Distance</div></div>
+          <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${toDistDisplay(day.driveKm)}</div><div class="drive-stat-label">Distance</div></div>
           <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${day.driveTime}</div><div class="drive-stat-label">Time</div></div>
           <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${pct}%</div><div class="drive-stat-label">Of total</div></div>
         </div>
@@ -932,6 +975,23 @@ function openMenu(){
   const overlay = document.getElementById('menu-overlay');
   const drawer = document.getElementById('menu-drawer');
   if(tripData) document.getElementById('menu-trip-name').textContent = tripData.tripName || '';
+  // Populate history list
+  const histList = document.getElementById('mi-history-list');
+  if(histList){
+    loadTripHistory();
+    if(tripHistory.length === 0){
+      histList.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:4px 20px 8px;">No recent trips yet</div>';
+    } else {
+      histList.innerHTML = tripHistory.map(h=>`
+        <div class="menu-item" onclick="restoreHistoryTrip('${h.savedAt}')">
+          <div class="menu-item-icon">🗺️</div>
+          <div>
+            <div class="menu-item-label">${h.tripName||'My Trip'}</div>
+            <div class="menu-item-sub">${h.dates||''} · ${h.totalDays||'?'} days</div>
+          </div>
+        </div>`).join('');
+    }
+  }
   overlay.style.display = 'block';
   drawer.style.display = 'flex';
 }
@@ -970,7 +1030,13 @@ function initMenuListeners(){
       <div class="menu-item" id="mi-bookings"><div class="menu-item-icon">✅</div><div><div class="menu-item-label">Bookings</div><div class="menu-item-sub">Confirmed & to-do</div></div></div>
       <div style="height:1px;background:var(--border);margin:8px 16px;"></div>
       <div class="menu-item" id="mi-settings"><div class="menu-item-icon">⚙️</div><div><div class="menu-item-label">Settings</div><div class="menu-item-sub">Theme, text size</div></div></div>
+      <div class="menu-item" id="mi-setup"><div class="menu-item-icon">🗺️</div><div><div class="menu-item-label">Trip Setup</div><div class="menu-item-sub">Dates, cities, plan with AI</div></div></div>
+      <div class="menu-item" id="mi-edit"><div class="menu-item-icon">✏️</div><div><div class="menu-item-label">Edit Details</div><div class="menu-item-sub">Hotels, bookings, drives</div></div></div>
       <div class="menu-item" id="mi-load"><div class="menu-item-icon">📂</div><div><div class="menu-item-label">Load Trip File</div><div class="menu-item-sub">Import a new .json</div></div></div>
+      <div style="height:1px;background:var(--border);margin:8px 16px;"></div>
+      <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:1px;padding:8px 20px 4px;">Recent trips</div>
+      <div id="mi-history-list"></div>
+      <div class="menu-item" id="mi-reset"><div class="menu-item-icon">↩️</div><div><div class="menu-item-label">Reset to Original Trip</div><div class="menu-item-sub">Málaga → Barcelona 2026</div></div></div>
     </div>
   `;
   document.body.appendChild(dr);
@@ -981,9 +1047,22 @@ function initMenuListeners(){
   document.getElementById('mi-drives').addEventListener('click', ()=>{ closeMenu(); renderDrivesSummary(); showScreen('drives-summary'); });
   document.getElementById('mi-bookings').addEventListener('click', ()=>{ closeMenu(); renderBookingsSummary(); showScreen('bookings-summary'); });
   document.getElementById('mi-settings').addEventListener('click', ()=>{ closeMenu(); renderSettingsInfo(); showScreen('settings'); });
+  document.getElementById('mi-setup').addEventListener('click', ()=>{ closeMenu(); openTripSetup(); });
+  document.getElementById('mi-edit').addEventListener('click', ()=>{ closeMenu(); openEditor(); });
+  document.getElementById('setup-back')?.addEventListener('click', ()=>showScreen('trip'));
+  document.getElementById('setup-plan-btn')?.addEventListener('click', planWithGemini);
   document.getElementById('mi-load').addEventListener('click', ()=>{ closeMenu(); document.getElementById('file-input').click(); });
+  document.getElementById('mi-reset').addEventListener('click', ()=>{ closeMenu(); if(confirm('Reset to the original Málaga → Barcelona trip?')){ try{localStorage.removeItem('trip_data');}catch(e){} tripData=BUILTIN_TRIP; save('trip_data',BUILTIN_TRIP); renderTrip(); showScreen('trip'); } });
 
   // Wire back buttons (these exist in static HTML after script)
+  const eb = document.getElementById('editor-back');
+  const esv = document.getElementById('editor-save');
+  const eex = document.getElementById('editor-export');
+  if(eb) eb.addEventListener('click', ()=>showScreen('trip'));
+  if(esv) esv.addEventListener('click', saveEdits);
+  if(eex) eex.addEventListener('click', exportTrip);
+  // Editor tabs
+  document.querySelectorAll('.editor-tab').forEach(t=>t.addEventListener('click',()=>renderEditorTab(t.dataset.etab)));
   const hb = document.getElementById('hotels-back');
   const db = document.getElementById('drives-back');
   const bb = document.getElementById('bookings-back');
@@ -1000,13 +1079,1429 @@ window.addEventListener('load', initMenuListeners);
 // Call initMenuListeners after DOM is ready
 
 
+
+
+// ═══════════════════════════════════════════
+// GEMINI AI ASSISTANT
+// ═══════════════════════════════════════════
+const GROQ_KEY = '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';
+// Gemini API key
+
+async function callGemini(prompt){
+  // Using Groq API (free tier) with llama-3.3-70b
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${GROQ_KEY}`
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages: [{role: 'user', content: prompt}],
+      temperature: 0.7,
+      max_tokens: 4096
+    })
+  });
+  if(!res.ok){
+    const err = await res.json().catch(()=>({}));
+    throw new Error(`Groq error: ${res.status} — ${err?.error?.message||'unknown'}`);
+  }
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || '';
+}
+
+// ── TRIP SETUP SCREEN
+let setupStyle = 'relaxed';
+
+function openTripSetup(){
+  // Pre-fill from current trip
+  if(tripData){
+    const start = tripData.days?.[0];
+    const end = tripData.days?.[tripData.days.length-1];
+    if(start) document.getElementById('setup-start-date').value = wmDate(start.date)||'';
+    if(end) document.getElementById('setup-end-date').value = wmDate(end.date)||'';
+    document.getElementById('setup-start-city').value = start?.city?.split('→')[0]?.trim()||'';
+    document.getElementById('setup-end-city').value = end?.city?.split('→')[0]?.trim()||'';
+    document.getElementById('setup-party').value = tripData.party||'2 adults';
+  }
+  loadPlacesAPI();
+  // Wire city search
+  ['start','end'].forEach(which=>{
+    const inp = document.getElementById(`setup-${which}-city`);
+    const sugg = document.getElementById(`setup-${which}-sugg`);
+    let t;
+    inp.oninput = ()=>{ clearTimeout(t); t=setTimeout(()=>showSuggestions(inp,sugg,name=>inp.value=name),300); };
+    inp.onblur = ()=>setTimeout(()=>sugg.classList.remove('show'),200);
+  });
+  // Style buttons
+  document.querySelectorAll('[data-style]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      setupStyle=btn.dataset.style;
+      document.querySelectorAll('[data-style]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  showScreen('trip-setup');
+}
+window.openTripSetup = openTripSetup;
+
+async function planWithGemini(){
+  const startDate = document.getElementById('setup-start-date').value;
+  const endDate = document.getElementById('setup-end-date').value;
+  const startCity = document.getElementById('setup-start-city').value;
+  const endCity = document.getElementById('setup-end-city').value;
+  const party = document.getElementById('setup-party').value;
+  const interests = document.getElementById('setup-interests').value;
+  const statusEl = document.getElementById('setup-status');
+
+  if(!startDate||!endDate||!startCity||!endCity){
+    statusEl.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px;">Please fill in dates and cities.</div>';
+    return;
+  }
+
+  statusEl.innerHTML=`<div class="setup-generating"><div style="font-size:24px;margin-bottom:8px;">✨</div><div style="font-size:14px;font-weight:600;color:var(--text);">AI is planning your trip...</div><div style="font-size:12px;color:var(--text2);margin-top:6px;">This may take 15–30 seconds</div></div>`;
+
+  const prompt = `You are a travel planning assistant. Create a detailed day-by-day road trip itinerary as a JSON object.
+
+Trip details:
+- Start: ${startCity} on ${startDate}
+- End: ${endCity} on ${endDate}
+- Party: ${party}
+- Style: ${setupStyle} (relaxed=fewer activities, packed=many activities)
+- Interests: ${interests||'general sightseeing, food, culture'}
+
+Return ONLY a valid JSON object with this exact structure (no markdown, no explanation):
+{
+  "tripName": "string",
+  "dates": "string",
+  "totalDays": number,
+  "totalNights": number,
+  "totalKm": number,
+  "cities": number,
+  "party": "string",
+  "days": [
+    {
+      "day": "Day 1",
+      "date": "string e.g. Sunday 24 May",
+      "city": "string",
+      "tag": "string",
+      "driveKm": "string or null",
+      "driveTime": "string or null",
+      "driveRoute": "string or null",
+      "sleep": "string",
+      "hotelStatus": "booked or unbooked",
+      "timeline": [
+        {"time": "9:00am", "icon": "emoji", "name": "string", "desc": "string"}
+      ],
+      "bookings": [
+        {"urgency": "urgent/soon/relaxed", "icon": "emoji", "name": "string", "sub": "string"}
+      ]
+    }
+  ],
+  "confirmedBookings": [],
+  "hotels": [
+    {"night": number, "date": "string", "city": "string", "hotel": "Recommended hotel name", "status": "unbooked"}
+  ]
+}`;
+
+  try{
+    const text = await callGemini(prompt);
+    // Extract JSON from response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('No JSON in response');
+    const newTrip = JSON.parse(jsonMatch[0]);
+    // Apply to app
+    tripData = newTrip;
+    save('trip_data', tripData);
+    saveTripToHistory(tripData);
+    renderTrip();
+    showScreen('trip');
+    // Toast
+    const toast = document.createElement('div');
+    toast.style.cssText='position:fixed;bottom:calc(var(--safe-bottom)+80px);left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#4285F4,#8B5CF6);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:600;white-space:nowrap;';
+    toast.textContent='✨ Trip planned by AI!';
+    document.body.appendChild(toast);
+    setTimeout(()=>toast.remove(),3000);
+  } catch(e){
+    statusEl.innerHTML=`<div style="color:var(--red);font-size:13px;padding:8px;">Error: ${e.message}. Check your Groq API key at console.groq.com</div>`;
+  }
+}
+window.planWithGemini = planWithGemini;
+
+// ── ACTIVITY THREE-DOT MENU
+let currentActivityCtx = null; // {dayIndex, actIndex, day, activity}
+
+function openActivityMenu(dayIndex, actIndex){
+  currentActivityCtx = {
+    dayIndex,
+    actIndex,
+    day: tripData.days[dayIndex],
+    activity: tripData.days[dayIndex].timeline[actIndex]
+  };
+  const act = currentActivityCtx.activity;
+  const day = currentActivityCtx.day;
+
+  document.getElementById('ai-popup-content').innerHTML = `
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">${act.icon||'📍'} ${act.name}</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:16px;">${day.day} · ${day.city}</div>
+    <div class="ai-option" onclick="editActivityManually(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">✏️</div>
+      <div><div class="ai-option-label">Edit manually</div><div class="ai-option-sub">Change name, time or description</div></div>
+    </div>
+    <div class="ai-option" onclick="geminiSuggestAlternatives(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">✨</div>
+      <div><div class="ai-option-label">Suggest alternatives</div><div class="ai-option-sub">AI finds similar activities nearby</div></div>
+    </div>
+    <div class="ai-option" onclick="geminiMoreInfo(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">💡</div>
+      <div><div class="ai-option-label">Tell me more</div><div class="ai-option-sub">Tips, opening hours, what to expect</div></div>
+    </div>
+    <div class="ai-option" onclick="removeActivity(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">🗑️</div>
+      <div><div class="ai-option-label" style="color:var(--red);">Remove activity</div><div class="ai-option-sub">Delete from this day</div></div>
+    </div>
+  `;
+  document.getElementById('ai-popup').style.display='block';
+}
+window.openActivityMenu = openActivityMenu;
+
+function closeAIPopup(){
+  document.getElementById('ai-popup').style.display='none';
+  currentActivityCtx=null;
+}
+window.closeAIPopup = closeAIPopup;
+
+function editActivityManually(di,ai){
+  const act = tripData.days[di].timeline[ai];
+  document.getElementById('ai-popup-content').innerHTML=`
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:16px;">Edit Activity</div>
+    <div class="editor-field"><div class="editor-label">Time</div><input class="editor-input" id="edit-time" value="${act.time||''}"/></div>
+    <div class="editor-field"><div class="editor-label">Name</div><input class="editor-input" id="edit-name" value="${act.name||''}"/></div>
+    <div class="editor-field"><div class="editor-label">Description</div><input class="editor-input" id="edit-desc" value="${act.desc||''}"/></div>
+    <button class="ai-apply-btn" onclick="applyManualEdit(${di},${ai})">Save Changes</button>
+  `;
+}
+window.editActivityManually = editActivityManually;
+
+function applyManualEdit(di,ai){
+  tripData.days[di].timeline[ai].time = document.getElementById('edit-time').value;
+  tripData.days[di].timeline[ai].name = document.getElementById('edit-name').value;
+  tripData.days[di].timeline[ai].desc = document.getElementById('edit-desc').value;
+  save('trip_data',tripData);
+  closeAIPopup();
+  selectDay(di);
+}
+window.applyManualEdit = applyManualEdit;
+
+function removeActivity(di,ai){
+  tripData.days[di].timeline.splice(ai,1);
+  save('trip_data',tripData);
+  closeAIPopup();
+  selectDay(di);
+}
+window.removeActivity = removeActivity;
+
+async function geminiSuggestAlternatives(di,ai){
+  const act = tripData.days[di].timeline[ai];
+  const day = tripData.days[di];
+  document.getElementById('ai-popup-content').innerHTML=`<div class="ai-loading">✨ <span>Gemini is thinking...</span></div>`;
+
+  try{
+    const prompt = `I'm on a road trip and currently have "${act.name}" planned in ${day.city} at ${act.time}.
+Suggest 3 alternative activities I could do instead at a similar time. For each give:
+- Name of place/activity
+- One sentence description
+- Approximate cost or "Free"
+Format as a simple numbered list. Be specific to ${day.city}, Spain.`;
+
+    const text = await callGemini(prompt);
+    document.getElementById('ai-popup-content').innerHTML=`
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">Alternatives to "${act.name}"</div>
+      <div class="ai-response">${text.replace(/\n/g,'<br>')}</div>
+      <div class="gemini-badge">✨ Powered by Groq + Llama</div>
+      <button class="ai-apply-btn" style="margin-top:12px;background:var(--card);color:var(--text);border:1px solid var(--border);" onclick="closeAIPopup()">Close</button>
+    `;
+  } catch(e){
+    document.getElementById('ai-popup-content').innerHTML=`<div style="color:var(--red);font-size:13px;">Error: ${e.message}</div>`;
+  }
+}
+window.geminiSuggestAlternatives = geminiSuggestAlternatives;
+
+async function geminiMoreInfo(di,ai){
+  const act = tripData.days[di].timeline[ai];
+  const day = tripData.days[di];
+  document.getElementById('ai-popup-content').innerHTML=`<div class="ai-loading">💡 <span>Getting tips...</span></div>`;
+
+  try{
+    const prompt = `Give me practical visitor tips for "${act.name}" in ${day.city}, Spain. Include:
+- Opening hours (typical)
+- Best time to visit
+- How long to spend there
+- 1-2 insider tips
+- Approximate entry cost
+Keep it concise and practical for a traveller visiting in late May.`;
+
+    const text = await callGemini(prompt);
+    document.getElementById('ai-popup-content').innerHTML=`
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">💡 ${act.name}</div>
+      <div class="ai-response">${text.replace(/\n/g,'<br>')}</div>
+      <div class="gemini-badge">✨ Powered by Groq + Llama</div>
+      <button class="ai-apply-btn" style="margin-top:12px;background:var(--card);color:var(--text);border:1px solid var(--border);" onclick="closeAIPopup()">Close</button>
+    `;
+  } catch(e){
+    document.getElementById('ai-popup-content').innerHTML=`<div style="color:var(--red);font-size:13px;">Error: ${e.message}</div>`;
+  }
+}
+window.geminiMoreInfo = geminiMoreInfo;
+
+
+function saveTripToHistory(data){
+  if(!data) return;
+  // Load existing history
+  let hist = [];
+  try{ hist = JSON.parse(localStorage.getItem('trip_history')||'[]'); } catch(e){}
+  // Don't duplicate same trip
+  if(hist.length && hist[0].tripName === data.tripName && hist[0].dates === data.dates) return;
+  // Add to front, keep last 3
+  hist.unshift({tripName: data.tripName, dates: data.dates, totalDays: data.totalDays, savedAt: new Date().toISOString()});
+  hist = hist.slice(0,3);
+  try{ localStorage.setItem('trip_history', JSON.stringify(hist)); } catch(e){}
+  // Also save full trip data
+  try{ localStorage.setItem(`trip_hist_${hist[0].savedAt}`, JSON.stringify(data)); } catch(e){}
+  tripHistory = hist;
+}
+window.saveTripToHistory = saveTripToHistory;
+
+function loadTripHistory(){
+  try{ tripHistory = JSON.parse(localStorage.getItem('trip_history')||'[]'); } catch(e){ tripHistory=[]; }
+  return tripHistory;
+}
+
+function restoreHistoryTrip(savedAt){
+  try{
+    const data = JSON.parse(localStorage.getItem(`trip_hist_${savedAt}`)||'null');
+    if(!data){ alert('Trip data not found'); return; }
+    tripData = data;
+    save('trip_data', data);
+    renderTrip();
+    showScreen('trip');
+    closeMenu();
+  } catch(e){ alert('Could not restore trip'); }
+}
+window.restoreHistoryTrip = restoreHistoryTrip;
+// ═══════════════════════════════════════════
+// WEATHER — Open-Meteo (free, no key, 16-day forecast)
+// ═══════════════════════════════════════════
+const WM_COORDS = {
+  'Málaga':    {lat:36.721,lng:-4.421},
+  'Malaga':    {lat:36.721,lng:-4.421},
+  'Seville':   {lat:37.386,lng:-5.992},
+  'Granada':   {lat:37.177,lng:-3.598},
+  'Valencia':  {lat:39.470,lng:-0.376},
+  'Peñíscola': {lat:40.359,lng:0.411},
+  'Barcelona': {lat:41.385,lng:2.173},
+};
+
+function wmIcon(code){
+  if(code===0) return '☀️';
+  if(code<=2)  return '⛅';
+  if(code===3) return '☁️';
+  if(code<=49) return '🌫️';
+  if(code<=59) return '🌦️';
+  if(code<=69) return '🌧️';
+  if(code<=79) return '❄️';
+  if(code<=82) return '🌧️';
+  if(code<=84) return '🌨️';
+  if(code<=99) return '⛈️';
+  return '🌡️';
+}
+
+function wmCoords(day){
+  const name=day.city.split('→')[0].split('(')[0].trim();
+  for(const [k,v] of Object.entries(WM_COORDS)){
+    if(name.toLowerCase().includes(k.toLowerCase())) return v;
+  }
+  return null;
+}
+
+function wmDate(dateStr){
+  if(!dateStr) return null;
+  dateStr = dateStr.trim().replace(/,/g,'');
+
+  // Already ISO: "2026-05-24"
+  if(/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+
+  const months={January:1,February:2,March:3,April:4,May:5,June:6,July:7,August:8,September:9,October:10,November:11,December:12,Jan:1,Feb:2,Mar:3,Apr:4,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
+  const p = dateStr.split(/\s+/).filter(Boolean);
+
+  // Find month and day tokens
+  let mo = null, d = null;
+  for(const tok of p){
+    const num = parseInt(tok);
+    if(!isNaN(num) && num >= 1 && num <= 31 && d === null) d = num;
+    else if(!isNaN(num) && num > 31) continue; // skip year
+    else if(months[tok]) mo = months[tok];
+  }
+
+  if(mo && d) return `2026-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+
+  // No month found — infer from trip start date and day number
+  // e.g. "Tuesday 19" — find which month day 19 falls in relative to trip start
+  if(d && tripData && tripData.days && tripData.days.length > 0){
+    // Get the start date from first day that has a parseable date with month
+    for(const day of tripData.days){
+      const parsed = wmDate(day.date);
+      if(parsed){
+        const startMonth = parseInt(parsed.substring(5,7));
+        const startDay = parseInt(parsed.substring(8,10));
+        // If this day number is >= start day, same month; if less, next month
+        const inferredMonth = d >= startDay ? startMonth : (startMonth % 12) + 1;
+        const year = inferredMonth < startMonth ? 2027 : 2026;
+        return `${year}-${String(inferredMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      }
+    }
+    // Fallback: just use May since that's our trip month
+    return `2026-05-${String(d).padStart(2,'0')}`;
+  }
+
+  return null;
+}
+
+
+// Climate cache — fetched from Open-Meteo historical API (last 5 years)
+
+function toDistDisplay(kmStr){
+  if(!kmStr) return kmStr;
+  // Extract number from strings like "210 km" or "490 km"
+  const match = kmStr.match(/([\d,]+)/);
+  if(!match) return kmStr;
+  const km = parseInt(match[1].replace(',',''));
+  if(prefs.distUnit === 'mi') return Math.round(km * 0.621371) + ' mi';
+  return km + ' km';
+}
+function toTotalDist(km){
+  if(prefs.distUnit === 'mi') return Math.round(km * 0.621371).toLocaleString() + ' mi';
+  return km.toLocaleString() + ' km';
+}
+
+function toDisplay(c){ return prefs.tempUnit==='F' ? Math.round(c*9/5+32) : Math.round(c); }
+function unitLabel(){ return prefs.tempUnit==='F' ? '°F' : '°C'; }
+const wmClimateCache = {};
+
+async function fetchClimate(coords, entries){
+  const {lat, lng} = coords;
+  const key = `${lat},${lng}`;
+  if(wmClimateCache[key]) return wmClimateCache[key];
+
+  try{
+    const year = 2026;
+    const allMax = {}, allMin = {}, allRain = {};
+
+    for(let y = year-5; y < year; y++){
+      const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lng}&start_date=${y}-05-20&end_date=${y}-06-05&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`;
+      let data;
+      try{
+        const res = await fetch(url);
+        if(!res.ok) continue;
+        data = await res.json();
+      } catch(e){ continue; }
+
+      const times = data.daily?.time || [];
+      const maxTemps = data.daily?.temperature_2m_max || [];
+      const minTemps = data.daily?.temperature_2m_min || [];
+      const precips  = data.daily?.precipitation_sum  || [];
+
+      times.forEach((d,i)=>{
+        const mmdd = d.substring(5); // "05-24"
+        if(!allMax[mmdd])  allMax[mmdd]  = [];
+        if(!allMin[mmdd])  allMin[mmdd]  = [];
+        if(!allRain[mmdd]) allRain[mmdd] = [];
+        if(maxTemps[i] != null && !isNaN(maxTemps[i])) allMax[mmdd].push(Number(maxTemps[i]));
+        if(minTemps[i] != null && !isNaN(minTemps[i])) allMin[mmdd].push(Number(minTemps[i]));
+        if(precips[i]  != null && !isNaN(precips[i]))  allRain[mmdd].push(Number(precips[i]));
+      });
+    }
+
+    const safeAvg = arr => (arr && arr.length) ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : null;
+
+    const result = {};
+    // Build result for all mmdd keys seen
+    const allKeys = new Set([...Object.keys(allMax), ...Object.keys(allRain)]);
+    allKeys.forEach(mmdd=>{
+      const maxVal = safeAvg(allMax[mmdd]);
+      const minVal = safeAvg(allMin[mmdd]);
+      const rainMM = safeAvg(allRain[mmdd]);
+      result[mmdd] = {
+        max:  maxVal,
+        min:  minVal,
+        rain: rainMM != null ? Math.min(70, Math.round(rainMM * 14)) : 0,
+      };
+    });
+
+    wmClimateCache[key] = result;
+    return result;
+  } catch(e){
+    console.warn('Climate fetch error:', e);
+    wmClimateCache[key] = {};
+    return {};
+  }
+}
+
+function wmClimate(day, coordsKey){
+  const result = wmClimateCache[coordsKey];
+  if(!result) return null;
+  const dt = wmDate(day.date); // "2026-05-24"
+  if(!dt) return null;
+  const mmdd = dt.substring(5); // "05-24"
+  return result[mmdd] || null;
+}
+
+const wmCache={};;
+
+async function loadAllWeather(){
+  if(!tripData||!navigator.onLine) return;
+
+  // Group by unique city coords to minimise API calls
+  const byCity={};
+  tripData.days.forEach((day,i)=>{
+    const c=wmCoords(day), dt=wmDate(day.date);
+    if(!c||!dt) return;
+    const key=`${c.lat},${c.lng}`;
+    if(!byCity[key]) byCity[key]={c,entries:[]};
+    byCity[key].entries.push({i,dt});
+  });
+
+  // One fetch per unique city
+  for(const [key,info] of Object.entries(byCity)){
+    if(wmCache[key]) continue;
+    try{
+      const {lat,lng}=info.c;
+      const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&timezone=auto&forecast_days=16`;
+      const res=await fetch(url);
+      if(!res.ok) throw new Error(res.status);
+      const data=await res.json();
+      const map={};
+      (data.daily?.time||[]).forEach((d,i)=>{
+        map[d]={
+          max:Math.round(data.daily.temperature_2m_max[i]),
+          min:Math.round(data.daily.temperature_2m_min[i]),
+          rain:Math.round(data.daily.precipitation_probability_max[i]||0),
+          code:data.daily.weathercode[i]||0,
+        };
+      });
+      wmCache[key]=map;
+    } catch(e){ wmCache[key]={}; }
+  }
+
+  // Fetch climate averages for any city not covered by forecast
+  // (fetch is async but chips update when done)
+  for(const [key,info] of Object.entries(byCity)){
+    if(!wmClimateCache[key]){
+      fetchClimate(info.c, info.entries).then(()=>{
+        // Re-render chips that had no forecast data
+        info.entries.forEach(({i})=>{
+          const day=tripData.days[i];
+          const el=document.getElementById(`wchip-${i}`);
+          if(!el) return;
+          const w=(wmCache[key]||{})[wmDate(day.date)];
+          if(w) return; // already has real forecast, skip
+          const cl=wmClimate(day,key);
+          if(!cl){el.innerHTML='';return;}
+          const rainStr=cl.rain>=20?`<span style="color:inherit;opacity:0.7;margin-left:1px;">${cl.rain}%💧</span>`:'';
+          if(cl.max==null){el.innerHTML='';return;}
+      el.innerHTML=`<span style="font-size:11px;">${cl.rain>40?'🌧️':cl.rain>20?'⛅':'☀️'}</span><span style="font-weight:600;opacity:0.8;">~${toDisplay(cl.max)}°</span>${rainStr}<span style="font-size:8px;opacity:0.55;margin-left:1px;">avg</span>`;
+        });
+      });
+    }
+  }
+
+  // Update each day chip weather slot — silently empty if no data
+  tripData.days.forEach((day,i)=>{
+    const el=document.getElementById(`wchip-${i}`);
+    if(!el) return;
+    const c=wmCoords(day), dt=wmDate(day.date);
+    if(!c||!dt){el.innerHTML='';return;}
+    const w=(wmCache[`${c.lat},${c.lng}`]||{})[dt];
+    if(!w){
+      const key=`${c.lat},${c.lng}`;
+      const cl=wmClimate(day,key);
+      if(!cl){el.innerHTML='';return;}
+      const rainStr=cl.rain>=20?`<span style="color:inherit;opacity:0.7;margin-left:1px;">${cl.rain}%💧</span>`:'';
+      el.innerHTML=`<span style="font-size:11px;">${cl.icon}</span><span style="font-weight:600;opacity:0.8;">~${cl.high}°</span>${rainStr}<span style="font-size:8px;opacity:0.55;margin-left:1px;">avg</span>`;
+      return;
+    }
+    const rain=w.rain>=20?`<span style="color:inherit;opacity:0.8;margin-left:1px;">${w.rain}%💧</span>`:'';
+    if(w.max==null){el.innerHTML='';return;}
+    el.innerHTML=`<span style="font-size:11px;">${wmIcon(w.code)}</span><span style="font-weight:600;">${toDisplay(w.max)}°</span>${rain}`;
+  });
+}
+window.loadAllWeather=loadAllWeather;
+
+// ═══════════════════════════════════════════
+// TRIP EDITOR
+// ═══════════════════════════════════════════
+let editData = null; // working copy of tripData being edited
+let placesService = null;
+let activeSuggestionsEl = null;
+
+function openEditor(){
+  // Deep copy trip data for editing
+  editData = JSON.parse(JSON.stringify(tripData));
+  renderEditorTab('hotels');
+  showScreen('editor-screen');
+}
+window.openEditor = openEditor;
+
+// Load Places API
+function loadPlacesAPI(){
+  if(window.google && window.google.maps && window.google.maps.places) return;
+  const s = document.createElement('script');
+  s.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBwl8qVLFwYbVEd_wYO5j90Bak_6NvEezM&libraries=places&callback=__placesReady`;
+  s.async = true;
+  window.__placesReady = ()=>{ console.log('Places API ready'); };
+  document.head.appendChild(s);
+}
+
+function getPlacesService(){
+  if(!window.google || !window.google.maps || !window.google.maps.places) return null;
+  if(!placesService){
+    const div = document.createElement('div');
+    placesService = new google.maps.places.AutocompleteService();
+  }
+  return placesService;
+}
+
+function searchPlaces(query, callback){
+  const svc = getPlacesService();
+  if(!svc || !query.trim()){ callback([]); return; }
+  svc.getPlacePredictions({
+    input: query,
+    types: ['(cities)']
+  }, (predictions, status)=>{
+    if(status === google.maps.places.PlacesServiceStatus.OK) callback(predictions||[]);
+    else callback([]);
+  });
+}
+
+function showSuggestions(inputEl, suggestionsEl, onSelect){
+  const query = inputEl.value;
+  if(query.length < 2){ suggestionsEl.classList.remove('show'); return; }
+  searchPlaces(query, predictions=>{
+    if(!predictions.length){ suggestionsEl.classList.remove('show'); return; }
+    suggestionsEl.innerHTML = predictions.slice(0,5).map(p=>`
+      <div class="places-item" data-place-id="${p.place_id}" data-name="${p.structured_formatting?.main_text||p.description}">
+        <div class="places-item-name">${p.structured_formatting?.main_text||p.description}</div>
+        <div class="places-item-addr">${p.structured_formatting?.secondary_text||''}</div>
+      </div>
+    `).join('');
+    suggestionsEl.classList.add('show');
+    suggestionsEl.querySelectorAll('.places-item').forEach(item=>{
+      item.addEventListener('click', ()=>{
+        const name = item.dataset.name;
+        inputEl.value = name;
+        suggestionsEl.classList.remove('show');
+        onSelect(name, item.dataset.placeId);
+      });
+    });
+  });
+}
+
+// ── EDITOR TABS
+function renderEditorTab(tab){
+  document.querySelectorAll('.editor-tab').forEach(t=>t.classList.toggle('active', t.dataset.etab===tab));
+  const el = document.getElementById('editor-content');
+
+  if(tab==='hotels') renderEditorHotels(el);
+  else if(tab==='activities') renderEditorActivities(el);
+  else if(tab==='drives') renderEditorDrives(el);
+  else if(tab==='bookings') renderEditorBookings(el);
+}
+window.renderEditorTab = renderEditorTab;
+
+// ── HOTELS EDITOR
+function renderEditorHotels(el){
+  let html = '<div style="font-size:12px;color:var(--text2);margin-bottom:16px;">Tap any hotel name to search Google Maps for the real place.</div>';
+  editData.hotels.forEach((h,i)=>{
+    html += `<div class="editor-card">
+      <div class="editor-card-title">Night ${h.night} · ${h.date}</div>
+      <div class="editor-field">
+        <div class="editor-label">Hotel</div>
+        <div class="places-wrap">
+          <input class="editor-input" id="hotel-name-${i}" value="${h.hotel}" placeholder="Search for hotel..." autocomplete="off"/>
+          <div class="places-suggestions" id="hotel-sugg-${i}"></div>
+        </div>
+      </div>
+      <div class="editor-field">
+        <div class="editor-label">City</div>
+        <input class="editor-input" id="hotel-city-${i}" value="${h.city}" placeholder="City"/>
+      </div>
+      <div class="editor-toggle-row">
+        <div class="editor-toggle-label">Booked</div>
+        <button class="toggle ${h.status==='booked'?'on':''}" id="hotel-status-${i}"></button>
+      </div>
+    </div>`;
+  });
+  el.innerHTML = html;
+  loadPlacesAPI();
+
+  // Wire up each hotel card
+  editData.hotels.forEach((h,i)=>{
+    const nameInput = document.getElementById(`hotel-name-${i}`);
+    const suggEl = document.getElementById(`hotel-sugg-${i}`);
+    const cityInput = document.getElementById(`hotel-city-${i}`);
+    const statusBtn = document.getElementById(`hotel-status-${i}`);
+
+    // Live search
+    let searchTimer;
+    nameInput.addEventListener('input', ()=>{
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(()=>showSuggestions(nameInput, suggEl, (name)=>{
+        editData.hotels[i].hotel = name;
+        // Also update matching day sleep field
+        editData.days.forEach(d=>{ if(d.sleep && d.sleep.includes(h.hotel)) d.sleep = name + ', ' + editData.hotels[i].city; });
+      }), 300);
+    });
+    nameInput.addEventListener('blur', ()=>{ setTimeout(()=>suggEl.classList.remove('show'),200); editData.hotels[i].hotel=nameInput.value; });
+    cityInput.addEventListener('blur', ()=>editData.hotels[i].city=cityInput.value);
+    statusBtn.addEventListener('click', ()=>{
+      const newStatus = editData.hotels[i].status==='booked'?'unbooked':'booked';
+      editData.hotels[i].status = newStatus;
+      statusBtn.classList.toggle('on', newStatus==='booked');
+    });
+  });
+}
+
+// ── ACTIVITIES EDITOR
+function renderEditorActivities(el){
+  let html = '<div style="font-size:12px;color:var(--text2);margin-bottom:16px;">Edit activity names. Tap the search icon to find a real place on Google Maps.</div>';
+  editData.days.forEach((day,di)=>{
+    if(!day.timeline || !day.timeline.length) return;
+    html += `<div class="editor-day-header">${day.day} · ${day.date} — ${day.city}</div>`;
+    day.timeline.forEach((t,ti)=>{
+      html += `<div class="editor-activity-row">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <div style="font-size:16px;">${t.icon||'📍'}</div>
+          <div style="font-size:11px;color:var(--text3);">${t.time}</div>
+        </div>
+        <div class="places-wrap">
+          <input class="editor-input" id="act-${di}-${ti}" value="${t.name}" placeholder="Activity name..." autocomplete="off" style="font-size:13px;"/>
+          <div class="places-suggestions" id="act-sugg-${di}-${ti}"></div>
+        </div>
+        <input class="editor-input" id="act-desc-${di}-${ti}" value="${t.desc||''}" placeholder="Description..." style="font-size:12px;margin-top:6px;color:var(--text2);"/>
+      </div>`;
+    });
+  });
+  el.innerHTML = html;
+  loadPlacesAPI();
+
+  editData.days.forEach((day,di)=>{
+    (day.timeline||[]).forEach((t,ti)=>{
+      const nameInput = document.getElementById(`act-${di}-${ti}`);
+      const suggEl = document.getElementById(`act-sugg-${di}-${ti}`);
+      const descInput = document.getElementById(`act-desc-${di}-${ti}`);
+      if(!nameInput) return;
+      let timer;
+      nameInput.addEventListener('input', ()=>{
+        clearTimeout(timer);
+        timer = setTimeout(()=>showSuggestions(nameInput, suggEl, name=>{ editData.days[di].timeline[ti].name=name; }), 300);
+      });
+      nameInput.addEventListener('blur', ()=>{ setTimeout(()=>suggEl.classList.remove('show'),200); editData.days[di].timeline[ti].name=nameInput.value; });
+      if(descInput) descInput.addEventListener('blur', ()=>editData.days[di].timeline[ti].desc=descInput.value);
+    });
+  });
+}
+
+// ── DRIVES EDITOR
+function renderEditorDrives(el){
+  let html = '<div style="font-size:12px;color:var(--text2);margin-bottom:16px;">Edit drive details for each day.</div>';
+  editData.days.filter(d=>d.driveKm).forEach((day,i)=>{
+    const di = editData.days.indexOf(day);
+    html += `<div class="editor-card">
+      <div class="editor-card-title">${day.day} · ${day.date}</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;">${day.city}</div>
+      <div style="display:flex;gap:8px;">
+        <div class="editor-field" style="flex:1;">
+          <div class="editor-label">Distance</div>
+          <input class="editor-input" id="drive-km-${di}" value="${day.driveKm}" placeholder="e.g. 210 km"/>
+        </div>
+        <div class="editor-field" style="flex:1;">
+          <div class="editor-label">Drive time</div>
+          <input class="editor-input" id="drive-time-${di}" value="${day.driveTime}" placeholder="e.g. ~2h 15min"/>
+        </div>
+      </div>
+      <div class="editor-field">
+        <div class="editor-label">Route</div>
+        <input class="editor-input" id="drive-route-${di}" value="${day.driveRoute||''}" placeholder="e.g. A-45 then A-92"/>
+      </div>
+    </div>`;
+  });
+  el.innerHTML = html;
+
+  editData.days.filter(d=>d.driveKm).forEach(day=>{
+    const di = editData.days.indexOf(day);
+    ['km','time','route'].forEach(field=>{
+      const inp = document.getElementById(`drive-${field}-${di}`);
+      if(inp) inp.addEventListener('blur', ()=>{
+        if(field==='km') editData.days[di].driveKm=inp.value;
+        else if(field==='time') editData.days[di].driveTime=inp.value;
+        else editData.days[di].driveRoute=inp.value;
+      });
+    });
+  });
+}
+
+// ── BOOKINGS EDITOR
+function renderEditorBookings(el){
+  let html = '<div style="font-size:12px;color:var(--text2);margin-bottom:16px;">Edit confirmed bookings and reminders.</div>';
+
+  // Confirmed bookings
+  html += '<div class="editor-card-title" style="margin-bottom:10px;">✅ Confirmed bookings</div>';
+  (editData.confirmedBookings||[]).forEach((b,i)=>{
+    html += `<div class="editor-card" style="margin-bottom:8px;">
+      <div class="editor-field"><div class="editor-label">What</div><input class="editor-input" id="cb-what-${i}" value="${b.what||''}"/></div>
+      <div style="display:flex;gap:8px;">
+        <div class="editor-field" style="flex:1;"><div class="editor-label">Date</div><input class="editor-input" id="cb-date-${i}" value="${b.date||''}"/></div>
+        <div class="editor-field" style="flex:1;"><div class="editor-label">Time</div><input class="editor-input" id="cb-time-${i}" value="${b.time||''}"/></div>
+      </div>
+      <div class="editor-field"><div class="editor-label">Locator / reference</div><input class="editor-input" id="cb-loc-${i}" value="${b.locator||''}"/></div>
+      <div class="editor-field"><div class="editor-label">Details</div><input class="editor-input" id="cb-det-${i}" value="${b.details||''}"/></div>
+    </div>`;
+  });
+
+  html += `<button class="export-btn" style="background:rgba(76,175,130,0.15);color:var(--green);margin-bottom:16px;" onclick="addConfirmedBooking()">+ Add confirmed booking</button>`;
+  el.innerHTML = html;
+
+  // Wire confirmed bookings
+  (editData.confirmedBookings||[]).forEach((b,i)=>{
+    ['what','date','time','loc','det'].forEach(f=>{
+      const inp = document.getElementById(`cb-${f}-${i}`);
+      if(inp) inp.addEventListener('blur', ()=>{
+        if(f==='what') editData.confirmedBookings[i].what=inp.value;
+        else if(f==='date') editData.confirmedBookings[i].date=inp.value;
+        else if(f==='time') editData.confirmedBookings[i].time=inp.value;
+        else if(f==='loc') editData.confirmedBookings[i].locator=inp.value;
+        else if(f==='det') editData.confirmedBookings[i].details=inp.value;
+      });
+    });
+  });
+}
+
+function addConfirmedBooking(){
+  if(!editData.confirmedBookings) editData.confirmedBookings=[];
+  editData.confirmedBookings.push({what:'',date:'',time:'',locator:'',details:''});
+  renderEditorTab('bookings');
+}
+window.addConfirmedBooking = addConfirmedBooking;
+
+// ── SAVE
+function saveEdits(){
+  tripData = JSON.parse(JSON.stringify(editData));
+  save('trip_data', tripData);
+  renderTrip();
+  showScreen('trip');
+  // Show saved toast
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:calc(var(--safe-bottom)+80px);left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:600;';
+  toast.textContent = '✅ Trip saved!';
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(), 2500);
+}
+window.saveEdits = saveEdits;
+
+// ── EXPORT JSON
+function exportTrip(){
+  const data = editData || tripData;
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `trip-${(data.tripName||'my-trip').replace(/[^a-zA-Z0-9]/g,'-').toLowerCase()}-edited.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+window.exportTrip = exportTrip;
+
+
+// ═══════════════════════════════════════════
+// GEMINI AI ASSISTANT
+// ═══════════════════════════════════════════
+
+
+
+// ── TRIP SETUP SCREEN
+
+function openTripSetup(){
+  // Pre-fill from current trip
+  if(tripData){
+    const start = tripData.days?.[0];
+    const end = tripData.days?.[tripData.days.length-1];
+    if(start) document.getElementById('setup-start-date').value = wmDate(start.date)||'';
+    if(end) document.getElementById('setup-end-date').value = wmDate(end.date)||'';
+    document.getElementById('setup-start-city').value = start?.city?.split('→')[0]?.trim()||'';
+    document.getElementById('setup-end-city').value = end?.city?.split('→')[0]?.trim()||'';
+    document.getElementById('setup-party').value = tripData.party||'2 adults';
+  }
+  loadPlacesAPI();
+  // Wire city search
+  ['start','end'].forEach(which=>{
+    const inp = document.getElementById(`setup-${which}-city`);
+    const sugg = document.getElementById(`setup-${which}-sugg`);
+    let t;
+    inp.oninput = ()=>{ clearTimeout(t); t=setTimeout(()=>showSuggestions(inp,sugg,name=>inp.value=name),300); };
+    inp.onblur = ()=>setTimeout(()=>sugg.classList.remove('show'),200);
+  });
+  // Style buttons
+  document.querySelectorAll('[data-style]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      setupStyle=btn.dataset.style;
+      document.querySelectorAll('[data-style]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  showScreen('trip-setup');
+}
+window.openTripSetup = openTripSetup;
+
+async function planWithGemini(){
+  const startDate = document.getElementById('setup-start-date').value;
+  const endDate = document.getElementById('setup-end-date').value;
+  const startCity = document.getElementById('setup-start-city').value;
+  const endCity = document.getElementById('setup-end-city').value;
+  const party = document.getElementById('setup-party').value;
+  const interests = document.getElementById('setup-interests').value;
+  const statusEl = document.getElementById('setup-status');
+
+  if(!startDate||!endDate||!startCity||!endCity){
+    statusEl.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px;">Please fill in dates and cities.</div>';
+    return;
+  }
+
+  statusEl.innerHTML=`<div class="setup-generating"><div style="font-size:24px;margin-bottom:8px;">✨</div><div style="font-size:14px;font-weight:600;color:var(--text);">AI is planning your trip...</div><div style="font-size:12px;color:var(--text2);margin-top:6px;">This may take 15–30 seconds</div></div>`;
+
+  const prompt = `You are a travel planning assistant. Create a detailed day-by-day road trip itinerary as a JSON object.
+
+Trip details:
+- Start: ${startCity} on ${startDate}
+- End: ${endCity} on ${endDate}
+- Party: ${party}
+- Style: ${setupStyle} (relaxed=fewer activities, packed=many activities)
+- Interests: ${interests||'general sightseeing, food, culture'}
+
+Return ONLY a valid JSON object with this exact structure (no markdown, no explanation):
+{
+  "tripName": "string",
+  "dates": "string",
+  "totalDays": number,
+  "totalNights": number,
+  "totalKm": number,
+  "cities": number,
+  "party": "string",
+  "days": [
+    {
+      "day": "Day 1",
+      "date": "string e.g. Sunday 24 May",
+      "city": "string",
+      "tag": "string",
+      "driveKm": "string or null",
+      "driveTime": "string or null",
+      "driveRoute": "string or null",
+      "sleep": "string",
+      "hotelStatus": "booked or unbooked",
+      "timeline": [
+        {"time": "9:00am", "icon": "emoji", "name": "string", "desc": "string"}
+      ],
+      "bookings": [
+        {"urgency": "urgent/soon/relaxed", "icon": "emoji", "name": "string", "sub": "string"}
+      ]
+    }
+  ],
+  "confirmedBookings": [],
+  "hotels": [
+    {"night": number, "date": "string", "city": "string", "hotel": "Recommended hotel name", "status": "unbooked"}
+  ]
+}`;
+
+  try{
+    const text = await callGemini(prompt);
+    // Extract JSON from response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('No JSON in response');
+    const newTrip = JSON.parse(jsonMatch[0]);
+    // Apply to app
+    tripData = newTrip;
+    save('trip_data', tripData);
+    saveTripToHistory(tripData);
+    renderTrip();
+    showScreen('trip');
+    // Toast
+    const toast = document.createElement('div');
+    toast.style.cssText='position:fixed;bottom:calc(var(--safe-bottom)+80px);left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#4285F4,#8B5CF6);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:600;white-space:nowrap;';
+    toast.textContent='✨ Trip planned by AI!';
+    document.body.appendChild(toast);
+    setTimeout(()=>toast.remove(),3000);
+  } catch(e){
+    statusEl.innerHTML=`<div style="color:var(--red);font-size:13px;padding:8px;">Error: ${e.message}. Check your Groq API key at console.groq.com</div>`;
+  }
+}
+window.planWithGemini = planWithGemini;
+
+// ── ACTIVITY THREE-DOT MENU
+
+function openActivityMenu(dayIndex, actIndex){
+  currentActivityCtx = {
+    dayIndex,
+    actIndex,
+    day: tripData.days[dayIndex],
+    activity: tripData.days[dayIndex].timeline[actIndex]
+  };
+  const act = currentActivityCtx.activity;
+  const day = currentActivityCtx.day;
+
+  document.getElementById('ai-popup-content').innerHTML = `
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">${act.icon||'📍'} ${act.name}</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:16px;">${day.day} · ${day.city}</div>
+    <div class="ai-option" onclick="editActivityManually(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">✏️</div>
+      <div><div class="ai-option-label">Edit manually</div><div class="ai-option-sub">Change name, time or description</div></div>
+    </div>
+    <div class="ai-option" onclick="geminiSuggestAlternatives(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">✨</div>
+      <div><div class="ai-option-label">Suggest alternatives</div><div class="ai-option-sub">AI finds similar activities nearby</div></div>
+    </div>
+    <div class="ai-option" onclick="geminiMoreInfo(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">💡</div>
+      <div><div class="ai-option-label">Tell me more</div><div class="ai-option-sub">Tips, opening hours, what to expect</div></div>
+    </div>
+    <div class="ai-option" onclick="removeActivity(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">🗑️</div>
+      <div><div class="ai-option-label" style="color:var(--red);">Remove activity</div><div class="ai-option-sub">Delete from this day</div></div>
+    </div>
+  `;
+  document.getElementById('ai-popup').style.display='block';
+}
+window.openActivityMenu = openActivityMenu;
+
+function closeAIPopup(){
+  document.getElementById('ai-popup').style.display='none';
+  currentActivityCtx=null;
+}
+window.closeAIPopup = closeAIPopup;
+
+function editActivityManually(di,ai){
+  const act = tripData.days[di].timeline[ai];
+  document.getElementById('ai-popup-content').innerHTML=`
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:16px;">Edit Activity</div>
+    <div class="editor-field"><div class="editor-label">Time</div><input class="editor-input" id="edit-time" value="${act.time||''}"/></div>
+    <div class="editor-field"><div class="editor-label">Name</div><input class="editor-input" id="edit-name" value="${act.name||''}"/></div>
+    <div class="editor-field"><div class="editor-label">Description</div><input class="editor-input" id="edit-desc" value="${act.desc||''}"/></div>
+    <button class="ai-apply-btn" onclick="applyManualEdit(${di},${ai})">Save Changes</button>
+  `;
+}
+window.editActivityManually = editActivityManually;
+
+function applyManualEdit(di,ai){
+  tripData.days[di].timeline[ai].time = document.getElementById('edit-time').value;
+  tripData.days[di].timeline[ai].name = document.getElementById('edit-name').value;
+  tripData.days[di].timeline[ai].desc = document.getElementById('edit-desc').value;
+  save('trip_data',tripData);
+  closeAIPopup();
+  selectDay(di);
+}
+window.applyManualEdit = applyManualEdit;
+
+function removeActivity(di,ai){
+  tripData.days[di].timeline.splice(ai,1);
+  save('trip_data',tripData);
+  closeAIPopup();
+  selectDay(di);
+}
+window.removeActivity = removeActivity;
+
+async function geminiSuggestAlternatives(di,ai){
+  const act = tripData.days[di].timeline[ai];
+  const day = tripData.days[di];
+  document.getElementById('ai-popup-content').innerHTML=`<div class="ai-loading">✨ <span>Gemini is thinking...</span></div>`;
+
+  try{
+    const prompt = `I'm on a road trip and currently have "${act.name}" planned in ${day.city} at ${act.time}.
+Suggest 3 alternative activities I could do instead at a similar time. For each give:
+- Name of place/activity
+- One sentence description
+- Approximate cost or "Free"
+Format as a simple numbered list. Be specific to ${day.city}, Spain.`;
+
+    const text = await callGemini(prompt);
+    document.getElementById('ai-popup-content').innerHTML=`
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">Alternatives to "${act.name}"</div>
+      <div class="ai-response">${text.replace(/\n/g,'<br>')}</div>
+      <div class="gemini-badge">✨ Powered by Groq + Llama</div>
+      <button class="ai-apply-btn" style="margin-top:12px;background:var(--card);color:var(--text);border:1px solid var(--border);" onclick="closeAIPopup()">Close</button>
+    `;
+  } catch(e){
+    document.getElementById('ai-popup-content').innerHTML=`<div style="color:var(--red);font-size:13px;">Error: ${e.message}</div>`;
+  }
+}
+window.geminiSuggestAlternatives = geminiSuggestAlternatives;
+
+async function geminiMoreInfo(di,ai){
+  const act = tripData.days[di].timeline[ai];
+  const day = tripData.days[di];
+  document.getElementById('ai-popup-content').innerHTML=`<div class="ai-loading">💡 <span>Getting tips...</span></div>`;
+
+  try{
+    const prompt = `Give me practical visitor tips for "${act.name}" in ${day.city}, Spain. Include:
+- Opening hours (typical)
+- Best time to visit
+- How long to spend there
+- 1-2 insider tips
+- Approximate entry cost
+Keep it concise and practical for a traveller visiting in late May.`;
+
+    const text = await callGemini(prompt);
+    document.getElementById('ai-popup-content').innerHTML=`
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">💡 ${act.name}</div>
+      <div class="ai-response">${text.replace(/\n/g,'<br>')}</div>
+      <div class="gemini-badge">✨ Powered by Groq + Llama</div>
+      <button class="ai-apply-btn" style="margin-top:12px;background:var(--card);color:var(--text);border:1px solid var(--border);" onclick="closeAIPopup()">Close</button>
+    `;
+  } catch(e){
+    document.getElementById('ai-popup-content').innerHTML=`<div style="color:var(--red);font-size:13px;">Error: ${e.message}</div>`;
+  }
+}
+window.geminiMoreInfo = geminiMoreInfo;
+
+
+function saveTripToHistory(data){
+  if(!data) return;
+  // Load existing history
+  let hist = [];
+  try{ hist = JSON.parse(localStorage.getItem('trip_history')||'[]'); } catch(e){}
+  // Don't duplicate same trip
+  if(hist.length && hist[0].tripName === data.tripName && hist[0].dates === data.dates) return;
+  // Add to front, keep last 3
+  hist.unshift({tripName: data.tripName, dates: data.dates, totalDays: data.totalDays, savedAt: new Date().toISOString()});
+  hist = hist.slice(0,3);
+  try{ localStorage.setItem('trip_history', JSON.stringify(hist)); } catch(e){}
+  // Also save full trip data
+  try{ localStorage.setItem(`trip_hist_${hist[0].savedAt}`, JSON.stringify(data)); } catch(e){}
+  tripHistory = hist;
+}
+window.saveTripToHistory = saveTripToHistory;
+
+function loadTripHistory(){
+  try{ tripHistory = JSON.parse(localStorage.getItem('trip_history')||'[]'); } catch(e){ tripHistory=[]; }
+  return tripHistory;
+}
+
+function restoreHistoryTrip(savedAt){
+  try{
+    const data = JSON.parse(localStorage.getItem(`trip_hist_${savedAt}`)||'null');
+    if(!data){ alert('Trip data not found'); return; }
+    tripData = data;
+    save('trip_data', data);
+    renderTrip();
+    showScreen('trip');
+    closeMenu();
+  } catch(e){ alert('Could not restore trip'); }
+}
+window.restoreHistoryTrip = restoreHistoryTrip;
+// ═══════════════════════════════════════════
+// WEATHER — Open-Meteo (free, no key, 16-day forecast)
+// ═══════════════════════════════════════════
+// TRIP EDITOR
+
+// ═══════════════════════════════════════════
+// GEMINI AI ASSISTANT
+// ═══════════════════════════════════════════
+
+
+
+// ── TRIP SETUP SCREEN
+
+function openTripSetup(){
+  // Pre-fill from current trip
+  if(tripData){
+    const start = tripData.days?.[0];
+    const end = tripData.days?.[tripData.days.length-1];
+    if(start) document.getElementById('setup-start-date').value = wmDate(start.date)||'';
+    if(end) document.getElementById('setup-end-date').value = wmDate(end.date)||'';
+    document.getElementById('setup-start-city').value = start?.city?.split('→')[0]?.trim()||'';
+    document.getElementById('setup-end-city').value = end?.city?.split('→')[0]?.trim()||'';
+    document.getElementById('setup-party').value = tripData.party||'2 adults';
+  }
+  loadPlacesAPI();
+  // Wire city search
+  ['start','end'].forEach(which=>{
+    const inp = document.getElementById(`setup-${which}-city`);
+    const sugg = document.getElementById(`setup-${which}-sugg`);
+    let t;
+    inp.oninput = ()=>{ clearTimeout(t); t=setTimeout(()=>showSuggestions(inp,sugg,name=>inp.value=name),300); };
+    inp.onblur = ()=>setTimeout(()=>sugg.classList.remove('show'),200);
+  });
+  // Style buttons
+  document.querySelectorAll('[data-style]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      setupStyle=btn.dataset.style;
+      document.querySelectorAll('[data-style]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  showScreen('trip-setup');
+}
+window.openTripSetup = openTripSetup;
+
+async function planWithGemini(){
+  const startDate = document.getElementById('setup-start-date').value;
+  const endDate = document.getElementById('setup-end-date').value;
+  const startCity = document.getElementById('setup-start-city').value;
+  const endCity = document.getElementById('setup-end-city').value;
+  const party = document.getElementById('setup-party').value;
+  const interests = document.getElementById('setup-interests').value;
+  const statusEl = document.getElementById('setup-status');
+
+  if(!startDate||!endDate||!startCity||!endCity){
+    statusEl.innerHTML='<div style="color:var(--red);font-size:13px;padding:8px;">Please fill in dates and cities.</div>';
+    return;
+  }
+
+  statusEl.innerHTML=`<div class="setup-generating"><div style="font-size:24px;margin-bottom:8px;">✨</div><div style="font-size:14px;font-weight:600;color:var(--text);">AI is planning your trip...</div><div style="font-size:12px;color:var(--text2);margin-top:6px;">This may take 15–30 seconds</div></div>`;
+
+  const prompt = `You are a travel planning assistant. Create a detailed day-by-day road trip itinerary as a JSON object.
+
+Trip details:
+- Start: ${startCity} on ${startDate}
+- End: ${endCity} on ${endDate}
+- Party: ${party}
+- Style: ${setupStyle} (relaxed=fewer activities, packed=many activities)
+- Interests: ${interests||'general sightseeing, food, culture'}
+
+Return ONLY a valid JSON object with this exact structure (no markdown, no explanation):
+{
+  "tripName": "string",
+  "dates": "string",
+  "totalDays": number,
+  "totalNights": number,
+  "totalKm": number,
+  "cities": number,
+  "party": "string",
+  "days": [
+    {
+      "day": "Day 1",
+      "date": "string e.g. Sunday 24 May",
+      "city": "string",
+      "tag": "string",
+      "driveKm": "string or null",
+      "driveTime": "string or null",
+      "driveRoute": "string or null",
+      "sleep": "string",
+      "hotelStatus": "booked or unbooked",
+      "timeline": [
+        {"time": "9:00am", "icon": "emoji", "name": "string", "desc": "string"}
+      ],
+      "bookings": [
+        {"urgency": "urgent/soon/relaxed", "icon": "emoji", "name": "string", "sub": "string"}
+      ]
+    }
+  ],
+  "confirmedBookings": [],
+  "hotels": [
+    {"night": number, "date": "string", "city": "string", "hotel": "Recommended hotel name", "status": "unbooked"}
+  ]
+}`;
+
+  try{
+    const text = await callGemini(prompt);
+    // Extract JSON from response
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if(!jsonMatch) throw new Error('No JSON in response');
+    const newTrip = JSON.parse(jsonMatch[0]);
+    // Apply to app
+    tripData = newTrip;
+    save('trip_data', tripData);
+    saveTripToHistory(tripData);
+    renderTrip();
+    showScreen('trip');
+    // Toast
+    const toast = document.createElement('div');
+    toast.style.cssText='position:fixed;bottom:calc(var(--safe-bottom)+80px);left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#4285F4,#8B5CF6);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:600;white-space:nowrap;';
+    toast.textContent='✨ Trip planned by AI!';
+    document.body.appendChild(toast);
+    setTimeout(()=>toast.remove(),3000);
+  } catch(e){
+    statusEl.innerHTML=`<div style="color:var(--red);font-size:13px;padding:8px;">Error: ${e.message}. Check your Groq API key at console.groq.com</div>`;
+  }
+}
+window.planWithGemini = planWithGemini;
+
+// ── ACTIVITY THREE-DOT MENU
+
+function openActivityMenu(dayIndex, actIndex){
+  currentActivityCtx = {
+    dayIndex,
+    actIndex,
+    day: tripData.days[dayIndex],
+    activity: tripData.days[dayIndex].timeline[actIndex]
+  };
+  const act = currentActivityCtx.activity;
+  const day = currentActivityCtx.day;
+
+  document.getElementById('ai-popup-content').innerHTML = `
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;">${act.icon||'📍'} ${act.name}</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:16px;">${day.day} · ${day.city}</div>
+    <div class="ai-option" onclick="editActivityManually(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">✏️</div>
+      <div><div class="ai-option-label">Edit manually</div><div class="ai-option-sub">Change name, time or description</div></div>
+    </div>
+    <div class="ai-option" onclick="geminiSuggestAlternatives(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">✨</div>
+      <div><div class="ai-option-label">Suggest alternatives</div><div class="ai-option-sub">AI finds similar activities nearby</div></div>
+    </div>
+    <div class="ai-option" onclick="geminiMoreInfo(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">💡</div>
+      <div><div class="ai-option-label">Tell me more</div><div class="ai-option-sub">Tips, opening hours, what to expect</div></div>
+    </div>
+    <div class="ai-option" onclick="removeActivity(${dayIndex},${actIndex})">
+      <div class="ai-option-icon">🗑️</div>
+      <div><div class="ai-option-label" style="color:var(--red);">Remove activity</div><div class="ai-option-sub">Delete from this day</div></div>
+    </div>
+  `;
+  document.getElementById('ai-popup').style.display='block';
+}
+window.openActivityMenu = openActivityMenu;
+
+function closeAIPopup(){
+  document.getElementById('ai-popup').style.display='none';
+  currentActivityCtx=null;
+}
+window.closeAIPopup = closeAIPopup;
+
+function editActivityManually(di,ai){
+  const act = tripData.days[di].timeline[ai];
+  document.getElementById('ai-popup-content').innerHTML=`
+    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:16px;">Edit Activity</div>
+    <div class="editor-field"><div class="editor-label">Time</div><input class="editor-input" id="edit-time" value="${act.time||''}"/></div>
+    <div class="editor-field"><div class="editor-label">Name</div><input class="editor-input" id="edit-name" value="${act.name||''}"/></div>
+    <div class="editor-field"><div class="editor-label">Description</div><input class="editor-input" id="edit-desc" value="${act.desc||''}"/></div>
+    <button class="ai-apply-btn" onclick="applyManualEdit(${di},${ai})">Save Changes</button>
+  `;
+}
+window.editActivityManually = editActivityManually;
+
+function applyManualEdit(di,ai){
+  tripData.days[di].timeline[ai].time = document.getElementById('edit-time').value;
+  tripData.days[di].timeline[ai].name = document.getElementById('edit-name').value;
+  tripData.days[di].timeline[ai].desc = document.getElementById('edit-desc').value;
+  save('trip_data',tripData);
+  closeAIPopup();
+  selectDay(di);
+}
+window.applyManualEdit = applyManualEdit;
+
+function removeActivity(di,ai){
+  tripData.days[di].timeline.splice(ai,1);
+  save('trip_data',tripData);
+  closeAIPopup();
+  selectDay(di);
+}
+window.removeActivity = removeActivity;
+
+async function geminiSuggestAlternatives(di,ai){
+  const act = tripData.days[di].timeline[ai];
+  const day = tripData.days[di];
+  document.getElementById('ai-popup-content').innerHTML=`<div class="ai-loading">✨ <span>Gemini is thinking...</span></div>`;
+
+  try{
+    const prompt = `I'm on a road trip and currently have "${act.name}" planned in ${day.city} at ${act.time}.
+Suggest 3 alternative activities I could do instead at a similar time. For each give:
+- Name of place/activity
+- One sentence description
+- Approximate cost or "Free"
+Format as a simple numbered list. Be specific to ${day.city}, Spain.`;
+
+    const text = await callGemini(prompt);
+    document.getElementById('ai-popup-content').innerHTML=`
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">Alternatives to "${act.name}"</div>
+      <div class="ai-response">${text.replace(/\n/g,'<br>')}</div>
+      <div class="gemini-badge">✨ Powered by Groq + Llama</div>
+      <button class="ai-apply-btn" style="margin-top:12px;background:var(--card);color:var(--text);border:1px solid var(--border);" onclick="closeAIPopup()">Close</button>
+    `;
+  } catch(e){
+    document.getElementById('ai-popup-content').innerHTML=`<div style="color:var(--red);font-size:13px;">Error: ${e.message}</div>`;
+  }
+}
+window.geminiSuggestAlternatives = geminiSuggestAlternatives;
+
+async function geminiMoreInfo(di,ai){
+  const act = tripData.days[di].timeline[ai];
+  const day = tripData.days[di];
+  document.getElementById('ai-popup-content').innerHTML=`<div class="ai-loading">💡 <span>Getting tips...</span></div>`;
+
+  try{
+    const prompt = `Give me practical visitor tips for "${act.name}" in ${day.city}, Spain. Include:
+- Opening hours (typical)
+- Best time to visit
+- How long to spend there
+- 1-2 insider tips
+- Approximate entry cost
+Keep it concise and practical for a traveller visiting in late May.`;
+
+    const text = await callGemini(prompt);
+    document.getElementById('ai-popup-content').innerHTML=`
+      <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;">💡 ${act.name}</div>
+      <div class="ai-response">${text.replace(/\n/g,'<br>')}</div>
+      <div class="gemini-badge">✨ Powered by Groq + Llama</div>
+      <button class="ai-apply-btn" style="margin-top:12px;background:var(--card);color:var(--text);border:1px solid var(--border);" onclick="closeAIPopup()">Close</button>
+    `;
+  } catch(e){
+    document.getElementById('ai-popup-content').innerHTML=`<div style="color:var(--red);font-size:13px;">Error: ${e.message}</div>`;
+  }
+}
+window.geminiMoreInfo = geminiMoreInfo;
+
+
+function saveTripToHistory(data){
+  if(!data) return;
+  // Load existing history
+  let hist = [];
+  try{ hist = JSON.parse(localStorage.getItem('trip_history')||'[]'); } catch(e){}
+  // Don't duplicate same trip
+  if(hist.length && hist[0].tripName === data.tripName && hist[0].dates === data.dates) return;
+  // Add to front, keep last 3
+  hist.unshift({tripName: data.tripName, dates: data.dates, totalDays: data.totalDays, savedAt: new Date().toISOString()});
+  hist = hist.slice(0,3);
+  try{ localStorage.setItem('trip_history', JSON.stringify(hist)); } catch(e){}
+  // Also save full trip data
+  try{ localStorage.setItem(`trip_hist_${hist[0].savedAt}`, JSON.stringify(data)); } catch(e){}
+  tripHistory = hist;
+}
+window.saveTripToHistory = saveTripToHistory;
+
+function loadTripHistory(){
+  try{ tripHistory = JSON.parse(localStorage.getItem('trip_history')||'[]'); } catch(e){ tripHistory=[]; }
+  return tripHistory;
+}
+
+function restoreHistoryTrip(savedAt){
+  try{
+    const data = JSON.parse(localStorage.getItem(`trip_hist_${savedAt}`)||'null');
+    if(!data){ alert('Trip data not found'); return; }
+    tripData = data;
+    save('trip_data', data);
+    renderTrip();
+    showScreen('trip');
+    closeMenu();
+  } catch(e){ alert('Could not restore trip'); }
+}
+window.restoreHistoryTrip = restoreHistoryTrip;
+// ═══════════════════════════════════════════
+// WEATHER
 // ═══════════════════════════════════════════
 // OFFLINE & SERVICE WORKER
 // ═══════════════════════════════════════════
 function updateOnline(){document.getElementById('offline-badge').classList.toggle('show',!navigator.onLine);}
 window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);updateOnline();
 if('serviceWorker' in navigator){
-  const sw=`const C='trip-v0.191';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>new Response('Offline',{status:503}))));});`;
+  const sw=`const C='trip-v0.218';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>new Response('Offline',{status:503}))));});`;
   navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
 }
 </script>
@@ -1053,6 +2548,108 @@ if('serviceWorker' in navigator){
   </div>
   <div style="flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(var(--safe-bottom)+16px);scrollbar-width:none;">
     <div id="bookings-summary-content"></div>
+  </div>
+</div>
+
+<!-- TRIP EDITOR SCREEN -->
+<div class="screen" id="editor-screen">
+  <div class="trip-header">
+    <div class="trip-header-top">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="hdr-btn" id="editor-back" style="font-size:16px;">← Back</button>
+        <div class="trip-name">Edit Trip</div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button class="hdr-btn" id="editor-export" style="color:var(--green);font-size:12px;font-weight:600;">⬇ Export</button>
+        <button class="hdr-btn" id="editor-save" style="background:var(--accent);color:#1a0e00;border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;">Save</button>
+      </div>
+    </div>
+  </div>
+  <!-- Editor tabs -->
+  <div style="display:flex;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;">
+    <button class="editor-tab active" data-etab="hotels">🏨 Hotels</button>
+    <button class="editor-tab" data-etab="activities">📍 Activities</button>
+    <button class="editor-tab" data-etab="drives">🚗 Drives</button>
+    <button class="editor-tab" data-etab="bookings">✅ Bookings</button>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(var(--safe-bottom)+16px);scrollbar-width:none;" id="editor-content"></div>
+</div>
+
+<!-- TRIP SETUP SCREEN -->
+<div class="screen" id="trip-setup">
+  <div class="trip-header">
+    <div class="trip-header-top">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="hdr-btn" id="setup-back">← Back</button>
+        <div class="trip-name">Trip Setup</div>
+      </div>
+      <button class="hdr-btn" id="setup-plan-btn" style="background:linear-gradient(135deg,#4285F4,#8B5CF6);color:#fff;border-radius:20px;padding:6px 16px;font-size:12px;font-weight:700;">✨ Plan with AI</button>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(var(--safe-bottom)+16px);scrollbar-width:none;">
+    <div style="font-size:13px;color:var(--text2);margin-bottom:20px;">Set your trip details and let Gemini build a full itinerary for you, or just update your dates and cities.</div>
+
+    <div class="editor-card">
+      <div class="editor-card-title">Dates</div>
+      <div style="display:flex;gap:10px;">
+        <div class="editor-field" style="flex:1;">
+          <div class="editor-label">Start date</div>
+          <input type="date" class="editor-input" id="setup-start-date"/>
+        </div>
+        <div class="editor-field" style="flex:1;">
+          <div class="editor-label">End date</div>
+          <input type="date" class="editor-input" id="setup-end-date"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="editor-card">
+      <div class="editor-card-title">Route</div>
+      <div class="editor-field">
+        <div class="editor-label">Start city</div>
+        <div class="places-wrap">
+          <input class="editor-input" id="setup-start-city" placeholder="e.g. Málaga, Spain" autocomplete="off"/>
+          <div class="places-suggestions" id="setup-start-sugg"></div>
+        </div>
+      </div>
+      <div class="editor-field">
+        <div class="editor-label">End city</div>
+        <div class="places-wrap">
+          <input class="editor-input" id="setup-end-city" placeholder="e.g. Barcelona, Spain" autocomplete="off"/>
+          <div class="places-suggestions" id="setup-end-sugg"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="editor-card">
+      <div class="editor-card-title">Preferences</div>
+      <div class="editor-field">
+        <div class="editor-label">Travellers</div>
+        <input class="editor-input" id="setup-party" placeholder="e.g. 2 adults" value="2 adults"/>
+      </div>
+      <div class="editor-field">
+        <div class="editor-label">Trip style</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="size-btn active" data-style="relaxed" id="style-relaxed">😌 Relaxed</button>
+          <button class="size-btn" data-style="moderate" id="style-moderate">🚶 Moderate</button>
+          <button class="size-btn" data-style="packed" id="style-packed">⚡ Packed</button>
+        </div>
+      </div>
+      <div class="editor-field">
+        <div class="editor-label">Interests (optional)</div>
+        <input class="editor-input" id="setup-interests" placeholder="e.g. food, architecture, beaches, nightlife"/>
+      </div>
+    </div>
+
+    <div id="setup-status" style="margin-top:8px;"></div>
+  </div>
+</div>
+
+<!-- AI ACTIVITY POPUP -->
+<div id="ai-popup" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.5);" onclick="closeAIPopup()">
+  <div id="ai-popup-inner" style="position:absolute;bottom:0;left:0;right:0;background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;max-height:80vh;overflow-y:auto;" onclick="event.stopPropagation()">
+    <div style="width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px;"></div>
+    <div id="ai-popup-content"></div>
   </div>
 </div>
 </body>

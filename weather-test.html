@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Weather Test</title></head>
+<body>
+<h2>Weather Archive Test</h2>
+<div id="out" style="font-family:monospace;font-size:12px;white-space:pre;"></div>
+<script>
+const out = document.getElementById('out');
+async function test(){
+  // Test Malaga historical for 2024
+  const url = 'https://archive-api.open-meteo.com/v1/archive?latitude=37.386&longitude=-5.992&start_date=2024-05-20&end_date=2024-06-05&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto';
+  out.textContent += 'Fetching...\n';
+  const res = await fetch(url);
+  const data = await res.json();
+  out.textContent += 'Status: ' + res.status + '\n';
+  out.textContent += 'Keys: ' + Object.keys(data.daily||{}).join(', ') + '\n';
+  out.textContent += 'Times: ' + (data.daily?.time||[]).slice(0,3).join(', ') + '\n';
+  out.textContent += 'MaxTemps: ' + (data.daily?.temperature_2m_max||[]).slice(0,3).join(', ') + '\n';
+  out.textContent += 'Precip: ' + (data.daily?.precipitation_sum||[]).slice(0,3).join(', ') + '\n';
+  out.textContent += '\nFull daily keys: ' + JSON.stringify(Object.keys(data.daily||{})) + '\n';
+}
+test().catch(e => out.textContent += 'ERROR: ' + e.message);
+</script>
+</body></html>
