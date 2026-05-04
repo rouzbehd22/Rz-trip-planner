@@ -5,275 +5,204 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Trip Planner">
-<meta name="theme-color" content="#1a1a2e">
-<title>Trip Planner</title>
+<meta name="apple-mobile-web-app-title" content="Trip Planner v0.12">
+<meta name="theme-color" content="#0f0f1a">
+<title>Trip Planner v0.12</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{--bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#16213e;--card:#1e1e35;--card2:#252540;--border:rgba(255,255,255,0.08);--accent:#e8a84c;--accent2:#c97d2e;--blue:#4a9eff;--green:#4caf82;--red:#e85c4a;--yellow:#f0c040;--text:#f0ede8;--text2:#a8a4b8;--text3:#6b6880;--radius:16px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);}
+body.light{--bg:#f5f3ef;--bg2:#ffffff;--bg3:#eceae5;--card:#ffffff;--card2:#f0ede8;--border:rgba(0,0,0,0.08);--text:#1a1818;--text2:#6b6460;--text3:#a8a4a0;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow:hidden;position:fixed;transition:background 0.3s,color 0.3s;}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+.screen.active{opacity:1;pointer-events:all;}
 
-  :root {
-    --bg: #0f0f1a;
-    --bg2: #1a1a2e;
-    --bg3: #16213e;
-    --card: #1e1e35;
-    --card2: #252540;
-    --border: rgba(255,255,255,0.08);
-    --accent: #e8a84c;
-    --accent2: #c97d2e;
-    --blue: #4a9eff;
-    --green: #4caf82;
-    --red: #e85c4a;
-    --yellow: #f0c040;
-    --text: #f0ede8;
-    --text2: #a8a4b8;
-    --text3: #6b6880;
-    --radius: 16px;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-  }
+/* TRIP */
+#trip{background:var(--bg);}
+.trip-header{background:var(--bg2);padding:calc(var(--safe-top) + 14px) 20px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.trip-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.trip-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--text);}
+.header-btns{display:flex;gap:4px;}
+.hdr-btn{font-size:13px;color:var(--accent);font-weight:500;background:none;border:none;cursor:pointer;padding:6px 8px;}
+.trip-meta-row{display:flex;gap:8px;flex-wrap:wrap;}
+.meta-chip{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text2);}
+.meta-chip span{color:var(--accent);font-weight:600;}
+.today-chip{background:rgba(74,158,255,0.15);border-color:rgba(74,158,255,0.3);cursor:pointer;}
+.today-chip span{color:var(--blue);}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* DAY STRIP */
+.day-strip-wrap{flex-shrink:0;background:var(--bg);border-bottom:1px solid var(--border);}
+.day-strip{display:flex;gap:8px;padding:10px 16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;}
+.day-strip::-webkit-scrollbar{display:none;}
+.day-chip{flex-shrink:0;scroll-snap-align:start;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:8px 12px;cursor:pointer;transition:all 0.15s;min-width:76px;text-align:center;position:relative;}
+.day-chip.active{background:var(--accent);border-color:var(--accent);}
+.day-chip.done{opacity:0.45;}
+.day-chip.unbooked{border-color:var(--red);}
+.day-chip.today-day{border-color:var(--blue);box-shadow:0 0 0 2px rgba(74,158,255,0.2);}
+.day-chip-num{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;}
+.day-chip.active .day-chip-num{color:rgba(0,0,0,0.5);}
+.day-chip-city{font-size:12px;font-weight:600;color:var(--text);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:72px;}
+.day-chip.active .day-chip-city{color:#1a0e00;}
+.day-chip-date{font-size:10px;color:var(--text3);margin-top:1px;}
+.day-chip.active .day-chip-date{color:rgba(0,0,0,0.45);}
+.done-tick{position:absolute;top:-5px;right:-5px;background:var(--green);color:#fff;width:16px;height:16px;border-radius:50%;font-size:9px;display:flex;align-items:center;justify-content:center;}
 
-  html, body {
-    height: 100%; width: 100%;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    overflow: hidden;
-    position: fixed;
-  }
+/* TAB PANELS */
+.tab-panel{display:none;flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(var(--safe-bottom) + 16px);scrollbar-width:none;}
+.tab-panel::-webkit-scrollbar{display:none;}
+.tab-panel.visible{display:block;}
 
-  /* ── SCREENS ── */
-  .screen { position: absolute; inset: 0; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-  .screen.active { opacity: 1; pointer-events: all; }
+/* DAY CONTENT */
+.day-header{margin-bottom:14px;}
+.dh-day{font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.dh-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.2;}
+.dh-tag{font-size:13px;color:var(--text2);margin-bottom:10px;}
+.action-row{display:flex;gap:8px;margin-bottom:14px;}
+.action-btn{flex:1;border:none;border-radius:12px;padding:11px 10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:transform 0.15s;font-family:'DM Sans',sans-serif;}
+.action-btn:active{transform:scale(0.96);}
+.gmaps-btn{background:linear-gradient(135deg,#4285F4,#34A853);color:#fff;}
+.done-btn{background:var(--card);border:1.5px solid var(--border);color:var(--text2);}
+.done-btn.is-done{background:rgba(76,175,130,0.15);border-color:rgba(76,175,130,0.4);color:var(--green);}
+.map-section{margin-bottom:14px;}
+.map-container{border-radius:14px;overflow:hidden;border:1px solid var(--border);height:200px;position:relative;}
+#leaflet-map{height:100%;width:100%;}
+.drive-bar{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+.drive-icon{font-size:20px;}
+.drive-info{flex:1;}
+.drive-route{font-size:13px;font-weight:600;color:var(--text);}
+.drive-meta{font-size:12px;color:var(--text2);margin-top:2px;}
+.no-drive{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin-bottom:12px;font-size:13px;color:var(--text2);display:flex;align-items:center;gap:10px;}
+.hotel-bar{border-radius:12px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;}
+.hotel-bar.booked{background:rgba(76,175,130,0.1);border:1px solid rgba(76,175,130,0.3);}
+.hotel-bar.unbooked{background:rgba(232,92,74,0.1);border:1px solid rgba(232,92,74,0.4);}
+.hotel-bar.none{background:var(--card);border:1px solid var(--border);}
+.hotel-icon{font-size:18px;}
+.hotel-name{font-size:13px;font-weight:600;color:var(--text);}
+.hotel-status{font-size:11px;margin-top:2px;}
+.hotel-bar.booked .hotel-status{color:var(--green);}
+.hotel-bar.unbooked .hotel-status{color:var(--red);font-weight:600;}
+.section-title{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;margin-top:4px;}
+.timeline{display:flex;flex-direction:column;gap:2px;margin-bottom:16px;}
+.tl-item{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;border-radius:12px;}
+.tl-time{font-size:11px;color:var(--text3);min-width:44px;padding-top:2px;}
+.tl-icon{font-size:16px;min-width:20px;text-align:center;padding-top:1px;}
+.tl-content{flex:1;}
+.tl-name{font-size:14px;font-weight:500;color:var(--text);line-height:1.3;}
+.tl-name.booked{color:var(--green);}
+.tl-desc{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.4;}
+.bookings{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.bk-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;border:1px solid;}
+.bk-item.urgent{background:rgba(232,92,74,0.08);border-color:rgba(232,92,74,0.3);}
+.bk-item.soon{background:rgba(240,192,64,0.08);border-color:rgba(240,192,64,0.3);}
+.bk-item.relaxed{background:rgba(76,175,130,0.08);border-color:rgba(76,175,130,0.3);}
+.bk-icon{font-size:18px;min-width:24px;}
+.bk-name{font-size:13px;font-weight:600;color:var(--text);}
+.bk-sub{font-size:11px;color:var(--text2);margin-top:3px;}
+.bk-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-top:4px;display:inline-block;padding:2px 7px;border-radius:4px;}
+.bk-item.urgent .bk-badge{background:rgba(232,92,74,0.2);color:var(--red);}
+.bk-item.soon .bk-badge{background:rgba(240,192,64,0.2);color:var(--yellow);}
+.bk-item.relaxed .bk-badge{background:rgba(76,175,130,0.2);color:var(--green);}
+.conf-item{background:var(--card);border:1px solid rgba(76,175,130,0.3);border-radius:12px;padding:14px 16px;margin-bottom:8px;}
+.conf-what{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.conf-meta{font-size:12px;color:var(--text2);line-height:1.5;}
+.conf-locator{font-size:12px;color:var(--accent);font-weight:600;margin-top:4px;}
+.hotels-list{display:flex;flex-direction:column;gap:8px;}
+.hl-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;}
+.hl-item.unbooked{border-color:rgba(232,92,74,0.4);background:rgba(232,92,74,0.06);}
+.hl-night{font-size:11px;color:var(--text3);min-width:48px;}
+.hl-info{flex:1;}
+.hl-hotel{font-size:13px;font-weight:600;color:var(--text);}
+.hl-city{font-size:11px;color:var(--text2);margin-top:2px;}
+.hl-status{font-size:11px;font-weight:600;}
+.hl-status.booked{color:var(--green);}
+.hl-status.unbooked{color:var(--red);}
 
-  /* ── WELCOME SCREEN ── */
-  #welcome {
-    background: linear-gradient(160deg, #0f0f1a 0%, #1a1a2e 50%, #0d1b35 100%);
-    align-items: center; justify-content: center; gap: 0; padding: 40px 32px;
-    padding-top: calc(var(--safe-top) + 40px);
-    padding-bottom: calc(var(--safe-bottom) + 40px);
-  }
-  .welcome-star { font-size: 56px; margin-bottom: 24px; animation: float 3s ease-in-out infinite; }
-  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-  .welcome-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--text); text-align: center; line-height: 1.2; margin-bottom: 12px; }
-  .welcome-sub { font-size: 15px; color: var(--text2); text-align: center; line-height: 1.6; margin-bottom: 40px; max-width: 280px; }
-  .load-btn {
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    color: #1a0e00; font-family: 'DM Sans', sans-serif; font-weight: 600;
-    font-size: 16px; border: none; border-radius: 50px; padding: 16px 40px;
-    cursor: pointer; box-shadow: 0 8px 32px rgba(232,168,76,0.3);
-    transition: transform 0.15s, box-shadow 0.15s; margin-bottom: 16px;
-    width: 100%; max-width: 280px;
-  }
-  .load-btn:active { transform: scale(0.96); box-shadow: 0 4px 16px rgba(232,168,76,0.2); }
-  .load-hint { font-size: 12px; color: var(--text3); text-align: center; }
-  #file-input { display: none; }
+/* FULL MAP */
+#mapscreen{background:var(--bg);}
+.map-header{background:var(--bg2);padding:calc(var(--safe-top) + 14px) 20px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.map-header-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:var(--text);}
+.map-header-sub{font-size:12px;color:var(--text2);margin-top:4px;}
+#full-map{flex:1;}
 
-  /* loaded trip on welcome */
-  .loaded-trip-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 16px 20px; width: 100%; max-width: 320px; margin-bottom: 24px;
-    cursor: pointer; transition: background 0.15s;
-  }
-  .loaded-trip-card:active { background: var(--card2); }
-  .ltc-label { font-size: 11px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-  .ltc-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .ltc-meta { font-size: 13px; color: var(--text2); }
-  .open-btn {
-    background: var(--blue); color: #fff; font-family: 'DM Sans', sans-serif;
-    font-weight: 600; font-size: 15px; border: none; border-radius: 50px;
-    padding: 14px 36px; cursor: pointer; width: 100%; max-width: 280px;
-    transition: transform 0.15s; margin-bottom: 12px;
-  }
-  .open-btn:active { transform: scale(0.96); }
+/* SETTINGS */
+#settings{background:var(--bg);}
+.settings-header{background:var(--bg2);padding:calc(var(--safe-top) + 14px) 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:12px;}
+.settings-back{background:none;border:none;color:var(--accent);font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.settings-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;color:var(--text);}
+.settings-body{flex:1;overflow-y:auto;padding:20px 16px;padding-bottom:calc(var(--safe-bottom)+20px);scrollbar-width:none;}
+.settings-body::-webkit-scrollbar{display:none;}
+.settings-section{margin-bottom:28px;}
+.settings-section-title{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.settings-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.settings-row{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border);gap:12px;}
+.settings-row:last-child{border-bottom:none;}
+.settings-row-icon{font-size:20px;min-width:28px;}
+.settings-row-info{flex:1;}
+.settings-row-label{font-size:14px;font-weight:500;color:var(--text);}
+.settings-row-sub{font-size:12px;color:var(--text2);margin-top:2px;}
+.toggle{width:44px;height:26px;background:var(--card2);border-radius:13px;position:relative;cursor:pointer;transition:background 0.2s;flex-shrink:0;border:1px solid var(--border);}
+.toggle.on{background:var(--accent);border-color:var(--accent);}
+.toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3);}
+.toggle.on::after{transform:translateX(17px);}
+.size-picker{display:flex;gap:6px;}
+.size-btn{background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.size-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(232,168,76,0.1);}
+.load-trip-btn{background:rgba(74,158,255,0.1);border:1px solid rgba(74,158,255,0.3);border-radius:12px;padding:14px 16px;width:100%;font-size:14px;font-weight:600;color:var(--blue);cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;}
+.load-trip-btn:active{opacity:0.7;}
+.danger-btn{background:rgba(232,92,74,0.1);border:1px solid rgba(232,92,74,0.3);border-radius:12px;padding:14px 16px;width:100%;font-size:14px;font-weight:600;color:var(--red);cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;}
+.danger-btn:active{opacity:0.7;}
+.trip-info-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:4px 0;}
+.ti-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);}
+.ti-row:last-child{border-bottom:none;}
+.ti-label{font-size:13px;color:var(--text2);}
+.ti-value{font-size:13px;font-weight:600;color:var(--text);}
+.active-trip-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(76,175,130,0.12);border:1px solid rgba(76,175,130,0.3);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--green);font-weight:500;margin-bottom:12px;}
 
-  /* ── TRIP SCREEN ── */
-  #trip { background: var(--bg); }
+/* BOTTOM TABS */
+.bottom-tabs{flex-shrink:0;display:flex;background:var(--bg2);border-top:1px solid var(--border);padding-bottom:var(--safe-bottom);}
+.tab-btn{flex:1;padding:10px 0;background:none;border:none;color:var(--text3);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:color 0.15s;}
+.tab-btn.active{color:var(--accent);}
+.tab-btn svg{width:20px;height:20px;}
+.tab-label{font-size:10px;font-weight:500;}
 
-  .trip-header {
-    background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
-    padding: calc(var(--safe-top) + 14px) 20px 12px;
-    border-bottom: 1px solid var(--border); flex-shrink: 0;
-  }
-  .trip-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .trip-name { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--text); }
-  .change-btn { font-size: 12px; color: var(--accent); font-weight: 500; background: none; border: none; cursor: pointer; padding: 4px 8px; }
-  .trip-meta-row { display: flex; gap: 12px; }
-  .meta-chip { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 12px; color: var(--text2); }
-  .meta-chip span { color: var(--accent); font-weight: 600; }
-
-  /* day strip */
-  .day-strip-wrap { flex-shrink: 0; padding: 12px 0 0; background: var(--bg); border-bottom: 1px solid var(--border); }
-  .day-strip { display: flex; gap: 8px; padding: 0 16px 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-  .day-strip::-webkit-scrollbar { display: none; }
-  .day-chip {
-    flex-shrink: 0; scroll-snap-align: start;
-    background: var(--card); border: 1.5px solid var(--border);
-    border-radius: 12px; padding: 8px 12px; cursor: pointer;
-    transition: all 0.15s; min-width: 80px; text-align: center;
-  }
-  .day-chip.active { background: var(--accent); border-color: var(--accent); }
-  .day-chip.unbooked { border-color: var(--red); }
-  .day-chip-num { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
-  .day-chip.active .day-chip-num { color: rgba(0,0,0,0.6); }
-  .day-chip-city { font-size: 12px; font-weight: 600; color: var(--text); margin-top: 2px; white-space: nowrap; }
-  .day-chip.active .day-chip-city { color: #1a0e00; }
-  .day-chip-date { font-size: 10px; color: var(--text3); margin-top: 1px; }
-  .day-chip.active .day-chip-date { color: rgba(0,0,0,0.5); }
-
-  /* day panel */
-  .day-panel { flex: 1; overflow-y: auto; padding: 16px; padding-bottom: calc(var(--safe-bottom) + 16px); scrollbar-width: none; }
-  .day-panel::-webkit-scrollbar { display: none; }
-
-  .day-header { margin-bottom: 16px; }
-  .dh-day { font-size: 11px; color: var(--accent); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-  .dh-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.2; }
-  .dh-tag { font-size: 13px; color: var(--text2); }
-
-  .drive-bar {
-    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-    padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
-  }
-  .drive-icon { font-size: 20px; }
-  .drive-info { flex: 1; }
-  .drive-route { font-size: 13px; font-weight: 600; color: var(--text); }
-  .drive-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
-  .no-drive { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; color: var(--text2); display: flex; align-items: center; gap: 10px; }
-
-  .hotel-bar {
-    border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
-  }
-  .hotel-bar.booked { background: rgba(76,175,130,0.12); border: 1px solid rgba(76,175,130,0.3); }
-  .hotel-bar.unbooked { background: rgba(232,92,74,0.12); border: 1px solid rgba(232,92,74,0.4); }
-  .hotel-bar.none { background: var(--card); border: 1px solid var(--border); }
-  .hotel-icon { font-size: 18px; }
-  .hotel-name { font-size: 13px; font-weight: 600; color: var(--text); }
-  .hotel-status { font-size: 11px; margin-top: 2px; }
-  .hotel-bar.booked .hotel-status { color: var(--green); }
-  .hotel-bar.unbooked .hotel-status { color: var(--red); font-weight: 600; }
-
-  .section-title { font-size: 11px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; margin-top: 4px; }
-
-  /* timeline */
-  .timeline { display: flex; flex-direction: column; gap: 2px; margin-bottom: 20px; }
-  .tl-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 14px; border-radius: 12px; transition: background 0.15s; }
-  .tl-item:active { background: var(--card2); }
-  .tl-time { font-size: 11px; color: var(--text3); min-width: 44px; padding-top: 2px; }
-  .tl-icon { font-size: 16px; min-width: 20px; text-align: center; padding-top: 1px; }
-  .tl-content { flex: 1; }
-  .tl-name { font-size: 14px; font-weight: 500; color: var(--text); line-height: 1.3; }
-  .tl-name.booked { color: var(--green); }
-  .tl-desc { font-size: 12px; color: var(--text2); margin-top: 3px; line-height: 1.4; }
-
-  /* bookings */
-  .bookings { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-  .bk-item { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; border: 1px solid; }
-  .bk-item.urgent { background: rgba(232,92,74,0.08); border-color: rgba(232,92,74,0.3); }
-  .bk-item.soon { background: rgba(240,192,64,0.08); border-color: rgba(240,192,64,0.3); }
-  .bk-item.relaxed { background: rgba(76,175,130,0.08); border-color: rgba(76,175,130,0.3); }
-  .bk-icon { font-size: 18px; min-width: 24px; }
-  .bk-name { font-size: 13px; font-weight: 600; color: var(--text); }
-  .bk-sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
-  .bk-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; display: inline-block; padding: 2px 7px; border-radius: 4px; }
-  .bk-item.urgent .bk-badge { background: rgba(232,92,74,0.2); color: var(--red); }
-  .bk-item.soon .bk-badge { background: rgba(240,192,64,0.2); color: var(--yellow); }
-  .bk-item.relaxed .bk-badge { background: rgba(76,175,130,0.2); color: var(--green); }
-
-  /* confirmed bookings tab */
-  .confirmed-section { margin-bottom: 20px; }
-  .conf-item { background: var(--card); border: 1px solid rgba(76,175,130,0.3); border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; }
-  .conf-what { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .conf-meta { font-size: 12px; color: var(--text2); line-height: 1.5; }
-  .conf-locator { font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 4px; }
-
-  /* hotels overview tab */
-  .hotels-list { display: flex; flex-direction: column; gap: 8px; }
-  .hl-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
-  .hl-item.unbooked { border-color: rgba(232,92,74,0.4); background: rgba(232,92,74,0.06); }
-  .hl-night { font-size: 11px; color: var(--text3); min-width: 48px; }
-  .hl-info { flex: 1; }
-  .hl-hotel { font-size: 13px; font-weight: 600; color: var(--text); }
-  .hl-city { font-size: 11px; color: var(--text2); margin-top: 2px; }
-  .hl-status { font-size: 11px; font-weight: 600; }
-  .hl-status.booked { color: var(--green); }
-  .hl-status.unbooked { color: var(--red); }
-
-  /* bottom tabs */
-  .bottom-tabs {
-    flex-shrink: 0; display: flex; background: var(--bg2);
-    border-top: 1px solid var(--border);
-    padding-bottom: calc(var(--safe-bottom) + 0px);
-  }
-  .tab-btn { flex: 1; padding: 10px 0; background: none; border: none; color: var(--text3); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; transition: color 0.15s; }
-  .tab-btn.active { color: var(--accent); }
-  .tab-btn svg { width: 20px; height: 20px; }
-  .tab-label { font-size: 10px; font-weight: 500; }
-
-  /* tab panels */
-  .tab-panel { display: none; flex: 1; overflow-y: auto; padding: 16px; padding-bottom: calc(var(--safe-bottom) + 16px); scrollbar-width: none; }
-  .tab-panel::-webkit-scrollbar { display: none; }
-  .tab-panel.visible { display: block; }
-
-  /* offline badge */
-  .offline-badge { position: fixed; bottom: calc(var(--safe-bottom) + 72px); left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 6px 16px; font-size: 12px; color: var(--text2); display: none; z-index: 100; }
-  .offline-badge.show { display: block; }
-
+/* OFFLINE */
+.offline-badge{position:fixed;bottom:calc(var(--safe-bottom) + 72px);left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--text2);display:none;z-index:1000;white-space:nowrap;}
+.offline-badge.show{display:block;}
+#file-input{display:none;}
 </style>
 </head>
 <body>
 
-<!-- WELCOME SCREEN -->
-<div class="screen active" id="welcome">
-  <div class="welcome-star">🗺️</div>
-  <div class="welcome-title">Trip Planner</div>
-  <div class="welcome-sub">Your offline travel companion. Load a trip file from Claude and explore your itinerary — no internet needed.</div>
-
-  <div id="loaded-trip-section" style="display:none; width:100%; max-width:320px;">
-    <div class="loaded-trip-card" id="loaded-trip-card">
-      <div class="ltc-label">Last loaded trip</div>
-      <div class="ltc-name" id="ltc-name">—</div>
-      <div class="ltc-meta" id="ltc-meta">—</div>
-    </div>
-    <button class="open-btn" id="open-saved-btn">Open This Trip</button>
-  </div>
-
-  <button class="load-btn" id="load-btn-welcome">📂 Load Trip File (.json)</button>
-  <input type="file" id="file-input" accept=".json">
-  <div class="load-hint">Get trip files from Claude → export as .json</div>
-</div>
-
-<!-- TRIP SCREEN -->
-<div class="screen" id="trip">
+<!-- TRIP (main screen — opens directly) -->
+<div class="screen active" id="trip">
   <div class="trip-header">
     <div class="trip-header-top">
-      <div class="trip-name" id="trip-name-header">Loading...</div>
-      <button class="change-btn" id="change-trip-btn">Change</button>
+      <div class="trip-name" id="trip-name-header">Trip Planner</div>
+      <div class="header-btns">
+        <button class="hdr-btn" id="fullmap-btn">🗺</button>
+        <button class="hdr-btn" id="settings-btn">⚙️</button>
+      </div>
     </div>
     <div class="trip-meta-row" id="trip-meta-row"></div>
   </div>
-
-  <!-- TAB PANELS -->
+  <div class="day-strip-wrap">
+    <div class="day-strip" id="day-strip"></div>
+  </div>
   <div class="tab-panel visible" id="panel-days">
-    <div class="day-strip-wrap" style="margin: -16px -16px 16px; padding: 0;">
-      <div class="day-strip" id="day-strip"></div>
-    </div>
     <div id="day-content"></div>
   </div>
-
   <div class="tab-panel" id="panel-bookings">
     <div class="section-title" style="margin-bottom:14px;">✅ Confirmed Bookings</div>
-    <div class="confirmed-section" id="confirmed-list"></div>
-    <div class="section-title" style="margin-bottom:14px; margin-top:8px;">⚠️ Still To Book</div>
+    <div id="confirmed-list"></div>
+    <div class="section-title" style="margin-bottom:14px;margin-top:8px;">⚠️ Still To Book</div>
     <div id="still-to-book-list"></div>
   </div>
-
   <div class="tab-panel" id="panel-hotels">
     <div class="section-title" style="margin-bottom:14px;">🏨 Hotels Overview</div>
     <div class="hotels-list" id="hotels-list"></div>
   </div>
-
-  <!-- BOTTOM TABS -->
   <div class="bottom-tabs">
     <button class="tab-btn active" data-panel="days">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -290,265 +219,356 @@
   </div>
 </div>
 
+<!-- FULL MAP -->
+<div class="screen" id="mapscreen">
+  <div class="map-header">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div class="map-header-title">Full Route Map</div>
+        <div class="map-header-sub" id="map-header-sub">All stops</div>
+      </div>
+      <button class="hdr-btn" id="map-back-btn" style="font-size:16px;color:var(--text2);">✕</button>
+    </div>
+  </div>
+  <div id="full-map"></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="screen" id="settings">
+  <div class="settings-header">
+    <button class="settings-back" id="settings-back">← Back</button>
+    <div class="settings-title">Settings</div>
+  </div>
+  <div class="settings-body">
+
+    <div class="settings-section">
+      <div class="settings-section-title">Display</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row-icon">🌙</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Dark Mode</div>
+            <div class="settings-row-sub">Toggle dark / light theme</div>
+          </div>
+          <button class="toggle on" id="dark-toggle"></button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-icon">🔤</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Text Size</div>
+            <div class="settings-row-sub">Adjust for readability on the go</div>
+          </div>
+          <div class="size-picker">
+            <button class="size-btn" data-size="small" style="font-size:12px;">A</button>
+            <button class="size-btn active" data-size="normal" style="font-size:15px;">A</button>
+            <button class="size-btn" data-size="large" style="font-size:18px;">A</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Navigation</div>
+      <div class="settings-card">
+        <div class="settings-row">
+          <div class="settings-row-icon">📅</div>
+          <div class="settings-row-info">
+            <div class="settings-row-label">Jump to Today</div>
+            <div class="settings-row-sub">Auto-open on today's day of trip</div>
+          </div>
+          <button class="toggle on" id="today-toggle"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Trip</div>
+      <div id="active-trip-info" style="margin-bottom:12px;"></div>
+      <div class="trip-info-card" id="trip-info-card"></div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Load a Different Trip</div>
+      <button class="load-trip-btn" id="load-new-trip-btn">📂 Load Trip File (.json)</button>
+      <div style="font-size:12px;color:var(--text3);text-align:center;">Get .json files from Claude for any trip</div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Reset</div>
+      <button class="danger-btn" id="reset-to-default-btn">↩️ Reset to Built-in Trip (v0.12)</button>
+    </div>
+
+  </div>
+</div>
+
+<input type="file" id="file-input" accept=".json">
 <div class="offline-badge" id="offline-badge">✈️ Offline mode</div>
 
 <script>
-let tripData = null;
-let currentDay = 0;
+// ═══════════════════════════════════════════
+// BUILT-IN TRIP DATA (always available offline)
+// ═══════════════════════════════════════════
+const BUILTIN_TRIP = {"tripName":"Málaga to Barcelona Road Trip","dates":"May 24 – June 2, 2026","totalDays":10,"totalNights":9,"totalKm":1400,"cities":5,"party":"2 adults","days":[{"day":"Day 1","date":"Sunday 24 May","city":"Málaga → Seville","tag":"Departure day","driveKm":"210 km","driveTime":"~2h 15min","driveRoute":"A-45 then A-92","sleep":"Alfonso XIII, Seville","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"🏛","name":"Alcazaba fortress","desc":"Moorish castle · best views in Málaga · €3.50"},{"time":"10:30am","icon":"⛪","name":"Málaga Cathedral","desc":"Rooftop walk · panoramic views · €6"},{"time":"12:30pm","icon":"🍽","name":"Lunch at El Pimpi","desc":"Iconic tapas bar · espetos & local wine"},{"time":"2:00pm","icon":"🚗","name":"Drive to Seville","desc":"A-45 then A-92 · arrive ~4:15pm"},{"time":"4:30pm","icon":"🏨","name":"Check in: Alfonso XIII","desc":"One of Spain's grandest hotels"},{"time":"8:00pm","icon":"🍸","name":"Tapas in Triana","desc":"Bar Santa Ana or Las Golondrinas"}],"bookings":[{"urgency":"urgent","icon":"🏛","name":"Real Alcázar Seville","sub":"Book tonight — alcazarsevilla.org"},{"urgency":"urgent","icon":"💃","name":"Flamenco show Seville","sub":"casadelamemoria.es or tablaoelareanal.es"}]},{"day":"Day 2","date":"Monday 25 May","city":"Seville","tag":"Full day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Alfonso XIII, Seville","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"🏛","name":"Real Alcázar palace","desc":"UNESCO palace · first timed slot · €14.50 — BOOK ASAP"},{"time":"11:30am","icon":"⛪","name":"Seville Cathedral & La Giralda","desc":"World's largest Gothic cathedral · €12"},{"time":"1:30pm","icon":"🍽","name":"Lunch in Santa Cruz","desc":"Bodega Santa Cruz · arrive early"},{"time":"3:30pm","icon":"🚶","name":"Barrio Santa Cruz wander","desc":"Maze of orange-tree lanes · free"},{"time":"5:00pm","icon":"🌅","name":"Plaza de España","desc":"Stunning 1929 square · boats ~€6 · free entry"},{"time":"8:00pm","icon":"💃","name":"Dinner + flamenco show","desc":"Tablao El Arenal or Casa de la Memoria — BOOK ASAP"}],"bookings":[{"urgency":"urgent","icon":"🏛","name":"Real Alcázar Seville","sub":"alcazarsevilla.org · €14.50"},{"urgency":"urgent","icon":"💃","name":"Flamenco show","sub":"tablaoelareanal.es or casadelamemoria.es"}]},{"day":"Day 3","date":"Tuesday 26 May","city":"Seville → Granada","tag":"Pack tonight — Alhambra at 10am tomorrow","driveKm":"260 km","driveTime":"~2h 45min","driveRoute":"A-92 east","sleep":"Seda Club Hotel, Granada","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"🚗","name":"Drive Seville → Granada","desc":"A-92 east · arrive ~11:45am"},{"time":"12:00pm","icon":"🏨","name":"Check in: Seda Club Hotel","desc":"Boutique luxury · Plaza de la Trinidad"},{"time":"1:00pm","icon":"🍽","name":"Lunch near hotel","desc":"Restaurante Chikito or Bodega Castañeda"},{"time":"3:00pm","icon":"🚶","name":"Albayzín wander","desc":"UNESCO Moorish quarter · whitewashed lanes · free"},{"time":"5:30pm","icon":"🌅","name":"Mirador de San Nicolás","desc":"Best sunset view over the Alhambra · 20 min walk"},{"time":"8:30pm","icon":"🍸","name":"Free tapas evening","desc":"Every drink includes a free tapa · Calle Navas"}],"bookings":[{"urgency":"soon","icon":"🎒","name":"Pack bags tonight","desc":"Alhambra 10am tomorrow then straight drive to Valencia"}]},{"day":"Day 4","date":"Wednesday 27 May","city":"Alhambra + Granada → Valencia","tag":"Longest drive day","driveKm":"490 km","driveTime":"~4h 30min","driveRoute":"A-92 then AP-7 north · depart ~2pm","sleep":"Grand Hotel Centenari, Valencia","hotelStatus":"booked","timeline":[{"time":"10:00am","icon":"✅","name":"Alhambra Fast-Track Guided Tour","desc":"BOOKED · 2 adults · English · 3h · Nasrid Palaces + Alcazaba + Generalife · $175.40"},{"time":"1:00pm","icon":"🍽","name":"Quick lunch near Alhambra","desc":"Near Alhambra or Albayzín · keep it quick"},{"time":"2:00pm","icon":"🚗","name":"Depart Granada → Valencia","desc":"A-92 then AP-7 north · ~4h 30min"},{"time":"4:30pm","icon":"☕","name":"Coffee stop: Murcia area","desc":"Break the drive · Murcia cathedral worth 20-min walk"},{"time":"6:30pm","icon":"🏨","name":"Arrive Valencia · check in","desc":"Grand Hotel Centenari · central location"},{"time":"8:00pm","icon":"🍽","name":"Light dinner near hotel","desc":"Mercado de Colón or El Carmen · easy night"}],"bookings":[{"urgency":"soon","icon":"🐠","name":"Oceanogràfic Aquarium","sub":"oceanografic.org · ~€32 · book tomorrow"},{"urgency":"soon","icon":"🥘","name":"La Pepica restaurant","sub":"lapepica.com · legendary paella · book ahead"}]},{"day":"Day 5","date":"Thursday 28 May","city":"Valencia","tag":"Full day · pack tonight","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Grand Hotel Centenari, Valencia","hotelStatus":"booked","timeline":[{"time":"9:30am","icon":"🛍","name":"Mercado Central","desc":"One of Europe's finest food markets · free"},{"time":"10:30am","icon":"⛪","name":"Valencia Cathedral","desc":"Claimed Holy Grail inside · €8"},{"time":"12:00pm","icon":"🐠","name":"Oceanogràfic Aquarium","desc":"Europe's largest · allow 2–3h · ~€32 — book ahead"},{"time":"3:00pm","icon":"🥘","name":"Paella at La Pepica","desc":"Legendary beachside restaurant since 1898 — book ahead"},{"time":"5:00pm","icon":"🏖","name":"Malvarrosa beach","desc":"Last proper beach before Barcelona"},{"time":"8:00pm","icon":"🍽","name":"Russafa dinner","desc":"Canalla Bistro by Ricard Camarena"}],"bookings":[{"urgency":"urgent","icon":"🐠","name":"Oceanogràfic Aquarium","sub":"oceanografic.org · ~€32"},{"urgency":"urgent","icon":"🥘","name":"La Pepica restaurant","sub":"lapepica.com · book today"}]},{"day":"Day 6","date":"Friday 29 May","city":"Valencia → Peñíscola → Barcelona","tag":"Peñíscola lunch stop","driveKm":"420 km","driveTime":"~4h total","driveRoute":"AP-7 north","sleep":"Cotton House Hotel, Barcelona","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"🚗","name":"Depart Valencia","desc":"AP-7 north · ~1h 30min to Peñíscola"},{"time":"10:30am","icon":"🏰","name":"Papa Luna Castle","desc":"Walk up · sea views · €5"},{"time":"11:30am","icon":"🚶","name":"Old town stroll","desc":"Car-free lanes · whitewashed houses · blue doors"},{"time":"12:30pm","icon":"🍽","name":"Lunch in Peñíscola","desc":"Try arroz a banda · El Langostino d'Or"},{"time":"1:30pm","icon":"🚗","name":"Depart → Barcelona","desc":"AP-7 north · arrive ~3:30pm"},{"time":"3:30pm","icon":"🏨","name":"Check in: Cotton House","desc":"Passeig de Gràcia · Casa Batlló literally next door"},{"time":"6:00pm","icon":"🚶","name":"Passeig de Gràcia stroll","desc":"Casa Batlló & Casa Milà exteriors · free"},{"time":"9:00pm","icon":"🍸","name":"Dinner in El Born","desc":"Bar del Pla, El Xampanyet or Bodega Sepúlveda"}],"bookings":[{"urgency":"urgent","icon":"🏠","name":"Book 31 May hotel","sub":"Try extending Cotton House first"},{"urgency":"soon","icon":"🦎","name":"Park Güell","sub":"parkguell.cat · ~€10 · book this weekend"},{"urgency":"soon","icon":"🏛","name":"Casa Batlló","sub":"casabatllo.es · ~€35 · right next door"}]},{"day":"Day 7","date":"Saturday 30 May","city":"Barcelona Day 1","tag":"Sagrada Família day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Cotton House Hotel, Barcelona","hotelStatus":"booked","timeline":[{"time":"10:00am","icon":"🚶","name":"Stroll Passeig de Gràcia","desc":"Casa Batlló & Casa Milà exteriors · coffee at terrace café"},{"time":"12:15pm","icon":"✅","name":"Sagrada Família Basílica","desc":"BOOKED · Locator 98377656 · enter C/ Marina · world's tallest church at 172.5m"},{"time":"1:00pm","icon":"✅","name":"Nativity Tower","desc":"BOOKED · elevator up · spiral staircase down · views to sea"},{"time":"2:30pm","icon":"🏛","name":"Recinte Modernista de Sant Pau","desc":"Hidden gem · 5 min from Sagrada Família · €16"},{"time":"4:00pm","icon":"🚶","name":"Gothic Quarter","desc":"Roman ruins · medieval lanes · Barcelona Cathedral · free"},{"time":"6:30pm","icon":"🌅","name":"Bunkers del Carmel","desc":"Best panoramic sunset view of Barcelona · free · taxi up"},{"time":"9:00pm","icon":"🍽","name":"Dinner in El Born","desc":"El Xampanyet · Bar del Pla"}],"bookings":[{"urgency":"urgent","icon":"🏠","name":"31 May hotel URGENT","sub":"Try extending Cotton House — cottonhousehotel.com"},{"urgency":"urgent","icon":"🦎","name":"Park Güell tomorrow 9am","sub":"parkguell.cat · ~€10"},{"urgency":"soon","icon":"🏛","name":"Casa Batlló tomorrow","sub":"casabatllo.es · ~€35"}]},{"day":"Day 8","date":"Sunday 31 May","city":"Barcelona Day 2","tag":"Last full day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Moxy Barcelona","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"🦎","name":"Park Güell","desc":"Timed entry · go early · ~€10 — book ahead"},{"time":"10:30am","icon":"🏛","name":"Casa Batlló","desc":"Right next to Cotton House · Gaudí interior · ~€35 — book ahead"},{"time":"1:00pm","icon":"🍽","name":"Lunch in Eixample","desc":"Cervecería Catalana or Federal Café"},{"time":"3:00pm","icon":"🎨","name":"Picasso Museum","desc":"El Born · world's best collection · ~€14 — book online"},{"time":"5:00pm","icon":"🏖","name":"Barceloneta beach","desc":"Last swim of the trip"},{"time":"7:30pm","icon":"🍸","name":"El Born aperitivo","desc":"Carrer del Parlament or Passeig del Born"},{"time":"9:30pm","icon":"🌟","name":"Special last dinner","desc":"Tickets by Adrià · Disfrutar · or Bodega 1900 — book now"}],"bookings":[{"urgency":"urgent","icon":"🍽","name":"Special last dinner","sub":"Tickets / Disfrutar — book now, fills weeks ahead"},{"urgency":"soon","icon":"🎨","name":"Picasso Museum","sub":"museupicasso.bcn.cat · ~€14"}]},{"day":"Day 9","date":"Monday 1 June","city":"Barcelona Day 3","tag":"Final full day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Moxy Barcelona","hotelStatus":"booked","timeline":[{"time":"9:30am","icon":"🌊","name":"Last Barceloneta stroll","desc":"One final walk along the sea"},{"time":"11:00am","icon":"☕","name":"Brunch in El Born","desc":"Federal Café or Nomad Coffee"},{"time":"1:00pm","icon":"🚶","name":"Free afternoon","desc":"Revisit a favourite spot · last-minute shopping · Passeig de Gràcia"},{"time":"4:00pm","icon":"🏨","name":"Back to hotel","desc":"Pack, freshen up · check out by 6pm"},{"time":"7:10pm","icon":"✈️","name":"Flight departs 19:10","desc":"Barcelona El Prat (BCN) · check in 2h before · leave hotel by ~5:30pm"}],"bookings":[{"urgency":"relaxed","icon":"🚌","name":"Airport transfer","sub":"Aerobus ~€6.75 from Plaça Catalunya · or Cabify ~€35 · allow 45min"}]},{"day":"Day 10","date":"Tuesday 2 June","city":"Barcelona → Departure","tag":"Fly home ✈️ 19:10","driveKm":"35 km","driveTime":"~40min","driveRoute":"Hotel → El Prat Airport (BCN)","sleep":"Fly home","hotelStatus":"none","timeline":[{"time":"9:00am","icon":"🌅","name":"Morning at leisure","desc":"Last coffee · walk · no rush until afternoon"},{"time":"12:00pm","icon":"🍽","name":"Farewell lunch","desc":"Cervecería Catalana · Bar del Pla · or wherever the trip takes you"},{"time":"3:00pm","icon":"🏨","name":"Check out Moxy","desc":"Bags packed · check out · head toward airport area"},{"time":"5:00pm","icon":"🚗","name":"Depart to El Prat","desc":"Leave by 5pm · allow 45min + airport time · T1 for most international flights"},{"time":"7:10pm","icon":"✈️","name":"Flight departs 19:10","desc":"Barcelona El Prat (BCN) · bon voyage!"},{"time":"—","icon":"🎉","name":"Trip complete!","desc":"Málaga → Seville → Granada → Valencia → Peñíscola → Barcelona · ~1,400 km · 9 nights"}],"bookings":[{"urgency":"relaxed","icon":"🚌","name":"Airport transfer","sub":"Aerobus ~€6.75 · depart Plaça Catalunya ~5:00pm · or Cabify ~€35"}]}],"confirmedBookings":[{"what":"Alhambra Fast-Track Guided Tour","date":"Wed 27 May","time":"10:00am","locator":null,"details":"2 adults · English · 3h · Nasrid Palaces + Alcazaba + Generalife · $175.40"},{"what":"Sagrada Família Basílica","date":"Sat 30 May","time":"12:15pm","locator":"98377656","details":"Enter C/ Marina · Basílica + Nativity Tower"},{"what":"Nativity Tower","date":"Sat 30 May","time":"1:00pm","locator":"98377656","details":"Included in Sagrada Família booking"}],"hotels":[{"night":1,"date":"Sun 24 May","city":"Seville","hotel":"Alfonso XIII","status":"booked"},{"night":2,"date":"Mon 25 May","city":"Seville","hotel":"Alfonso XIII","status":"booked"},{"night":3,"date":"Tue 26 May","city":"Granada","hotel":"Seda Club Hotel","status":"booked"},{"night":4,"date":"Wed 27 May","city":"Valencia","hotel":"Grand Hotel Centenari","status":"booked"},{"night":5,"date":"Thu 28 May","city":"Valencia","hotel":"Grand Hotel Centenari","status":"booked"},{"night":6,"date":"Fri 29 May","city":"Barcelona","hotel":"Cotton House Hotel","status":"booked"},{"night":7,"date":"Sat 30 May","city":"Barcelona","hotel":"Cotton House Hotel","status":"booked"},{"night":8,"date":"Sun 31 May","city":"Barcelona","hotel":"Moxy Barcelona","status":"booked"},{"night":9,"date":"Mon 1 Jun","city":"Barcelona","hotel":"Moxy Barcelona","status":"booked"}]};
 
-// ── STORAGE ──
-function saveTrip(data) {
-  try { localStorage.setItem('trip_data', JSON.stringify(data)); } catch(e) {}
-}
-function loadSavedTrip() {
-  try { const d = localStorage.getItem('trip_data'); return d ? JSON.parse(d) : null; } catch(e) { return null; }
-}
+// ═══════════════════════════════════════════
+// STATE & STORAGE
+// ═══════════════════════════════════════════
+let tripData = null, currentDay = 0, doneDays = new Set(), dayMap = null, fullLeafletMap = null;
+let prefs = { dark: true, textSize: 'normal', jumpToToday: true };
+let usingBuiltin = true;
 
-// ── FILE LOAD ──
-document.getElementById('file-input').addEventListener('change', function(e) {
-  const file = e.target.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    try {
-      const data = JSON.parse(ev.target.result);
-      tripData = data;
-      saveTrip(data);
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+function load(k){try{const d=localStorage.getItem(k);return d?JSON.parse(d):null;}catch(e){return null;}}
+
+// ═══════════════════════════════════════════
+// INIT — open straight into trip
+// ═══════════════════════════════════════════
+window.addEventListener('load',()=>{
+  const p=load('prefs'); if(p) prefs={...prefs,...p};
+  applyPrefs();
+  const dd=load('done_days'); if(dd) doneDays=new Set(dd);
+
+  // Use saved custom trip if available, otherwise built-in
+  const saved=load('trip_data');
+  if(saved){
+    tripData=saved;
+    usingBuiltin=false;
+  } else {
+    tripData=BUILTIN_TRIP;
+    usingBuiltin=true;
+  }
+  renderTrip();
+});
+
+// ═══════════════════════════════════════════
+// PREFS
+// ═══════════════════════════════════════════
+function applyPrefs(){
+  document.body.classList.toggle('light',!prefs.dark);
+  document.body.classList.remove('text-small','text-large');
+  if(prefs.textSize==='small') document.body.classList.add('text-small');
+  if(prefs.textSize==='large') document.body.classList.add('text-large');
+  document.getElementById('dark-toggle').classList.toggle('on',prefs.dark);
+  document.getElementById('today-toggle').classList.toggle('on',prefs.jumpToToday);
+  document.querySelectorAll('.size-btn').forEach(b=>b.classList.toggle('active',b.dataset.size===prefs.textSize));
+}
+document.getElementById('dark-toggle').addEventListener('click',()=>{prefs.dark=!prefs.dark;applyPrefs();save('prefs',prefs);});
+document.getElementById('today-toggle').addEventListener('click',()=>{prefs.jumpToToday=!prefs.jumpToToday;applyPrefs();save('prefs',prefs);});
+document.querySelectorAll('.size-btn').forEach(btn=>btn.addEventListener('click',()=>{prefs.textSize=btn.dataset.size;applyPrefs();save('prefs',prefs);}));
+
+// ═══════════════════════════════════════════
+// FILE LOAD (load different trip)
+// ═══════════════════════════════════════════
+document.getElementById('file-input').addEventListener('change',function(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      tripData=JSON.parse(ev.target.result);
+      doneDays=new Set();
+      usingBuiltin=false;
+      save('trip_data',tripData);
+      save('done_days',[]);
       renderTrip();
       showScreen('trip');
-    } catch(err) { alert('Could not read trip file. Make sure it\'s a valid .json from Claude.'); }
+    } catch(err){alert('Could not read trip file. Make sure it\'s a valid .json from Claude.');}
   };
-  reader.readAsText(file);
-  e.target.value = '';
+  reader.readAsText(file); e.target.value='';
 });
+document.getElementById('load-new-trip-btn').addEventListener('click',()=>document.getElementById('file-input').click());
 
-document.getElementById('load-btn-welcome').addEventListener('click', () => {
-  document.getElementById('file-input').click();
-});
-
-document.getElementById('change-trip-btn').addEventListener('click', () => {
-  showScreen('welcome');
-});
-
-// check for saved trip
-window.addEventListener('load', () => {
-  const saved = loadSavedTrip();
-  if (saved) {
-    document.getElementById('loaded-trip-section').style.display = 'block';
-    document.getElementById('ltc-name').textContent = saved.tripName || 'My Trip';
-    document.getElementById('ltc-meta').textContent = `${saved.dates || ''} · ${saved.totalDays || '?'} days`;
-    document.getElementById('open-saved-btn').addEventListener('click', () => {
-      tripData = saved;
-      renderTrip();
-      showScreen('trip');
-    });
+// Reset to built-in
+document.getElementById('reset-to-default-btn').addEventListener('click',()=>{
+  if(confirm('Reset to the built-in Málaga → Barcelona trip?')){
+    try{localStorage.removeItem('trip_data');localStorage.removeItem('done_days');}catch(e){}
+    tripData=BUILTIN_TRIP; doneDays=new Set(); usingBuiltin=true;
+    renderTrip(); showScreen('trip');
   }
 });
 
-// ── SCREENS ──
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+document.getElementById('settings-btn').addEventListener('click',()=>{renderSettingsInfo();showScreen('settings');});
+document.getElementById('settings-back').addEventListener('click',()=>showScreen('trip'));
+document.getElementById('fullmap-btn').addEventListener('click',()=>showScreen('mapscreen'));
+document.getElementById('map-back-btn').addEventListener('click',()=>showScreen('trip'));
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  if(id==='mapscreen') setTimeout(initFullMap,200);
 }
 
-// ── RENDER TRIP ──
-function renderTrip() {
-  const d = tripData;
-  document.getElementById('trip-name-header').textContent = d.tripName || 'My Trip';
+// ═══════════════════════════════════════════
+// TODAY DETECTION
+// ═══════════════════════════════════════════
+function getTodayIdx(){
+  if(!tripData) return -1;
+  const today=new Date();
+  const months={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+  for(let i=0;i<tripData.days.length;i++){
+    const parts=tripData.days[i].date.split(' ');
+    if(parts.length>=3){
+      const day=parseInt(parts[1]),month=months[parts[2]];
+      if(!isNaN(day)&&month!==undefined&&new Date(today.getFullYear(),month,day).toDateString()===today.toDateString()) return i;
+    }
+  } return -1;
+}
 
-  // meta chips
-  const metaRow = document.getElementById('trip-meta-row');
-  metaRow.innerHTML = `
+// ═══════════════════════════════════════════
+// RENDER TRIP
+// ═══════════════════════════════════════════
+function renderTrip(){
+  const d=tripData;
+  document.getElementById('trip-name-header').textContent=d.tripName||'My Trip';
+  const todayIdx=getTodayIdx();
+
+  document.getElementById('trip-meta-row').innerHTML=`
     <div class="meta-chip"><span>${d.totalDays}</span> days</div>
-    <div class="meta-chip"><span>${d.totalKm?.toLocaleString()}</span> km</div>
+    <div class="meta-chip"><span>${(d.totalKm||0).toLocaleString()}</span> km</div>
     <div class="meta-chip"><span>${d.cities}</span> cities</div>
+    ${todayIdx>=0?`<div class="meta-chip today-chip" id="jump-today-chip"><span>Today</span> Day ${todayIdx+1}</div>`:''}
   `;
+  setTimeout(()=>document.getElementById('jump-today-chip')?.addEventListener('click',()=>selectDay(todayIdx)),0);
 
-  // day strip
-  const strip = document.getElementById('day-strip');
-  strip.innerHTML = '';
-  d.days.forEach((day, i) => {
-    const chip = document.createElement('div');
-    chip.className = 'day-chip' + (day.hotelStatus === 'unbooked' ? ' unbooked' : '');
-    chip.innerHTML = `
-      <div class="day-chip-num">${day.day}</div>
-      <div class="day-chip-city">${day.city.split('→')[0].split('(')[0].trim()}</div>
-      <div class="day-chip-date">${day.date.split(' ').slice(0,2).join(' ')}</div>
-    `;
-    chip.addEventListener('click', () => selectDay(i));
+  // strip
+  const strip=document.getElementById('day-strip'); strip.innerHTML='';
+  d.days.forEach((day,i)=>{
+    const chip=document.createElement('div');
+    chip.className='day-chip'+(day.hotelStatus==='unbooked'?' unbooked':'')+(doneDays.has(i)?' done':'')+(i===todayIdx?' today-day':'');
+    chip.innerHTML=`${doneDays.has(i)?'<div class="done-tick">✓</div>':''}<div class="day-chip-num">${day.day}</div><div class="day-chip-city">${day.city.split('→')[0].split('(')[0].trim()}</div><div class="day-chip-date">${day.date.split(' ').slice(0,2).join(' ')}</div>`;
+    chip.addEventListener('click',()=>selectDay(i));
     strip.appendChild(chip);
   });
 
-  // confirmed bookings
-  const confList = document.getElementById('confirmed-list');
-  confList.innerHTML = '';
-  (d.confirmedBookings || []).forEach(b => {
-    confList.innerHTML += `
-      <div class="conf-item">
-        <div class="conf-what">✅ ${b.what}</div>
-        <div class="conf-meta">${b.date} · ${b.time}${b.locator ? '' : ''}</div>
-        ${b.locator ? `<div class="conf-locator">Locator: ${b.locator}</div>` : ''}
-        <div class="conf-meta" style="margin-top:4px;font-size:11px;">${b.details}</div>
-      </div>
-    `;
-  });
+  // bookings tab
+  const confList=document.getElementById('confirmed-list'); confList.innerHTML='';
+  (d.confirmedBookings||[]).forEach(b=>{confList.innerHTML+=`<div class="conf-item"><div class="conf-what">✅ ${b.what}</div><div class="conf-meta">${b.date} · ${b.time}</div>${b.locator?`<div class="conf-locator">Locator: ${b.locator}</div>`:''}<div class="conf-meta" style="margin-top:4px;font-size:11px;">${b.details}</div></div>`;});
 
-  // still to book — aggregate from all days
-  const allBookings = {};
-  d.days.forEach(day => {
-    (day.bookings || []).forEach(b => {
-      if (!allBookings[b.name]) allBookings[b.name] = {...b};
-    });
-  });
-  const stbList = document.getElementById('still-to-book-list');
-  stbList.innerHTML = '';
-  ['urgent','soon','relaxed'].forEach(urgency => {
-    Object.values(allBookings).filter(b => b.urgency === urgency).forEach(b => {
-      const label = urgency === 'urgent' ? '🔴 Book now' : urgency === 'soon' ? '🟡 Book soon' : '🟢 Can wait';
-      stbList.innerHTML += `
-        <div class="bk-item ${urgency}" style="margin-bottom:8px;">
-          <div class="bk-icon">${b.icon || '📌'}</div>
-          <div>
-            <div class="bk-name">${b.name}</div>
-            <div class="bk-sub">${b.sub || b.desc || ''}</div>
-            <div class="bk-badge">${label}</div>
-          </div>
-        </div>
-      `;
-    });
-  });
+  const allBk={};
+  d.days.forEach(day=>(day.bookings||[]).forEach(b=>{if(!allBk[b.name])allBk[b.name]={...b};}));
+  const stb=document.getElementById('still-to-book-list'); stb.innerHTML='';
+  ['urgent','soon','relaxed'].forEach(u=>{Object.values(allBk).filter(b=>b.urgency===u).forEach(b=>{const label=u==='urgent'?'🔴 Book now':u==='soon'?'🟡 Book soon':'🟢 Can wait';stb.innerHTML+=`<div class="bk-item ${u}" style="margin-bottom:8px;"><div class="bk-icon">${b.icon||'📌'}</div><div><div class="bk-name">${b.name}</div><div class="bk-sub">${b.sub||b.desc||''}</div><div class="bk-badge">${label}</div></div></div>`;});});
 
-  // hotels list
-  const hotelsList = document.getElementById('hotels-list');
-  hotelsList.innerHTML = '';
-  (d.hotels || []).forEach(h => {
-    hotelsList.innerHTML += `
-      <div class="hl-item ${h.status}">
-        <div class="hl-night">Night ${h.night}<br><span style="color:var(--text3);font-size:10px;">${h.date}</span></div>
-        <div class="hl-info">
-          <div class="hl-hotel">${h.hotel}</div>
-          <div class="hl-city">${h.city}</div>
-        </div>
-        <div class="hl-status ${h.status}">${h.status === 'booked' ? '✅ Booked' : '⚠️ Unbooked'}</div>
-      </div>
-    `;
-  });
+  // hotels tab
+  const hl=document.getElementById('hotels-list'); hl.innerHTML='';
+  (d.hotels||[]).forEach(h=>{hl.innerHTML+=`<div class="hl-item ${h.status}"><div class="hl-night">Night ${h.night}<br><span style="color:var(--text3);font-size:10px;">${h.date}</span></div><div class="hl-info"><div class="hl-hotel">${h.hotel}</div><div class="hl-city">${h.city}</div></div><div class="hl-status ${h.status}">${h.status==='booked'?'✅ Booked':'⚠️ Unbooked'}</div></div>`;});
 
-  selectDay(0);
+  selectDay(prefs.jumpToToday&&todayIdx>=0?todayIdx:0);
 }
 
-// ── SELECT DAY ──
-function selectDay(i) {
-  currentDay = i;
-  const chips = document.querySelectorAll('.day-chip');
-  chips.forEach((c, ci) => c.classList.toggle('active', ci === i));
+// ═══════════════════════════════════════════
+// CITY COORDS
+// ═══════════════════════════════════════════
+const COORDS={'Málaga':[36.721,-4.421],'Malaga':[36.721,-4.421],'Seville':[37.386,-5.992],'Sevilla':[37.386,-5.992],'Granada':[37.177,-3.598],'Valencia':[39.470,-0.376],'Peñíscola':[40.359,0.411],'Peniscola':[40.359,0.411],'Barcelona':[41.385,2.173],'Murcia':[37.983,-1.130],'Madrid':[40.416,-3.703],'Nice':[43.710,7.262],'Marseille':[43.296,5.369],'Lyon':[45.748,4.847],'Montpellier':[43.611,3.877],'Cadaqués':[42.288,3.278]};
+function getCoords(name){const n=(name||'').split('→')[0].split('(')[0].trim();for(const[k,v]of Object.entries(COORDS)){if(n.toLowerCase().includes(k.toLowerCase())) return v;}return[40.0,-3.0];}
+function getDestCoords(day){if(!day.driveKm) return getCoords(day.city);const dest=day.city.includes('→')?day.city.split('→')[1].trim():day.city;for(const[k,v]of Object.entries(COORDS)){if(dest.toLowerCase().includes(k.toLowerCase())) return v;}return getCoords(day.city);}
 
-  // scroll chip into view
-  chips[i]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-
-  const day = tripData.days[i];
-  const content = document.getElementById('day-content');
-
-  // drive bar
-  let driveHTML = '';
-  if (day.driveKm) {
-    driveHTML = `<div class="drive-bar">
-      <div class="drive-icon">🚗</div>
-      <div class="drive-info">
-        <div class="drive-route">${day.driveRoute || day.city}</div>
-        <div class="drive-meta">${day.driveKm} · ${day.driveTime}</div>
-      </div>
-    </div>`;
-  } else if (day.hotelStatus !== 'none') {
-    driveHTML = `<div class="no-drive">🏙️ <span>No driving today</span></div>`;
-  }
-
-  // hotel bar
-  let hotelHTML = '';
-  if (day.hotelStatus === 'booked') {
-    hotelHTML = `<div class="hotel-bar booked"><div class="hotel-icon">🏨</div><div><div class="hotel-name">${day.sleep}</div><div class="hotel-status">✅ Booked</div></div></div>`;
-  } else if (day.hotelStatus === 'unbooked') {
-    hotelHTML = `<div class="hotel-bar unbooked"><div class="hotel-icon">⚠️</div><div><div class="hotel-name">${day.sleep}</div><div class="hotel-status">UNBOOKED — action needed</div></div></div>`;
-  } else if (day.hotelStatus === 'none') {
-    hotelHTML = `<div class="hotel-bar none"><div class="hotel-icon">✈️</div><div><div class="hotel-name">Departure day</div><div class="hotel-status" style="color:var(--text2);">Fly home</div></div></div>`;
-  }
-
-  // timeline
-  const tlHTML = (day.timeline || []).map(t => {
-    const isBooked = (t.name || '').includes('BOOKED') || (t.desc || '').startsWith('BOOKED');
-    return `<div class="tl-item">
-      <div class="tl-time">${t.time}</div>
-      <div class="tl-icon">${t.icon || '•'}</div>
-      <div class="tl-content">
-        <div class="tl-name ${isBooked ? 'booked' : ''}">${t.name}</div>
-        <div class="tl-desc">${t.desc || ''}</div>
-      </div>
-    </div>`;
-  }).join('');
-
-  // bookings
-  const bkHTML = (day.bookings || []).map(b => {
-    const label = b.urgency === 'urgent' ? '🔴 Book now' : b.urgency === 'soon' ? '🟡 Book soon' : '🟢 Can wait';
-    return `<div class="bk-item ${b.urgency}">
-      <div class="bk-icon">${b.icon || '📌'}</div>
-      <div>
-        <div class="bk-name">${b.name}</div>
-        <div class="bk-sub">${b.sub || b.desc || ''}</div>
-        <div class="bk-badge">${label}</div>
-      </div>
-    </div>`;
-  }).join('');
-
-  content.innerHTML = `
-    <div class="day-header">
-      <div class="dh-day">${day.day} · ${day.date}</div>
-      <div class="dh-title">${day.city}</div>
-      ${day.tag ? `<div class="dh-tag">${day.tag}</div>` : ''}
+// ═══════════════════════════════════════════
+// SELECT DAY
+// ═══════════════════════════════════════════
+function selectDay(i){
+  currentDay=i;
+  const chips=document.querySelectorAll('.day-chip');
+  chips.forEach((c,ci)=>c.classList.toggle('active',ci===i));
+  chips[i]?.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  const day=tripData.days[i], isDone=doneDays.has(i);
+  const from=day.city.split('→')[0].trim(), to=day.city.includes('→')?day.city.split('→')[1].trim():day.city.split('(')[0].trim();
+  const gmUrl=day.driveKm?`https://www.google.com/maps/dir/${encodeURIComponent(from)}/${encodeURIComponent(to)}`:`https://www.google.com/maps/search/${encodeURIComponent(to)}`;
+  const driveHTML=day.driveKm?`<div class="drive-bar"><div class="drive-icon">🚗</div><div class="drive-info"><div class="drive-route">${day.driveRoute||day.city}</div><div class="drive-meta">${day.driveKm} · ${day.driveTime}</div></div></div>`:day.hotelStatus!=='none'?`<div class="no-drive">🏙️ <span>No driving today</span></div>`:'';
+  const hotelH={booked:`<div class="hotel-bar booked"><div class="hotel-icon">🏨</div><div><div class="hotel-name">${day.sleep}</div><div class="hotel-status">✅ Booked</div></div></div>`,unbooked:`<div class="hotel-bar unbooked"><div class="hotel-icon">⚠️</div><div><div class="hotel-name">${day.sleep}</div><div class="hotel-status">UNBOOKED — action needed</div></div></div>`,none:`<div class="hotel-bar none"><div class="hotel-icon">✈️</div><div><div class="hotel-name">Departure day</div><div class="hotel-status" style="color:var(--text2)">Fly home</div></div></div>`};
+  const tlHTML=(day.timeline||[]).map(t=>`<div class="tl-item"><div class="tl-time">${t.time}</div><div class="tl-icon">${t.icon||'•'}</div><div class="tl-content"><div class="tl-name ${(t.name||'').includes('BOOKED')||(t.desc||'').startsWith('BOOKED')?'booked':''}">${t.name}</div><div class="tl-desc">${t.desc||''}</div></div></div>`).join('');
+  const bkHTML=(day.bookings||[]).map(b=>{const label=b.urgency==='urgent'?'🔴 Book now':b.urgency==='soon'?'🟡 Book soon':'🟢 Can wait';return`<div class="bk-item ${b.urgency}"><div class="bk-icon">${b.icon||'📌'}</div><div><div class="bk-name">${b.name}</div><div class="bk-sub">${b.sub||b.desc||''}</div><div class="bk-badge">${label}</div></div></div>`;}).join('');
+  document.getElementById('day-content').innerHTML=`
+    <div class="day-header"><div class="dh-day">${day.day} · ${day.date}</div><div class="dh-title">${day.city}</div>${day.tag?`<div class="dh-tag">${day.tag}</div>`:''}</div>
+    <div class="action-row">
+      <button class="action-btn gmaps-btn" id="gmaps-btn">🗺️ Open in Google Maps</button>
+      <button class="action-btn done-btn${isDone?' is-done':''}" id="done-day-btn">${isDone?'✓ Done':'Mark Done'}</button>
     </div>
-    ${driveHTML}
-    ${hotelHTML}
-    ${day.timeline?.length ? `<div class="section-title">Day plan</div><div class="timeline">${tlHTML}</div>` : ''}
-    ${day.bookings?.length ? `<div class="section-title">Reminders</div><div class="bookings">${bkHTML}</div>` : ''}
+    <div class="map-section"><div class="map-container"><div id="leaflet-map"></div></div></div>
+    ${driveHTML}${hotelH[day.hotelStatus]||''}
+    ${day.timeline?.length?`<div class="section-title">Day plan</div><div class="timeline">${tlHTML}</div>`:''}
+    ${day.bookings?.length?`<div class="section-title">Reminders</div><div class="bookings">${bkHTML}</div>`:''}
   `;
-
-  // scroll day panel to top
-  document.getElementById('panel-days').scrollTop = 0;
-}
-
-// ── BOTTOM TABS ──
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const panel = btn.dataset.panel;
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('visible'));
-    btn.classList.add('active');
-    document.getElementById('panel-' + panel).classList.add('visible');
+  document.getElementById('gmaps-btn').addEventListener('click',()=>window.open(gmUrl,'_blank'));
+  document.getElementById('done-day-btn').addEventListener('click',()=>{
+    if(doneDays.has(i)) doneDays.delete(i); else doneDays.add(i);
+    save('done_days',[...doneDays]); renderTrip(); selectDay(i);
+    document.getElementById('panel-days').scrollTop=0;
   });
-});
-
-// ── OFFLINE INDICATOR ──
-function updateOnlineStatus() {
-  document.getElementById('offline-badge').classList.toggle('show', !navigator.onLine);
+  setTimeout(()=>initDayMap(day),150);
+  document.getElementById('panel-days').scrollTop=0;
 }
-window.addEventListener('online', updateOnlineStatus);
-window.addEventListener('offline', updateOnlineStatus);
-updateOnlineStatus();
 
-// ── SERVICE WORKER (inline) ──
-if ('serviceWorker' in navigator) {
-  const swCode = `
-    const CACHE = 'trip-planner-v1';
-    self.addEventListener('install', e => {
-      e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/trip-viewer-app.html'])));
-      self.skipWaiting();
-    });
-    self.addEventListener('activate', e => { self.clients.claim(); });
-    self.addEventListener('fetch', e => {
-      e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).catch(() => caches.match('/trip-viewer-app.html'))));
-    });
-  `;
-  const blob = new Blob([swCode], { type: 'application/javascript' });
-  const swURL = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swURL).catch(() => {});
+// ═══════════════════════════════════════════
+// MAPS
+// ═══════════════════════════════════════════
+function initDayMap(day){
+  if(dayMap){dayMap.remove();dayMap=null;}
+  const el=document.getElementById('leaflet-map'); if(!el) return;
+  const from=getCoords(day.city), to=getDestCoords(day);
+  dayMap=L.map('leaflet-map',{zoomControl:false,attributionControl:false,scrollWheelZoom:false,dragging:true});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(dayMap);
+  if(day.driveKm){
+    L.circleMarker(from,{radius:8,color:'#fff',weight:2,fillColor:'#e8a84c',fillOpacity:1}).addTo(dayMap).bindPopup(day.city.split('→')[0].trim());
+    L.circleMarker(to,{radius:8,color:'#fff',weight:2,fillColor:'#4a9eff',fillOpacity:1}).addTo(dayMap).bindPopup(day.city.split('→')[1]?.trim()||'');
+    L.polyline([from,to],{color:'#e8a84c',weight:3,opacity:0.8,dashArray:'8 6'}).addTo(dayMap);
+    dayMap.fitBounds(L.latLngBounds([from,to]),{padding:[24,24]});
+  } else {
+    L.circleMarker(from,{radius:10,color:'#fff',weight:2,fillColor:'#e8a84c',fillOpacity:1}).addTo(dayMap).bindPopup(day.city.split('(')[0].trim());
+    dayMap.setView(from,13);
+  }
+}
+
+function initFullMap(){
+  if(!tripData) return;
+  document.getElementById('map-header-sub').textContent=`${tripData.days.length} stops · ${(tripData.totalKm||0).toLocaleString()} km`;
+  if(fullLeafletMap){fullLeafletMap.remove();fullLeafletMap=null;}
+  fullLeafletMap=L.map('full-map',{zoomControl:true,attributionControl:false});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(fullLeafletMap);
+  const colors=['#D85A30','#378ADD','#378ADD','#1D9E75','#1D9E75','#EF9F27','#533CB7','#533CB7','#888780'];
+  const allCoords=[];
+  tripData.days.forEach((day,i)=>{
+    const c=getCoords(day.city); allCoords.push(c);
+    const col=colors[i]||'#888';
+    L.circleMarker(c,{radius:10,color:'#fff',weight:2,fillColor:col,fillOpacity:1}).addTo(fullLeafletMap).bindPopup(`<strong>${day.day}</strong><br>${day.city}`);
+    L.marker(c,{icon:L.divIcon({className:'',html:`<div style="background:${col};color:#fff;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid #fff;margin-top:-30px;margin-left:2px;">${i+1}</div>`,iconSize:[24,24],iconAnchor:[12,12]})}).addTo(fullLeafletMap);
+  });
+  if(allCoords.length>1) L.polyline(allCoords,{color:'#e8a84c',weight:3,opacity:0.7,dashArray:'10 8'}).addTo(fullLeafletMap);
+  fullLeafletMap.fitBounds(L.latLngBounds(allCoords),{padding:[40,40]});
+}
+
+// ═══════════════════════════════════════════
+// BOTTOM TABS
+// ═══════════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  const p=btn.dataset.panel;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('visible'));
+  btn.classList.add('active');
+  document.getElementById('panel-'+p).classList.add('visible');
+}));
+
+// ═══════════════════════════════════════════
+// SETTINGS INFO
+// ═══════════════════════════════════════════
+function renderSettingsInfo(){
+  document.getElementById('active-trip-info').innerHTML=`<div class="active-trip-badge">${usingBuiltin?'📦 Built-in trip':'📂 Custom trip loaded'}</div>`;
+  const card=document.getElementById('trip-info-card');
+  if(!tripData){card.innerHTML='<div style="font-size:13px;color:var(--text2);text-align:center;padding:16px;">No trip loaded</div>';return;}
+  const d=tripData;
+  card.innerHTML=`<div class="ti-row"><div class="ti-label">Trip</div><div class="ti-value">${d.tripName||'—'}</div></div><div class="ti-row"><div class="ti-label">Dates</div><div class="ti-value">${d.dates||'—'}</div></div><div class="ti-row"><div class="ti-label">Duration</div><div class="ti-value">${d.totalDays} days · ${d.totalNights} nights</div></div><div class="ti-row"><div class="ti-label">Distance</div><div class="ti-value">~${(d.totalKm||0).toLocaleString()} km</div></div><div class="ti-row"><div class="ti-label">Cities</div><div class="ti-value">${d.cities}</div></div><div class="ti-row"><div class="ti-label">Party</div><div class="ti-value">${d.party||'—'}</div></div><div class="ti-row"><div class="ti-label">Days completed</div><div class="ti-value">${doneDays.size} of ${d.totalDays}</div></div>`;
+}
+
+// ═══════════════════════════════════════════
+// OFFLINE & SERVICE WORKER
+// ═══════════════════════════════════════════
+function updateOnline(){document.getElementById('offline-badge').classList.toggle('show',!navigator.onLine);}
+window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);updateOnline();
+if('serviceWorker' in navigator){
+  const sw=`const C='trip-v0.12';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>new Response('Offline',{status:503}))));});`;
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
 }
 </script>
 </body>
