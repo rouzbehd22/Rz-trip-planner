@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Trip Planner v0.185">
+<meta name="apple-mobile-web-app-title" content="Trip Planner v0.191">
 <meta name="theme-color" content="#0f0f1a">
-<title>Trip Planner v0.185</title>
+<title>Trip Planner v0.191</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 :root{--bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#16213e;--card:#1e1e35;--card2:#252540;--border:rgba(255,255,255,0.08);--accent:#e8a84c;--accent2:#c97d2e;--blue:#4a9eff;--green:#4caf82;--red:#e85c4a;--yellow:#f0c040;--text:#f0ede8;--text2:#a8a4b8;--text3:#6b6880;--radius:16px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);}
@@ -337,7 +337,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 
     <div class="settings-section">
       <div class="settings-section-title">Reset</div>
-      <button class="danger-btn" id="reset-to-default-btn">↩️ Reset to Built-in Trip (v0.185)</button>
+      <button class="danger-btn" id="reset-to-default-btn">↩️ Reset to Built-in Trip (v0.191)</button>
     </div>
 
   </div>
@@ -435,10 +435,12 @@ document.getElementById('fullmap-btn').addEventListener('click',()=>showScreen('
 document.getElementById('map-back-btn').addEventListener('click',()=>showScreen('trip'));
 
 function showScreen(id){
+  closeMenu();
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if(id==='mapscreen') setTimeout(initFullMap,200);
 }
+window.showScreen = showScreen;
 
 // ═══════════════════════════════════════════
 // TODAY DETECTION
@@ -800,6 +802,127 @@ function renderSettingsInfo(){
   const d=tripData;
   card.innerHTML=`<div class="ti-row"><div class="ti-label">Trip</div><div class="ti-value">${d.tripName||'—'}</div></div><div class="ti-row"><div class="ti-label">Dates</div><div class="ti-value">${d.dates||'—'}</div></div><div class="ti-row"><div class="ti-label">Duration</div><div class="ti-value">${d.totalDays} days · ${d.totalNights} nights</div></div><div class="ti-row"><div class="ti-label">Distance</div><div class="ti-value">~${(d.totalKm||0).toLocaleString()} km</div></div><div class="ti-row"><div class="ti-label">Cities</div><div class="ti-value">${d.cities}</div></div><div class="ti-row"><div class="ti-label">Party</div><div class="ti-value">${d.party||'—'}</div></div>`;
 }
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.panel===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('visible',p.id==='panel-'+name));
+}
+window.switchTab = switchTab;
+
+function renderHotelsSummary(){
+  if(!tripData) return;
+  const el = document.getElementById('hotels-summary-content');
+  const hotels = tripData.hotels || [];
+  const booked = hotels.filter(h=>h.status==='booked').length;
+  const unbooked = hotels.filter(h=>h.status==='unbooked').length;
+  let html = `<div style="display:flex;gap:10px;margin-bottom:20px;">
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${tripData.totalNights}</div><div class="drive-stat-label">Total nights</div></div>
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val" style="color:var(--green);">${booked}</div><div class="drive-stat-label">Booked</div></div>
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val" style="color:${unbooked>0?'var(--red)':'var(--green)'};">${unbooked}</div><div class="drive-stat-label">Unbooked</div></div>
+  </div>`;
+  hotels.forEach(h=>{
+    const isBooked=h.status==='booked';
+    html+=`<div class="summary-card" style="padding:14px 16px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:12px;flex:1;">
+          <div style="background:var(--card2);border-radius:10px;padding:6px 10px;text-align:center;min-width:48px;">
+            <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Night</div>
+            <div style="font-size:18px;font-weight:700;color:var(--accent);font-family:'Playfair Display',serif;">${h.night}</div>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:11px;color:var(--text3);margin-bottom:2px;">${h.date}</div>
+            <div style="font-size:15px;font-weight:600;color:var(--text);">🏨 ${h.hotel}</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:2px;">📍 ${h.city}</div>
+          </div>
+        </div>
+        <div style="font-size:18px;">${isBooked?'✅':'⚠️'}</div>
+      </div>
+    </div>`;
+  });
+  el.innerHTML=html;
+}
+window.renderHotelsSummary = renderHotelsSummary;
+
+function renderDrivesSummary(){
+  if(!tripData) return;
+  const el=document.getElementById('drives-summary-content');
+  const driveDays=tripData.days.filter(d=>d.driveKm);
+  const totalKm=driveDays.reduce((sum,d)=>sum+(parseInt(d.driveKm)||0),0);
+  let html=`<div style="display:flex;gap:10px;margin-bottom:20px;">
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${totalKm.toLocaleString()}</div><div class="drive-stat-label">Total km</div></div>
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${driveDays.length}</div><div class="drive-stat-label">Drive days</div></div>
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${tripData.totalDays-driveDays.length}</div><div class="drive-stat-label">Rest days</div></div>
+  </div>`;
+  tripData.days.forEach(day=>{
+    const isDrive=!!day.driveKm;
+    const km=parseInt(day.driveKm)||0;
+    const pct=isDrive?Math.round((km/totalKm)*100):0;
+    if(isDrive){
+      html+=`<div class="summary-card" style="margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <div style="background:rgba(232,168,76,0.15);border-radius:10px;padding:6px 10px;text-align:center;min-width:48px;">
+            <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">${day.day}</div>
+            <div style="font-size:18px;">🚗</div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text3);">${day.date}</div>
+            <div style="font-size:15px;font-weight:600;color:var(--text);">${day.city}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${day.driveKm}</div><div class="drive-stat-label">Distance</div></div>
+          <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${day.driveTime}</div><div class="drive-stat-label">Time</div></div>
+          <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${pct}%</div><div class="drive-stat-label">Of total</div></div>
+        </div>
+        <div style="background:var(--card2);border-radius:6px;height:5px;overflow:hidden;margin-bottom:8px;"><div style="height:100%;width:${pct}%;background:var(--accent);border-radius:6px;"></div></div>
+        <div style="font-size:12px;color:var(--text2);">🛣 ${day.driveRoute||''}</div>
+      </div>`;
+    } else {
+      html+=`<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;opacity:0.6;">
+        <div style="background:var(--card2);border-radius:10px;padding:6px 10px;text-align:center;min-width:48px;">
+          <div style="font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;">${day.day}</div>
+          <div style="font-size:18px;">🏙️</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);">${day.date}</div>
+          <div style="font-size:14px;font-weight:500;color:var(--text2);">${day.city.split('(')[0].trim()}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;">No driving today</div>
+        </div>
+      </div>`;
+    }
+  });
+  el.innerHTML=html;
+}
+window.renderDrivesSummary = renderDrivesSummary;
+
+function renderBookingsSummary(){
+  if(!tripData) return;
+  const el=document.getElementById('bookings-summary-content');
+  const confirmed=tripData.confirmedBookings||[];
+  const allBk={};
+  tripData.days.forEach(day=>(day.bookings||[]).forEach(b=>{if(!allBk[b.name])allBk[b.name]={...b};}));
+  const urgent=Object.values(allBk).filter(b=>b.urgency==='urgent');
+  const soon=Object.values(allBk).filter(b=>b.urgency==='soon');
+  const relaxed=Object.values(allBk).filter(b=>b.urgency==='relaxed');
+  let html=`<div style="display:flex;gap:10px;margin-bottom:20px;">
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val" style="color:var(--green);">${confirmed.length}</div><div class="drive-stat-label">Confirmed</div></div>
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val" style="color:var(--red);">${urgent.length}</div><div class="drive-stat-label">Urgent</div></div>
+    <div class="drive-stat" style="flex:1"><div class="drive-stat-val" style="color:var(--yellow);">${soon.length}</div><div class="drive-stat-label">Book soon</div></div>
+  </div>`;
+  if(confirmed.length){
+    html+=`<div style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">✅ Confirmed</div>`;
+    confirmed.forEach(b=>{html+=`<div class="summary-card" style="margin-bottom:8px;border-color:rgba(76,175,130,0.3);background:rgba(76,175,130,0.05);"><div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;">✅ ${b.what}</div><div style="font-size:12px;color:var(--text2);">${b.date} · ${b.time}</div>${b.locator?`<div style="font-size:12px;color:var(--accent);font-weight:600;margin-top:4px;">Locator: ${b.locator}</div>`:''}<div style="font-size:11px;color:var(--text3);margin-top:4px;">${b.details}</div></div>`;});
+  }
+  const sections=[{items:urgent,label:'🔴 Book now',color:'232,92,74'},{items:soon,label:'🟡 Book this week',color:'240,192,64'},{items:relaxed,label:'🟢 Can wait',color:'76,175,130'}];
+  sections.forEach(({items,label,color})=>{
+    if(!items.length) return;
+    html+=`<div style="font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:16px 0 10px;">${label}</div>`;
+    items.forEach(b=>{html+=`<div class="summary-card" style="margin-bottom:8px;border-color:rgba(${color},0.3);background:rgba(${color},0.05);"><div style="display:flex;align-items:flex-start;gap:10px;"><div style="font-size:20px;">${b.icon||'📌'}</div><div><div style="font-size:14px;font-weight:600;color:var(--text);">${b.name}</div><div style="font-size:12px;color:var(--text2);margin-top:3px;">${b.sub||b.desc||''}</div></div></div></div>`;});
+  });
+  el.innerHTML=html;
+}
+window.renderBookingsSummary = renderBookingsSummary;
+
+window.renderSettingsInfo = renderSettingsInfo;
 
 
 // ═══════════════════════════════════════════
@@ -812,106 +935,70 @@ function openMenu(){
   overlay.style.display = 'block';
   drawer.style.display = 'flex';
 }
+window.openMenu = openMenu;
 function closeMenu(){
-  document.getElementById('menu-overlay').style.display = 'none';
-  document.getElementById('menu-drawer').style.display = 'none';
+  const ov=document.getElementById('menu-overlay');
+  const dr=document.getElementById('menu-drawer');
+  if(ov) ov.style.display='none';
+  if(dr) dr.style.display='none';
 }
-document.getElementById('menu-btn').addEventListener('click', openMenu);
-document.getElementById('menu-overlay').addEventListener('click', closeMenu);
+window.closeMenu = closeMenu;
+function initMenuListeners(){
+  // Create overlay
+  const ov = document.createElement('div');
+  ov.id = 'menu-overlay';
+  ov.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;cursor:pointer;';
+  ov.onclick = () => closeMenu();
+  document.body.appendChild(ov);
 
-document.getElementById('menu-go-days').addEventListener('click', ()=>{ closeMenu(); showScreen('trip'); switchTab('days'); });
-document.getElementById('menu-go-hotels').addEventListener('click', ()=>{ closeMenu(); renderHotelsSummary(); showScreen('hotels-summary'); });
-document.getElementById('menu-go-drives').addEventListener('click', ()=>{ closeMenu(); renderDrivesSummary(); showScreen('drives-summary'); });
-document.getElementById('menu-go-bookings').addEventListener('click', ()=>{ closeMenu(); showScreen('trip'); switchTab('bookings'); });
-document.getElementById('menu-go-settings').addEventListener('click', ()=>{ closeMenu(); renderSettingsInfo(); showScreen('settings'); });
-document.getElementById('menu-load-trip').addEventListener('click', ()=>{ closeMenu(); document.getElementById('file-input').click(); });
-document.getElementById('hotels-back').addEventListener('click', ()=>showScreen('trip'));
-document.getElementById('drives-back').addEventListener('click', ()=>showScreen('trip'));
+  // Create drawer
+  const dr = document.createElement('div');
+  dr.id = 'menu-drawer';
+  dr.style.cssText = 'display:none;position:fixed;top:0;left:0;bottom:0;width:78%;max-width:290px;background:var(--bg2);z-index:501;flex-direction:column;border-right:1px solid var(--border);box-shadow:4px 0 20px rgba(0,0,0,0.3);';
+  dr.innerHTML = `
+    <div style="padding:calc(var(--safe-top) + 20px) 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);">Menu</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px;" id="menu-trip-name"></div>
+      </div>
+      <button style="background:none;border:none;font-size:20px;color:var(--text2);cursor:pointer;padding:4px 8px;" onclick="closeMenu()">✕</button>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:12px 0;">
+      <div class="menu-item" id="mi-days"><div class="menu-item-icon">📅</div><div><div class="menu-item-label">Day by Day</div><div class="menu-item-sub">Full itinerary</div></div></div>
+      <div class="menu-item" id="mi-hotels"><div class="menu-item-icon">🏨</div><div><div class="menu-item-label">Hotel Summary</div><div class="menu-item-sub">All stays at a glance</div></div></div>
+      <div class="menu-item" id="mi-drives"><div class="menu-item-icon">🚗</div><div><div class="menu-item-label">Drive Summary</div><div class="menu-item-sub">All driving days</div></div></div>
+      <div class="menu-item" id="mi-bookings"><div class="menu-item-icon">✅</div><div><div class="menu-item-label">Bookings</div><div class="menu-item-sub">Confirmed & to-do</div></div></div>
+      <div style="height:1px;background:var(--border);margin:8px 16px;"></div>
+      <div class="menu-item" id="mi-settings"><div class="menu-item-icon">⚙️</div><div><div class="menu-item-label">Settings</div><div class="menu-item-sub">Theme, text size</div></div></div>
+      <div class="menu-item" id="mi-load"><div class="menu-item-icon">📂</div><div><div class="menu-item-label">Load Trip File</div><div class="menu-item-sub">Import a new .json</div></div></div>
+    </div>
+  `;
+  document.body.appendChild(dr);
 
-function switchTab(name){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.panel===name));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('visible',p.id==='panel-'+name));
+  // Wire menu items via addEventListener (elements now exist since we just created them)
+  document.getElementById('mi-days').addEventListener('click', ()=>{ closeMenu(); showScreen('trip'); switchTab('days'); });
+  document.getElementById('mi-hotels').addEventListener('click', ()=>{ closeMenu(); renderHotelsSummary(); showScreen('hotels-summary'); });
+  document.getElementById('mi-drives').addEventListener('click', ()=>{ closeMenu(); renderDrivesSummary(); showScreen('drives-summary'); });
+  document.getElementById('mi-bookings').addEventListener('click', ()=>{ closeMenu(); renderBookingsSummary(); showScreen('bookings-summary'); });
+  document.getElementById('mi-settings').addEventListener('click', ()=>{ closeMenu(); renderSettingsInfo(); showScreen('settings'); });
+  document.getElementById('mi-load').addEventListener('click', ()=>{ closeMenu(); document.getElementById('file-input').click(); });
+
+  // Wire back buttons (these exist in static HTML after script)
+  const hb = document.getElementById('hotels-back');
+  const db = document.getElementById('drives-back');
+  const bb = document.getElementById('bookings-back');
+  if(hb) hb.addEventListener('click', ()=>showScreen('trip'));
+  if(db) db.addEventListener('click', ()=>showScreen('trip'));
+  if(bb) bb.addEventListener('click', ()=>showScreen('trip'));
+
+  // Wire menu open button
+  const mb = document.getElementById('menu-btn');
+  if(mb) mb.addEventListener('click', openMenu);
 }
+window.addEventListener('load', initMenuListeners);
+window.addEventListener('load', initMenuListeners);
+// Call initMenuListeners after DOM is ready
 
-// ── HOTELS SUMMARY
-function renderHotelsSummary(){
-  if(!tripData) return;
-  const el = document.getElementById('hotels-summary-content');
-  let html = '';
-  // Group nights by hotel
-  const groups = [];
-  let cur = null;
-  (tripData.hotels||[]).forEach(h=>{
-    if(cur && cur.hotel===h.hotel && cur.city===h.city){
-      cur.nights++; cur.checkOut=h.date;
-    } else {
-      if(cur) groups.push(cur);
-      cur={hotel:h.hotel,city:h.city,status:h.status,checkIn:h.date,checkOut:h.date,nights:1,night:h.night};
-    }
-  });
-  if(cur) groups.push(cur);
-
-  // Total stats
-  const booked = groups.filter(g=>g.status==='booked').length;
-  html += `<div style="display:flex;gap:10px;margin-bottom:20px;">
-    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${tripData.totalNights}</div><div class="drive-stat-label">Total nights</div></div>
-    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${groups.length}</div><div class="drive-stat-label">Hotels</div></div>
-    <div class="drive-stat" style="flex:1"><div class="drive-stat-val">${booked}/${groups.length}</div><div class="drive-stat-label">Booked</div></div>
-  </div>`;
-
-  groups.forEach((g,i)=>{
-    const badgeClass = g.status==='booked'?'badge-booked':'badge-unbooked';
-    const badgeText = g.status==='booked'?'✅ Booked':'⚠️ Not booked';
-    html += `<div class="summary-card">
-      <div class="summary-card-header">
-        <div class="summary-card-day">Night${g.nights>1?'s':''} ${g.night}${g.nights>1?'–'+(g.night+g.nights-1):''}</div>
-        <div class="summary-card-date">${g.nights} night${g.nights>1?'s':''}</div>
-      </div>
-      <div class="summary-card-title">${g.hotel}</div>
-      <div class="summary-card-sub">📍 ${g.city}</div>
-      <div class="summary-card-sub" style="margin-top:4px;">Check in: ${g.checkIn} · Check out: ${g.checkOut}</div>
-      <div class="summary-card-badge ${badgeClass}">${badgeText}</div>
-    </div>`;
-  });
-  el.innerHTML = html;
-}
-
-// ── DRIVES SUMMARY
-function renderDrivesSummary(){
-  if(!tripData) return;
-  const el = document.getElementById('drives-summary-content');
-  const driveDays = tripData.days.filter(d=>d.driveKm);
-  const totalKm = driveDays.reduce((sum,d)=>sum+(parseInt(d.driveKm)||0),0);
-  const totalTime = driveDays.length;
-
-  let html = `<div class="drives-total">
-    <div class="drives-total-item"><div class="drives-total-val">${totalKm.toLocaleString()}</div><div class="drives-total-label">Total km</div></div>
-    <div class="drives-total-item"><div class="drives-total-val">${driveDays.length}</div><div class="drives-total-label">Drive days</div></div>
-    <div class="drives-total-item"><div class="drives-total-val">${tripData.totalDays - driveDays.length}</div><div class="drives-total-label">Rest days</div></div>
-  </div>`;
-
-  driveDays.forEach(d=>{
-    const km = parseInt(d.driveKm)||0;
-    const pct = Math.round((km/totalKm)*100);
-    html += `<div class="summary-card">
-      <div class="summary-card-header">
-        <div class="summary-card-day">${d.day}</div>
-        <div class="summary-card-date">${d.date}</div>
-      </div>
-      <div class="summary-card-title">${d.city}</div>
-      <div class="drive-stat-row">
-        <div class="drive-stat"><div class="drive-stat-val">${d.driveKm}</div><div class="drive-stat-label">Distance</div></div>
-        <div class="drive-stat"><div class="drive-stat-val">${d.driveTime}</div><div class="drive-stat-label">Drive time</div></div>
-        <div class="drive-stat"><div class="drive-stat-val">${pct}%</div><div class="drive-stat-label">Of total</div></div>
-      </div>
-      <div style="margin-top:10px;background:var(--card2);border-radius:6px;height:6px;overflow:hidden;">
-        <div style="height:100%;width:${pct}%;background:var(--accent);border-radius:6px;"></div>
-      </div>
-      <div class="summary-card-sub" style="margin-top:8px;">🛣 ${d.driveRoute||''}</div>
-    </div>`;
-  });
-  el.innerHTML = html;
-}
 
 // ═══════════════════════════════════════════
 // OFFLINE & SERVICE WORKER
@@ -919,48 +1006,10 @@ function renderDrivesSummary(){
 function updateOnline(){document.getElementById('offline-badge').classList.toggle('show',!navigator.onLine);}
 window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);updateOnline();
 if('serviceWorker' in navigator){
-  const sw=`const C='trip-v0.185';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>new Response('Offline',{status:503}))));});`;
+  const sw=`const C='trip-v0.191';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>new Response('Offline',{status:503}))));});`;
   navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
 }
 </script>
-
-<!-- SIDE MENU OVERLAY -->
-<div id="menu-overlay" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:200;" id="menu-overlay"></div>
-
-<!-- SIDE MENU DRAWER -->
-<div id="menu-drawer" style="display:none;position:absolute;top:0;left:0;bottom:0;width:75%;max-width:280px;background:var(--bg2);z-index:201;flex-direction:column;border-right:1px solid var(--border);">
-  <div style="padding:calc(var(--safe-top) + 20px) 20px 16px;border-bottom:1px solid var(--border);">
-    <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--text);">Trip Menu</div>
-    <div style="font-size:12px;color:var(--text2);margin-top:4px;" id="menu-trip-name"></div>
-  </div>
-  <div style="flex:1;overflow-y:auto;padding:12px 0;">
-    <div class="menu-item" id="menu-go-days">
-      <div class="menu-item-icon">📅</div>
-      <div><div class="menu-item-label">Day by Day</div><div class="menu-item-sub">Full itinerary</div></div>
-    </div>
-    <div class="menu-item" id="menu-go-hotels">
-      <div class="menu-item-icon">🏨</div>
-      <div><div class="menu-item-label">Hotel Summary</div><div class="menu-item-sub">All stays at a glance</div></div>
-    </div>
-    <div class="menu-item" id="menu-go-drives">
-      <div class="menu-item-icon">🚗</div>
-      <div><div class="menu-item-label">Drive Summary</div><div class="menu-item-sub">All driving days</div></div>
-    </div>
-    <div class="menu-item" id="menu-go-bookings">
-      <div class="menu-item-icon">✅</div>
-      <div><div class="menu-item-label">Bookings</div><div class="menu-item-sub">Confirmed & to-do</div></div>
-    </div>
-    <div style="height:1px;background:var(--border);margin:8px 16px;"></div>
-    <div class="menu-item" id="menu-go-settings">
-      <div class="menu-item-icon">⚙️</div>
-      <div><div class="menu-item-label">Settings</div><div class="menu-item-sub">Theme, text size</div></div>
-    </div>
-    <div class="menu-item" id="menu-load-trip">
-      <div class="menu-item-icon">📂</div>
-      <div><div class="menu-item-label">Load Trip File</div><div class="menu-item-sub">Import a new .json</div></div>
-    </div>
-  </div>
-</div>
 
 <!-- HOTELS SUMMARY SCREEN -->
 <div class="screen" id="hotels-summary">
@@ -989,6 +1038,21 @@ if('serviceWorker' in navigator){
   </div>
   <div style="flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(var(--safe-bottom)+16px);scrollbar-width:none;">
     <div id="drives-summary-content"></div>
+  </div>
+</div>
+
+<!-- BOOKINGS SUMMARY SCREEN -->
+<div class="screen" id="bookings-summary">
+  <div class="trip-header">
+    <div class="trip-header-top">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="hdr-btn" id="bookings-back" style="font-size:16px;">← Back</button>
+        <div class="trip-name">Bookings</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px;padding-bottom:calc(var(--safe-bottom)+16px);scrollbar-width:none;">
+    <div id="bookings-summary-content"></div>
   </div>
 </div>
 </body>
