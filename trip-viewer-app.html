@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Trip Planner v0.255">
+<meta name="apple-mobile-web-app-title" content="Trip Planner v0.266">
 <meta name="theme-color" content="#0f0f1a">
-<title>Trip Planner v0.255</title>
+<title>Trip Planner v0.266</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 :root{--bg:#0f0f1a;--bg2:#1a1a2e;--bg3:#16213e;--card:#1e1e35;--card2:#252540;--border:rgba(255,255,255,0.08);--accent:#e8a84c;--accent2:#c97d2e;--blue:#4a9eff;--green:#4caf82;--red:#e85c4a;--yellow:#f0c040;--text:#f0ede8;--text2:#a8a4b8;--text3:#6b6880;--radius:16px;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);}
@@ -418,7 +418,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 
     <div class="settings-section">
       <div class="settings-section-title">Reset</div>
-      <button class="danger-btn" id="reset-to-default-btn">↩️ Reset to Built-in Trip (v0.255)</button>
+      <button class="danger-btn" id="reset-to-default-btn">↩️ Reset to Built-in Trip (v0.266)</button>
     </div>
 
   </div>
@@ -431,7 +431,7 @@ html,body{height:100%;width:100%;background:var(--bg);color:var(--text);font-fam
 // ═══════════════════════════════════════════
 // BUILT-IN TRIP DATA (always available offline)
 // ═══════════════════════════════════════════
-const BUILTIN_TRIP = {"tripName":"Málaga to Barcelona Road Trip","dates":"May 23 – June 2, 2026","totalDays":11,"totalNights":10,"totalKm":1400,"cities":5,"party":"2 adults","days":[{"day":"Day 1","date":"Saturday 23 May","city":"Arrival · Marbella","tag":"Arrival day","driveKm":"60 km","driveTime":"~45min","driveRoute":"A-7 west along the coast","sleep":"Marbella hotel","hotelStatus":"tbd","timeline":[{"time":"Afternoon","icon":"✈️","name":"Fly into Málaga (AGP)","desc":"Pick up rental car · drive 45min southwest to Marbella","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"4:00pm","icon":"🚗","name":"Drive to Marbella","desc":"A-7 coastal road · ~45min · Costa del Sol views","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"5:00pm","icon":"🏨","name":"Check in · Marbella","desc":"Drop bags · freshen up","mustDo":false,"sellsOut":false,"bookingStatus":"tbd"},{"time":"5:30pm","icon":"🚶","name":"Marbella old town (Casco Antiguo)","desc":"Cobblestone lanes · whitewashed houses · flower-filled balconies · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"6:00pm","icon":"🌅","name":"Plaza de los Naranjos","desc":"Marbella\\'s charming orange-tree main square · cafés & tapas bars","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"8:30pm","icon":"🍽","name":"Beachfront dinner","desc":"El Boqueron or MIA Café · fresh seafood on the Costa del Sol","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"urgent","icon":"🏨","name":"Marbella hotel — Night 1","sub":"⚠ Not yet booked — book ASAP for May 23"}]},{"day":"Day 2","date":"Sunday 24 May","city":"Marbella → Ronda → Seville","tag":"Scenic road trip day","driveKm":"270 km","driveTime":"~3h 30min driving","driveRoute":"A-397 mountain road to Ronda · then A-374/A-92 to Seville","sleep":"Alfonso XIII, Seville","hotelStatus":"booked","timeline":[{"time":"8:00am","icon":"☕","name":"Breakfast in Marbella","desc":"Churrería Ramón · Plaza de los Naranjos · churros & coffee","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"9:00am","icon":"🚗","name":"Drive Marbella → Ronda","desc":"A-397 mountain road · 1h · one of Spain\\'s most scenic drives · pine forests & gorges","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"10:00am","icon":"🌉","name":"Puente Nuevo bridge · Ronda","desc":"18th-century bridge over a 100m sheer gorge · unmissable · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"10:30am","icon":"🚶","name":"Ronda old town walk","desc":"Moorish quarter · cliff-edge viewpoints · Arab baths · allow 1h","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"11:30am","icon":"🍽","name":"Coffee & bite in Ronda","desc":"Café María or Tragabuches · fuel up before the drive","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"12:00pm","icon":"🚗","name":"Drive Ronda → Seville","desc":"A-374 then A-92 · ~1h 45min · olive groves & Andalusian countryside","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"2:00pm","icon":"🏨","name":"Check in: Alfonso XIII","desc":"One of Spain\\'s grandest hotels · Seville","mustDo":false,"sellsOut":false,"bookingStatus":"booked"},{"time":"4:00pm","icon":"🚶","name":"First stroll in Seville","desc":"Wander to the Cathedral · Santa Cruz quarter · get your bearings","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"8:00pm","icon":"🍸","name":"Tapas in Triana","desc":"Bar Santa Ana or Las Golondrinas · classic first Seville evening","mustDo":true,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"urgent","icon":"🏨","name":"Marbella hotel — Night 1","sub":"⚠ Not yet booked — book ASAP for May 23"},{"urgency":"urgent","icon":"emoji","name":"Real Alcázar Seville","sub":"Book tonight — alcazarsevilla.org"},{"urgency":"urgent","icon":"💃","name":"Flamenco show Seville","sub":"casadelamemoria.es or tablaoelareanal.es"}]},{"day":"Day 3","date":"Monday 25 May","city":"Seville","tag":"Full day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Alfonso XIII, Seville","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"emoji","name":"Real Alcázar palace","desc":"UNESCO palace · first timed slot · €14.50 — BOOK ASAP","mustDo":true,"sellsOut":true,"bookingStatus":"booked"},{"time":"11:30am","icon":"⛪","name":"Seville Cathedral & La Giralda","desc":"World's largest Gothic cathedral · €12","mustDo":true,"sellsOut":false,"bookingStatus":"needed"},{"time":"1:30pm","icon":"🍽","name":"Lunch in Santa Cruz","desc":"Bodega Santa Cruz · arrive early","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"3:30pm","icon":"🚶","name":"Barrio Santa Cruz wander","desc":"Maze of orange-tree lanes · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"5:00pm","icon":"🌅","name":"Plaza de España","desc":"Stunning 1929 square · boats ~€6 · free entry","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"8:00pm","icon":"💃","name":"Dinner + flamenco show","desc":"Tablao El Arenal or Casa de la Memoria — BOOK ASAP","mustDo":true,"sellsOut":true,"bookingStatus":"needed"}],"bookings":[{"urgency":"urgent","icon":"emoji","name":"Real Alcázar Seville","sub":"alcazarsevilla.org · €14.50"},{"urgency":"urgent","icon":"💃","name":"Flamenco show","sub":"tablaoelareanal.es or casadelamemoria.es"}]},{"day":"Day 4","date":"Tuesday 26 May","city":"Seville → Granada","tag":"Pack tonight — Alhambra at 10am tomorrow","driveKm":"260 km","driveTime":"~2h 45min","driveRoute":"A-92 east","sleep":"Seda Club Hotel, Granada","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"🚗","name":"Drive Seville → Granada","desc":"A-92 east · arrive ~11:45am","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"12:00pm","icon":"🏨","name":"Check in: Seda Club Hotel","desc":"Boutique luxury · Plaza de la Trinidad","mustDo":false,"sellsOut":false,"bookingStatus":"booked"},{"time":"1:00pm","icon":"🍽","name":"Lunch near hotel","desc":"Restaurante Chikito or Bodega Castañeda","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"3:00pm","icon":"🚶","name":"Albayzín wander","desc":"UNESCO Moorish quarter · whitewashed lanes · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"5:30pm","icon":"🌅","name":"Mirador de San Nicolás","desc":"Best sunset view over the Alhambra · 20 min walk","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"8:30pm","icon":"🍸","name":"Free tapas evening","desc":"Every drink includes a free tapa · Calle Navas","mustDo":true,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"soon","icon":"🎒","name":"Pack bags tonight","desc":"Alhambra 10am tomorrow then straight drive to Valencia"}]},{"day":"Day 5","date":"Wednesday 27 May","city":"Alhambra + Granada → Valencia","tag":"Longest drive day","driveKm":"490 km","driveTime":"~4h 30min","driveRoute":"A-92 then AP-7 north · depart ~2pm","sleep":"Grand Hotel Centenari, Valencia","hotelStatus":"booked","timeline":[{"time":"10:00am","icon":"✅","name":"Alhambra Fast-Track Guided Tour","desc":"BOOKED · 2 adults · English · 3h · Nasrid Palaces + Alcazaba + Generalife · $175.40","mustDo":true,"sellsOut":true,"bookingStatus":"booked"},{"time":"1:00pm","icon":"🍽","name":"Quick lunch near Alhambra","desc":"Near Alhambra or Albayzín · keep it quick","mustDo":true,"sellsOut":true,"bookingStatus":"booked"},{"time":"2:00pm","icon":"🚗","name":"Depart Granada → Valencia","desc":"A-92 then AP-7 north · ~4h 30min","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"4:30pm","icon":"☕","name":"Coffee stop: Murcia area","desc":"Break the drive · Murcia cathedral worth 20-min walk","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"6:30pm","icon":"🏨","name":"Arrive Valencia · check in","desc":"Grand Hotel Centenari · central location","mustDo":false,"sellsOut":false,"bookingStatus":"booked"},{"time":"8:00pm","icon":"🍽","name":"Light dinner near hotel","desc":"Mercado de Colón or El Carmen · easy night","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"soon","icon":"🐠","name":"Oceanogràfic Aquarium","sub":"oceanografic.org · ~€32 · book tomorrow"},{"urgency":"soon","icon":"🥘","name":"La Pepica restaurant","sub":"lapepica.com · legendary paella · book ahead"}]},{"day":"Day 6","date":"Thursday 28 May","city":"Valencia","tag":"Full day · pack tonight","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Grand Hotel Centenari, Valencia","hotelStatus":"booked","timeline":[{"time":"9:30am","icon":"🛍","name":"Mercado Central","desc":"One of Europe's finest food markets · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"10:30am","icon":"⛪","name":"Valencia Cathedral","desc":"Claimed Holy Grail inside · €8","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"12:00pm","icon":"🐠","name":"Oceanogràfic Aquarium","desc":"Europe's largest · allow 2–3h · ~€32 — book ahead","mustDo":true,"sellsOut":false,"bookingStatus":"needed"},{"time":"3:00pm","icon":"🥘","name":"Paella at La Pepica","desc":"Legendary beachside restaurant since 1898 — book ahead","mustDo":true,"sellsOut":false,"bookingStatus":"needed"},{"time":"5:00pm","icon":"🏖","name":"Malvarrosa beach","desc":"Last proper beach before Barcelona","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"8:00pm","icon":"🍽","name":"Russafa dinner","desc":"Canalla Bistro by Ricard Camarena","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"urgent","icon":"🐠","name":"Oceanogràfic Aquarium","sub":"oceanografic.org · ~€32"},{"urgency":"urgent","icon":"🥘","name":"La Pepica restaurant","sub":"lapepica.com · book today"}]},{"day":"Day 7","date":"Friday 29 May","city":"Valencia → Peñíscola → Barcelona","tag":"Peñíscola lunch stop","driveKm":"420 km","driveTime":"~4h total","driveRoute":"AP-7 north","sleep":"Cotton House Hotel, Barcelona","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"🚗","name":"Depart Valencia","desc":"AP-7 north · ~1h 30min to Peñíscola","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"10:30am","icon":"🏰","name":"Papa Luna Castle","desc":"Walk up · sea views · €5","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"11:30am","icon":"🚶","name":"Old town stroll","desc":"Car-free lanes · whitewashed houses · blue doors","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"12:30pm","icon":"🍽","name":"Lunch in Peñíscola","desc":"Try arroz a banda · El Langostino d'Or","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"1:30pm","icon":"🚗","name":"Depart → Barcelona","desc":"AP-7 north · arrive ~3:30pm","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"3:30pm","icon":"🏨","name":"Check in: Cotton House","desc":"Passeig de Gràcia · Casa Batlló literally next door","mustDo":false,"sellsOut":false,"bookingStatus":"booked"},{"time":"6:00pm","icon":"🚶","name":"Passeig de Gràcia stroll","desc":"Casa Batlló & Casa Milà exteriors · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"9:00pm","icon":"🍸","name":"Dinner in El Born","desc":"Bar del Pla, El Xampanyet or Bodega Sepúlveda","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"urgent","icon":"🏠","name":"Book 31 May hotel","sub":"Try extending Cotton House first"},{"urgency":"soon","icon":"🦎","name":"Park Güell","sub":"parkguell.cat · ~€10 · book this weekend"},{"urgency":"soon","icon":"emoji","name":"Casa Batlló","sub":"casabatllo.es · ~€35 · right next door"}]},{"day":"Day 8","date":"Saturday 30 May","city":"Barcelona Day 1","tag":"Sagrada Família day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Cotton House Hotel, Barcelona","hotelStatus":"booked","timeline":[{"time":"10:00am","icon":"🚶","name":"Stroll Passeig de Gràcia","desc":"Casa Batlló & Casa Milà exteriors · coffee at terrace café","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"12:15pm","icon":"✅","name":"Sagrada Família Basílica","desc":"BOOKED · Locator 98377656 · enter C/ Marina · world's tallest church at 172.5m","mustDo":true,"sellsOut":true,"bookingStatus":"booked"},{"time":"1:00pm","icon":"✅","name":"Nativity Tower","desc":"BOOKED · elevator up · spiral staircase down · views to sea","mustDo":true,"sellsOut":true,"bookingStatus":"booked"},{"time":"2:30pm","icon":"emoji","name":"Recinte Modernista de Sant Pau","desc":"Hidden gem · 5 min from Sagrada Família · €16","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"4:00pm","icon":"🚶","name":"Gothic Quarter","desc":"Roman ruins · medieval lanes · Barcelona Cathedral · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"6:30pm","icon":"🌅","name":"Bunkers del Carmel","desc":"Best panoramic sunset view of Barcelona · free · taxi up","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"9:00pm","icon":"🍽","name":"Dinner in El Born","desc":"El Xampanyet · Bar del Pla","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"urgent","icon":"🏠","name":"31 May hotel URGENT","sub":"Try extending Cotton House — cottonhousehotel.com"},{"urgency":"urgent","icon":"🦎","name":"Park Güell tomorrow 9am","sub":"parkguell.cat · ~€10"},{"urgency":"soon","icon":"emoji","name":"Casa Batlló tomorrow","sub":"casabatllo.es · ~€35"}]},{"day":"Day 9","date":"Sunday 31 May","city":"Barcelona Day 2","tag":"Last full day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Moxy Barcelona","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"🦎","name":"Park Güell","desc":"Timed entry · go early · ~€10 — book ahead","mustDo":true,"sellsOut":true,"bookingStatus":"needed"},{"time":"10:30am","icon":"emoji","name":"Casa Batlló","desc":"Right next to Cotton House · Gaudí interior · ~€35 — book ahead","mustDo":true,"sellsOut":true,"bookingStatus":"needed"},{"time":"1:00pm","icon":"🍽","name":"Lunch in Eixample","desc":"Cervecería Catalana or Federal Café","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"3:00pm","icon":"🎨","name":"Picasso Museum","desc":"El Born · world's best collection · ~€14 — book online","mustDo":true,"sellsOut":false,"bookingStatus":"needed"},{"time":"5:00pm","icon":"🏖","name":"Barceloneta beach","desc":"Last swim of the trip","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"7:30pm","icon":"🍸","name":"El Born aperitivo","desc":"Carrer del Parlament or Passeig del Born","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"9:30pm","icon":"🌟","name":"Special last dinner","desc":"Tickets by Adrià · Disfrutar · or Bodega 1900 — book now","mustDo":true,"sellsOut":true,"bookingStatus":"needed"}],"bookings":[{"urgency":"urgent","icon":"🍽","name":"Special last dinner","sub":"Tickets / Disfrutar — book now, fills weeks ahead"},{"urgency":"soon","icon":"🎨","name":"Picasso Museum","sub":"museupicasso.bcn.cat · ~€14"}]},{"day":"Day 10","date":"Monday 1 June","city":"Barcelona Day 3","tag":"Final full day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Moxy Barcelona","hotelStatus":"booked","timeline":[{"time":"9:30am","icon":"🌊","name":"Last Barceloneta stroll","desc":"One final walk along the sea","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"11:00am","icon":"☕","name":"Brunch in El Born","desc":"Federal Café or Nomad Coffee","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"1:00pm","icon":"🚶","name":"Free afternoon","desc":"Revisit a favourite spot · last-minute shopping · Passeig de Gràcia","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"4:00pm","icon":"🏨","name":"Back to hotel","desc":"Pack, freshen up · check out by 6pm","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"7:10pm","icon":"✈️","name":"Flight departs 19:10","desc":"Barcelona El Prat (BCN) · check in 2h before · leave hotel by ~5:30pm","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"relaxed","icon":"🚌","name":"Airport transfer","sub":"Aerobus ~€6.75 from Plaça Catalunya · or Cabify ~€35 · allow 45min"}]},{"day":"Day 11","date":"Tuesday 2 June","city":"Barcelona → Departure","tag":"Fly home ✈️ 19:10","driveKm":"35 km","driveTime":"~40min","driveRoute":"Hotel → El Prat Airport (BCN)","sleep":"Fly home","hotelStatus":"none","timeline":[{"time":"9:00am","icon":"🌅","name":"Morning at leisure","desc":"Last coffee · walk · no rush until afternoon","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"12:00pm","icon":"🍽","name":"Farewell lunch","desc":"Cervecería Catalana · Bar del Pla · or wherever the trip takes you","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"3:00pm","icon":"🏨","name":"Check out Moxy","desc":"Bags packed · check out · head toward airport area","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"5:00pm","icon":"🚗","name":"Depart to El Prat","desc":"Leave by 5pm · allow 45min + airport time · T1 for most international flights","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"7:10pm","icon":"✈️","name":"Flight departs 19:10","desc":"Barcelona El Prat (BCN) · bon voyage!","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"—","icon":"🎉","name":"Trip complete!","desc":"Málaga → Seville → Granada → Valencia → Peñíscola → Barcelona · ~1,400 km · 9 nights","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"relaxed","icon":"🚌","name":"Airport transfer","sub":"Aerobus ~€6.75 · depart Plaça Catalunya ~5:00pm · or Cabify ~€35"}]}],"confirmedBookings":[{"what":"Alhambra Fast-Track Guided Tour","date":"Wed 27 May","time":"10:00am","locator":null,"details":"2 adults · English · 3h · Nasrid Palaces + Alcazaba + Generalife · $175.40"},{"what":"Sagrada Família Basílica","date":"Sat 30 May","time":"12:15pm","locator":"98377656","details":"Enter C/ Marina · Basílica + Nativity Tower"},{"what":"Nativity Tower","date":"Sat 30 May","time":"1:00pm","locator":"98377656","details":"Included in Sagrada Família booking"}],"hotels":[{"night":1,"date":"Sat 23 May","city":"Marbella","hotel":"Marbella hotel","status":"tbd"},{"night":2,"date":"Sun 24 May","city":"Seville","hotel":"Alfonso XIII","status":"booked"},{"night":3,"date":"Mon 25 May","city":"Seville","hotel":"Alfonso XIII","status":"booked"},{"night":4,"date":"Tue 26 May","city":"Granada","hotel":"Seda Club Hotel","status":"booked"},{"night":5,"date":"Wed 27 May","city":"Valencia","hotel":"Grand Hotel Centenari","status":"booked"},{"night":6,"date":"Thu 28 May","city":"Valencia","hotel":"Grand Hotel Centenari","status":"booked"},{"night":7,"date":"Fri 29 May","city":"Barcelona","hotel":"Cotton House Hotel","status":"booked"},{"night":8,"date":"Sat 30 May","city":"Barcelona","hotel":"Cotton House Hotel","status":"booked"},{"night":9,"date":"Sun 31 May","city":"Barcelona","hotel":"Moxy Barcelona","status":"booked"},{"night":10,"date":"Mon 1 Jun","city":"Barcelona","hotel":"Moxy Barcelona","status":"booked"}]};
+const BUILTIN_TRIP = {"tripName":"Málaga to Barcelona Road Trip","dates":"May 23 – June 2, 2026","totalDays":11,"totalNights":10,"totalKm":1400,"cities":5,"party":"2 adults","days":[{"day":"Day 1","date":"Saturday 23 May","city":"Málaga","tag":"Full day in Málaga","driveKm":"—","driveTime":"—","driveRoute":"—","sleep":"Four Points by Sheraton, Málaga","hotelStatus":"booked","timeline":[{"time":"Early AM","icon":"✈️","name":"Arrive Málaga (AGP)","desc":"Pick up bags · check in or drop luggage at Four Points","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"9:00am","icon":"☕","name":"Breakfast in Málaga old town","desc":"Café Central on Plaza de la Constitución · churros & coffee · classic local spot","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"10:30am","icon":"🏰","name":"Walk up to Gibralfaro castle","desc":"Best panoramic views in Málaga · Alcazaba exterior on the way up · €3.50 · ~1.5h","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"1:00pm","icon":"🍽","name":"Lunch near the cathedral","desc":"El Pimpi · iconic Málaga bodega · local wine & espetos de sardinas","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"2:30pm","icon":"😴","name":"Afternoon rest","desc":"Back to Four Points · recharge before the evening","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"5:00pm","icon":"🎨","name":"Picasso Museum","desc":"Museu Picasso Málaga · birthplace of Picasso · 285 works · €12","mustDo":true,"sellsOut":false,"bookingStatus":"needed"},{"time":"7:00pm","icon":"🚶","name":"Walking tour","desc":"Booked · meet at designated point · historic city centre","mustDo":true,"sellsOut":false,"bookingStatus":"booked"},{"time":"9:00pm","icon":"🍸","name":"Dinner after the tour","desc":"Explore Calle Larios · tapas bar crawl or sit-down dinner in the old town","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"soon","icon":"🎨","name":"Picasso Museum","sub":"museopicassomalaga.org — book online to skip queue"}]},{"day":"Day 2","date":"Sunday 24 May","city":"Marbella → Ronda → Seville","tag":"Scenic road trip day","driveKm":"270 km","driveTime":"~3h 30min driving","driveRoute":"A-397 mountain road to Ronda · then A-374/A-92 to Seville","sleep":"Alfonso XIII, Seville","hotelStatus":"booked","timeline":[{"time":"8:00am","icon":"☕","name":"Breakfast in Marbella","desc":"Churrería Ramón · Plaza de los Naranjos · churros & coffee","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"9:00am","icon":"🚗","name":"Drive Marbella → Ronda","desc":"A-397 mountain road · 1h · one of Spain\\'s most scenic drives · pine forests & gorges","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"10:00am","icon":"🌉","name":"Puente Nuevo bridge · Ronda","desc":"18th-century bridge over a 100m sheer gorge · unmissable · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"10:30am","icon":"🚶","name":"Ronda old town walk","desc":"Moorish quarter · cliff-edge viewpoints · Arab baths · allow 1h","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"11:30am","icon":"🍽","name":"Coffee & bite in Ronda","desc":"Café María or Tragabuches · fuel up before the drive","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"12:00pm","icon":"🚗","name":"Drive Ronda → Seville","desc":"A-374 then A-92 · ~1h 45min · olive groves & Andalusian countryside","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"2:00pm","icon":"🏨","name":"Check in: Alfonso XIII","desc":"One of Spain\\'s grandest hotels · Seville","mustDo":false,"sellsOut":false,"bookingStatus":"booked"},{"time":"4:00pm","icon":"🚶","name":"First stroll in Seville","desc":"Wander to the Cathedral · Santa Cruz quarter · get your bearings","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"8:00pm","icon":"🍸","name":"Tapas in Triana","desc":"Bar Santa Ana or Las Golondrinas · classic first Seville evening","mustDo":true,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"urgent","icon":"💃","name":"Flamenco show Seville","sub":"casadelamemoria.es or tablaoelareanal.es"}]},{"day":"Day 3","date":"Monday 25 May","city":"Seville","tag":"Full day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Alfonso XIII, Seville","hotelStatus":"booked","timeline":[{"time":"5:00pm","icon":"emoji","name":"Real Alcázar palace","desc":"BOOKED 17:00 · timed entry · standard ticket · allow 2h · gardens unmissable","mustDo":true,"sellsOut":true,"bookingStatus":"booked"},{"time":"11:30am","icon":"⛪","name":"Seville Cathedral & La Giralda","desc":"World's largest Gothic cathedral · €12","mustDo":true,"sellsOut":false,"bookingStatus":"needed"},{"time":"1:30pm","icon":"🍽","name":"Lunch in Santa Cruz","desc":"Bodega Santa Cruz · arrive early","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"3:30pm","icon":"🚶","name":"Barrio Santa Cruz wander","desc":"Maze of orange-tree lanes · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"5:00pm","icon":"🌅","name":"Plaza de España","desc":"Stunning 1929 square · boats ~€6 · free entry","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"8:00pm","icon":"💃","name":"Dinner + flamenco show","desc":"Tablao El Arenal or Casa de la Memoria — BOOK ASAP","mustDo":true,"sellsOut":true,"bookingStatus":"needed"}],"bookings":[{"urgency":"urgent","icon":"💃","name":"Flamenco show","sub":"tablaoelareanal.es or casadelamemoria.es"}]},{"day":"Day 4","date":"Tuesday 26 May","city":"Seville → Granada","tag":"Pack tonight — Alhambra at 10am tomorrow","driveKm":"260 km","driveTime":"~2h 45min","driveRoute":"A-92 east","sleep":"Seda Club Hotel, Granada","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"🚗","name":"Drive Seville → Granada","desc":"A-92 east · arrive ~11:45am","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"12:00pm","icon":"🏨","name":"Check in: Seda Club Hotel","desc":"Boutique luxury · Plaza de la Trinidad","mustDo":false,"sellsOut":false,"bookingStatus":"booked"},{"time":"1:00pm","icon":"🍽","name":"Lunch near hotel","desc":"Restaurante Chikito or Bodega Castañeda","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"3:00pm","icon":"🚶","name":"Albayzín wander","desc":"UNESCO Moorish quarter · whitewashed lanes · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"5:30pm","icon":"🌅","name":"Mirador de San Nicolás","desc":"Best sunset view over the Alhambra · 20 min walk","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"8:30pm","icon":"🍸","name":"Free tapas evening","desc":"Every drink includes a free tapa · Calle Navas","mustDo":true,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"soon","icon":"🎒","name":"Pack bags tonight","desc":"Alhambra 10am tomorrow then straight drive to Valencia"}]},{"day":"Day 5","date":"Wednesday 27 May","city":"Alhambra + Granada → Valencia","tag":"Longest drive day","driveKm":"490 km","driveTime":"~4h 30min","driveRoute":"A-92 then AP-7 north · depart ~2pm","sleep":"Grand Hotel Centenari, Valencia","hotelStatus":"booked","timeline":[{"time":"10:00am","icon":"✅","name":"Alhambra Fast-Track Guided Tour","desc":"BOOKED · 2 adults · English · 3h · Nasrid Palaces + Alcazaba + Generalife · $175.40","mustDo":true,"sellsOut":true,"bookingStatus":"booked"},{"time":"1:00pm","icon":"🍽","name":"Quick lunch near Alhambra","desc":"Near Alhambra or Albayzín · keep it quick","mustDo":true,"sellsOut":true,"bookingStatus":"booked"},{"time":"2:00pm","icon":"🚗","name":"Depart Granada → Valencia","desc":"A-92 then AP-7 north · ~4h 30min","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"4:30pm","icon":"☕","name":"Coffee stop: Murcia area","desc":"Break the drive · Murcia cathedral worth 20-min walk","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"6:30pm","icon":"🏨","name":"Arrive Valencia · check in","desc":"Grand Hotel Centenari · central location","mustDo":false,"sellsOut":false,"bookingStatus":"booked"},{"time":"8:00pm","icon":"🍽","name":"Light dinner near hotel","desc":"Mercado de Colón or El Carmen · easy night","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"soon","icon":"🐠","name":"Oceanogràfic Aquarium","sub":"oceanografic.org · ~€32 · book tomorrow"},{"urgency":"soon","icon":"🥘","name":"La Pepica restaurant","sub":"lapepica.com · legendary paella · book ahead"}]},{"day":"Day 6","date":"Thursday 28 May","city":"Valencia","tag":"Full day · pack tonight","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Grand Hotel Centenari, Valencia","hotelStatus":"booked","timeline":[{"time":"9:30am","icon":"🛍","name":"Mercado Central","desc":"One of Europe's finest food markets · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"10:30am","icon":"⛪","name":"Valencia Cathedral","desc":"Claimed Holy Grail inside · €8","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"12:00pm","icon":"🐠","name":"Oceanogràfic Aquarium","desc":"Europe's largest · allow 2–3h · ~€32 — book ahead","mustDo":true,"sellsOut":false,"bookingStatus":"needed"},{"time":"3:00pm","icon":"🥘","name":"Paella at La Pepica","desc":"Legendary beachside restaurant since 1898 — book ahead","mustDo":true,"sellsOut":false,"bookingStatus":"needed"},{"time":"5:00pm","icon":"🏖","name":"Malvarrosa beach","desc":"Last proper beach before Barcelona","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"8:00pm","icon":"🍽","name":"Russafa dinner","desc":"Canalla Bistro by Ricard Camarena","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"urgent","icon":"🐠","name":"Oceanogràfic Aquarium","sub":"oceanografic.org · ~€32"},{"urgency":"urgent","icon":"🥘","name":"La Pepica restaurant","sub":"lapepica.com · book today"}]},{"day":"Day 7","date":"Friday 29 May","city":"Valencia → Peñíscola → Barcelona","tag":"Peñíscola lunch stop","driveKm":"420 km","driveTime":"~4h total","driveRoute":"AP-7 north","sleep":"Cotton House Hotel, Barcelona","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"🚗","name":"Depart Valencia","desc":"AP-7 north · ~1h 30min to Peñíscola","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"10:30am","icon":"🏰","name":"Papa Luna Castle","desc":"Walk up · sea views · €5","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"11:30am","icon":"🚶","name":"Old town stroll","desc":"Car-free lanes · whitewashed houses · blue doors","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"12:30pm","icon":"🍽","name":"Lunch in Peñíscola","desc":"Try arroz a banda · El Langostino d'Or","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"1:30pm","icon":"🚗","name":"Depart → Barcelona","desc":"AP-7 north · arrive ~3:30pm","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"3:30pm","icon":"🏨","name":"Check in: Cotton House","desc":"Passeig de Gràcia · Casa Batlló literally next door","mustDo":false,"sellsOut":false,"bookingStatus":"booked"},{"time":"6:00pm","icon":"🚶","name":"Passeig de Gràcia stroll","desc":"Casa Batlló & Casa Milà exteriors · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"9:00pm","icon":"🍸","name":"Dinner in El Born","desc":"Bar del Pla, El Xampanyet or Bodega Sepúlveda","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"urgent","icon":"🏠","name":"Book 31 May hotel","sub":"Try extending Cotton House first"},{"urgency":"soon","icon":"🦎","name":"Park Güell","sub":"parkguell.cat · ~€10 · book this weekend"},{"urgency":"soon","icon":"emoji","name":"Casa Batlló","sub":"casabatllo.es · ~€35 · right next door"}]},{"day":"Day 8","date":"Saturday 30 May","city":"Barcelona Day 1","tag":"Sagrada Família day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Cotton House Hotel, Barcelona","hotelStatus":"booked","timeline":[{"time":"10:00am","icon":"🚶","name":"Stroll Passeig de Gràcia","desc":"Casa Batlló & Casa Milà exteriors · coffee at terrace café","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"12:15pm","icon":"✅","name":"Sagrada Família Basílica","desc":"BOOKED · Locator 98377656 · enter C/ Marina · world's tallest church at 172.5m","mustDo":true,"sellsOut":true,"bookingStatus":"booked"},{"time":"1:00pm","icon":"✅","name":"Nativity Tower","desc":"BOOKED · elevator up · spiral staircase down · views to sea","mustDo":true,"sellsOut":true,"bookingStatus":"booked"},{"time":"2:30pm","icon":"emoji","name":"Recinte Modernista de Sant Pau","desc":"Hidden gem · 5 min from Sagrada Família · €16","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"4:00pm","icon":"🚶","name":"Gothic Quarter","desc":"Roman ruins · medieval lanes · Barcelona Cathedral · free","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"6:30pm","icon":"🌅","name":"Bunkers del Carmel","desc":"Best panoramic sunset view of Barcelona · free · taxi up","mustDo":true,"sellsOut":false,"bookingStatus":"none"},{"time":"9:00pm","icon":"🍽","name":"Dinner in El Born","desc":"El Xampanyet · Bar del Pla","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"urgent","icon":"🏠","name":"31 May hotel URGENT","sub":"Try extending Cotton House — cottonhousehotel.com"},{"urgency":"urgent","icon":"🦎","name":"Park Güell tomorrow 9am","sub":"parkguell.cat · ~€10"},{"urgency":"soon","icon":"emoji","name":"Casa Batlló tomorrow","sub":"casabatllo.es · ~€35"}]},{"day":"Day 9","date":"Sunday 31 May","city":"Barcelona Day 2","tag":"Last full day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Moxy Barcelona","hotelStatus":"booked","timeline":[{"time":"9:00am","icon":"🦎","name":"Park Güell","desc":"Timed entry · go early · ~€10 — book ahead","mustDo":true,"sellsOut":true,"bookingStatus":"needed"},{"time":"10:30am","icon":"emoji","name":"Casa Batlló","desc":"Right next to Cotton House · Gaudí interior · ~€35 — book ahead","mustDo":true,"sellsOut":true,"bookingStatus":"needed"},{"time":"1:00pm","icon":"🍽","name":"Lunch in Eixample","desc":"Cervecería Catalana or Federal Café","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"3:00pm","icon":"🎨","name":"Picasso Museum","desc":"El Born · world's best collection · ~€14 — book online","mustDo":true,"sellsOut":false,"bookingStatus":"needed"},{"time":"5:00pm","icon":"🏖","name":"Barceloneta beach","desc":"Last swim of the trip","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"7:30pm","icon":"🍸","name":"El Born aperitivo","desc":"Carrer del Parlament or Passeig del Born","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"9:30pm","icon":"🌟","name":"Special last dinner","desc":"Tickets by Adrià · Disfrutar · or Bodega 1900 — book now","mustDo":true,"sellsOut":true,"bookingStatus":"needed"}],"bookings":[{"urgency":"urgent","icon":"🍽","name":"Special last dinner","sub":"Tickets / Disfrutar — book now, fills weeks ahead"},{"urgency":"soon","icon":"🎨","name":"Picasso Museum","sub":"museupicasso.bcn.cat · ~€14"}]},{"day":"Day 10","date":"Monday 1 June","city":"Barcelona Day 3","tag":"Final full day","driveKm":null,"driveTime":null,"driveRoute":null,"sleep":"Moxy Barcelona","hotelStatus":"booked","timeline":[{"time":"9:30am","icon":"🌊","name":"Last Barceloneta stroll","desc":"One final walk along the sea","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"11:00am","icon":"☕","name":"Brunch in El Born","desc":"Federal Café or Nomad Coffee","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"1:00pm","icon":"🚶","name":"Free afternoon","desc":"Revisit a favourite spot · last-minute shopping · Passeig de Gràcia","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"4:00pm","icon":"🏨","name":"Back to hotel","desc":"Pack, freshen up · check out by 6pm","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"7:10pm","icon":"✈️","name":"Flight departs 19:10","desc":"Barcelona El Prat (BCN) · check in 2h before · leave hotel by ~5:30pm","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"relaxed","icon":"🚌","name":"Airport transfer","sub":"Aerobus ~€6.75 from Plaça Catalunya · or Cabify ~€35 · allow 45min"}]},{"day":"Day 11","date":"Tuesday 2 June","city":"Barcelona → Departure","tag":"Fly home ✈️ 19:10","driveKm":"35 km","driveTime":"~40min","driveRoute":"Hotel → El Prat Airport (BCN)","sleep":"Fly home","hotelStatus":"none","timeline":[{"time":"9:00am","icon":"🌅","name":"Morning at leisure","desc":"Last coffee · walk · no rush until afternoon","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"12:00pm","icon":"🍽","name":"Farewell lunch","desc":"Cervecería Catalana · Bar del Pla · or wherever the trip takes you","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"3:00pm","icon":"🏨","name":"Check out Moxy","desc":"Bags packed · check out · head toward airport area","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"5:00pm","icon":"🚗","name":"Depart to El Prat","desc":"Leave by 5pm · allow 45min + airport time · T1 for most international flights","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"7:10pm","icon":"✈️","name":"Flight departs 19:10","desc":"Barcelona El Prat (BCN) · bon voyage!","mustDo":false,"sellsOut":false,"bookingStatus":"none"},{"time":"—","icon":"🎉","name":"Trip complete!","desc":"Málaga → Seville → Granada → Valencia → Peñíscola → Barcelona · ~1,400 km · 9 nights","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[{"urgency":"relaxed","icon":"🚌","name":"Airport transfer","sub":"Aerobus ~€6.75 · depart Plaça Catalunya ~5:00pm · or Cabify ~€35"}]}],"confirmedBookings":[{"what":"Alhambra Fast-Track Guided Tour","date":"Wed 27 May","time":"10:00am","locator":null,"details":"2 adults · English · 3h · Nasrid Palaces + Alcazaba + Generalife · $175.40"},{"what":"Sagrada Família Basílica","date":"Sat 30 May","time":"12:15pm","locator":"98377656","details":"Enter C/ Marina · Basílica + Nativity Tower"},{"what":"Nativity Tower","date":"Sat 30 May","time":"1:00pm","locator":"98377656","details":"Included in Sagrada Família booking"}],"hotels":[{"night":1,"date":"Sat 23 May","city":"Málaga","hotel":"Four Points by Sheraton Málaga","status":"booked"},{"night":2,"date":"Sun 24 May","city":"Seville","hotel":"Alfonso XIII","status":"booked"},{"night":3,"date":"Mon 25 May","city":"Seville","hotel":"Alfonso XIII","status":"booked"},{"night":4,"date":"Tue 26 May","city":"Granada","hotel":"Seda Club Hotel","status":"booked"},{"night":5,"date":"Wed 27 May","city":"Valencia","hotel":"Grand Hotel Centenari","status":"booked"},{"night":6,"date":"Thu 28 May","city":"Valencia","hotel":"Grand Hotel Centenari","status":"booked"},{"night":7,"date":"Fri 29 May","city":"Barcelona","hotel":"Cotton House Hotel","status":"booked"},{"night":8,"date":"Sat 30 May","city":"Barcelona","hotel":"Cotton House Hotel","status":"booked"},{"night":9,"date":"Sun 31 May","city":"Barcelona","hotel":"Moxy Barcelona","status":"booked"},{"night":10,"date":"Mon 1 Jun","city":"Barcelona","hotel":"Moxy Barcelona","status":"booked"}]};
 
 // ═══════════════════════════════════════════
 // STATE & STORAGE
@@ -715,12 +715,14 @@ function initDayMap(day){
   // Per-day pin data with type, icon, label, coordinates
     const dayPins = {
     'Day 1': {
-      center:{lat:36.511,lng:-4.886}, zoom:14,
+      center:{lat:36.721,lng:-4.419}, zoom:15,
       pins:[
-        {type:'hotel', lat:36.5101,lng:-4.8860, name:'Marbella hotel', sub:'Your hotel tonight — book ASAP'},
-        {type:'walk',  lat:36.5097,lng:-4.8864, name:'Casco Antiguo old town', sub:'5:30pm · Free · cobblestone lanes'},
-        {type:'sight', lat:36.5095,lng:-4.8858, name:'Plaza de los Naranjos', sub:'6:00pm · Orange-tree square'},
-        {type:'food',  lat:36.5088,lng:-4.8823, name:'Beachfront dinner', sub:'8:30pm · El Boqueron'},
+        {type:'hotel', lat:36.7213,lng:-4.4195, name:'Four Points by Sheraton', sub:'Your hotel tonight'},
+        {type:'food',  lat:36.7214,lng:-4.4194, name:'Café Central', sub:'9:00am · Breakfast · Plaza Constitución'},
+        {type:'sight', lat:36.7213,lng:-4.4189, name:'Alcazaba & Gibralfaro', sub:'10:30am · Moorish fortress & castle · €3.50'},
+        {type:'food',  lat:36.7207,lng:-4.4162, name:'El Pimpi', sub:'1:00pm · Lunch · local wine & espetos'},
+        {type:'sight', lat:36.7212,lng:-4.4175, name:'Picasso Museum', sub:'5:00pm · €12'},
+        {type:'walk',  lat:36.7215,lng:-4.4180, name:'Walking tour meet point', sub:'7:00pm · BOOKED'},
       ]
     },
     'Day 2': {
@@ -999,6 +1001,30 @@ function switchTab(name){
 }
 window.switchTab = switchTab;
 
+function toggleHotelStatus(nightIndex){
+  const h = tripData.hotels[nightIndex];
+  if(!h) return;
+  // Toggle between booked and tbd
+  h.status = h.status === 'booked' ? 'tbd' : 'booked';
+  // Sync matching day's hotelStatus
+  tripData.days.forEach(day => {
+    if(day.sleep && h.hotel && day.sleep.includes(h.city)){
+      // Match days that sleep in this city on this night
+      const dayNum = parseInt(day.day.replace('Day ',''));
+      if(dayNum === h.night){
+        day.hotelStatus = h.status === 'booked' ? 'booked' : 'tbd';
+      }
+    }
+  });
+  save('trip_data', tripData);
+  renderHotelsSummary();
+  // Re-render current day if it matches
+  if(tripData.days[currentDay] && parseInt(tripData.days[currentDay].day.replace('Day ','')) === h.night){
+    selectDay(currentDay);
+  }
+}
+window.toggleHotelStatus = toggleHotelStatus;
+
 function renderHotelsSummary(){
   if(!tripData) return;
   const el = document.getElementById('hotels-summary-content');
@@ -1012,7 +1038,7 @@ function renderHotelsSummary(){
   </div>`;
   hotels.forEach(h=>{
     const isBooked=h.status==='booked';
-    html+=`<div class="summary-card" style="padding:14px 16px;margin-bottom:8px;">
+    html+=`<div class="summary-card" style="padding:14px 16px;margin-bottom:8px;cursor:pointer;" onclick="toggleHotelStatus(${hotels.indexOf(h)})">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div style="display:flex;align-items:center;gap:12px;flex:1;">
           <div style="background:var(--card2);border-radius:10px;padding:6px 10px;text-align:center;min-width:48px;">
@@ -1025,7 +1051,10 @@ function renderHotelsSummary(){
             <div style="font-size:12px;color:var(--text2);margin-top:2px;">📍 ${h.city}</div>
           </div>
         </div>
-        <div style="font-size:18px;">${isBooked?'✅':'⚠️'}</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <div style="font-size:18px;">${isBooked?'✅':'⚠️'}</div>
+          <div style="font-size:10px;color:var(--text3);">tap to toggle</div>
+        </div>
       </div>
     </div>`;
   });
@@ -1198,6 +1227,11 @@ function initMenuListeners(){
   document.getElementById('mi-setup').addEventListener('click', ()=>{ closeMenu(); openTripSetup(); });
   document.getElementById('mi-edit').addEventListener('click', ()=>{ closeMenu(); openEditor(); });
   document.getElementById('setup-back')?.addEventListener('click', ()=>showScreen('trip'));
+  // Load saved DeepSeek key
+  window.DEEPSEEK_KEY = window.DEEPSEEK_KEY || 'sk-5d1b85ead076423fb8b7c33eb487c108';
+  const savedDsKey = localStorage.getItem('ds_key') || 'sk-5d1b85ead076423fb8b7c33eb487c108';
+  if(savedDsKey){ window.DEEPSEEK_KEY=savedDsKey; const inp=document.getElementById('deepseek-key-input'); if(inp) inp.value=savedDsKey; }
+  document.getElementById('setup-plan-deepseek')?.addEventListener('click', ()=>{ aiProvider='deepseek'; planWithGemini(); });
   document.getElementById('setup-plan-gemini')?.addEventListener('click', ()=>{ aiProvider='gemini'; planWithGemini(); });
   document.getElementById('setup-plan-groq')?.addEventListener('click', ()=>{ aiProvider='groq'; planWithGemini(); });
   document.getElementById('mi-load').addEventListener('click', ()=>{ closeMenu(); document.getElementById('file-input').click(); });
@@ -1237,35 +1271,53 @@ window.addEventListener('load', initMenuListeners);
 // Gemini API key
 
 // AI provider state
-let aiProvider = 'gemini';
+let aiProvider = 'deepseek';
+
 function selectAI(provider){
   aiProvider = provider;
-  document.getElementById('ai-gemini').classList.toggle('active', provider==='gemini');
-  document.getElementById('ai-groq').classList.toggle('active', provider==='groq');
-  const notes = {
-    gemini: 'Gemini — fast, no wait time, generous free limits',
-    groq:   'Groq — high quality 70B model, may have rate limits on free tier'
-  };
-  document.getElementById('ai-provider-note').textContent = notes[provider];
+  ['deepseek','gemini','groq'].forEach(p=>{
+    const el = document.getElementById('ai-'+p);
+    if(el) el.classList.toggle('active', p===provider);
+  });
 }
 window.selectAI = selectAI;
 
-async function callGemini(prompt){
-  if(aiProvider === 'groq'){
-    return callGroq(prompt);
-  }
-  // Gemini 2.5 Flash
-  const KEY = 'AIzaSyCbUMykNKckAgghH2zVyAO8XwGl7ITNh9Y';
-  const models = ['gemini-2.0-flash-lite', 'gemini-2.0-flash'];
+// ── DeepSeek worker (cheap, fast, OpenAI-compatible) ──────────────────
+async function callDeepSeek(prompt){
+  // Route through Cloudflare Worker to handle CORS
+  const WORKER_URL = 'https://plain-wind-6276.rouzbehd22.workers.dev';
+  const res = await fetch(WORKER_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'deepseek-chat',
+      messages: [
+        { role: 'system', content: 'You are a travel planning assistant. Respond with valid JSON only. No markdown, no code blocks.' },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.3,
+      max_tokens: 8000,
+      response_format: { type: 'json_object' }
+    })
+  });
+  if(!res.ok){ const e=await res.json().catch(()=>({})); throw new Error(`DeepSeek error: ${res.status} — ${e?.error?.message||'unknown'}`); }
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content || '';
+}
+
+// ── Gemini (review pass + fallback) ───────────────────────────────────
+async function callGeminiDirect(prompt){
+  const WORKER_URL = 'https://plain-wind-6276.rouzbehd22.workers.dev';
+  const models = ['gemini-2.0-flash-lite','gemini-2.0-flash'];
   let lastErr = '';
   for(const model of models){
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${KEY}`;
-    const res = await fetch(url, {
+    const res = await fetch(WORKER_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'X-Provider': 'gemini' },
       body: JSON.stringify({
+        model,
         contents: [{ parts: [{ text: prompt }] }],
-        systemInstruction: { parts: [{ text: 'You are a travel planning assistant. Respond with valid JSON only. No markdown, no code blocks, no extra text.' }] },
+        systemInstruction: { parts: [{ text: 'You are a travel planning assistant. Respond with valid JSON only. No markdown, no code blocks.' }] },
         generationConfig: { temperature: 0.3, maxOutputTokens: 8000, responseMimeType: 'application/json' }
       })
     });
@@ -1274,13 +1326,14 @@ async function callGemini(prompt){
       return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     }
     const err = await res.json().catch(()=>({}));
-    lastErr = err?.error?.message || `HTTP ${res.status}`;
-    if(res.status !== 503 && res.status !== 429) break;
+    lastErr = err?.error?.message||`HTTP ${res.status}`;
+    if(res.status!==503&&res.status!==429) break;
     await new Promise(r=>setTimeout(r,1000));
   }
   throw new Error(`Gemini error: ${lastErr}`);
 }
 
+// ── Groq fallback ─────────────────────────────────────────────────────
 async function callGroq(prompt){
   const WORKER_URL = 'https://plain-wind-6276.rouzbehd22.workers.dev';
   const res = await fetch(WORKER_URL, {
@@ -1289,56 +1342,43 @@ async function callGroq(prompt){
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
       messages: [
-        { role: 'system', content: 'You are a travel planning assistant. Respond with valid JSON only. No markdown, no code blocks. Use double quotes. Avoid apostrophes in text.' },
+        { role: 'system', content: 'You are a travel planning assistant. Respond with valid JSON only. No markdown, no code blocks.' },
         { role: 'user', content: prompt }
       ],
-      temperature: 0.3,
-      max_tokens: 8000,
+      temperature: 0.3, max_tokens: 8000,
       response_format: { type: 'json_object' }
     })
   });
-  if(!res.ok){
-    const err = await res.json().catch(()=>({}));
-    throw new Error(`Groq error: ${res.status} — ${err?.error?.message||'Check Cloudflare Worker'}`);
-  }
+  if(!res.ok){ const e=await res.json().catch(()=>({})); throw new Error(`Groq error: ${res.status} — ${e?.error?.message||'unknown'}`); }
   const data = await res.json();
-  return data.choices?.[0]?.message?.content || '';
+  return data.choices?.[0]?.message?.content||'';
 }
 
-// ── TRIP SETUP SCREEN
-let setupStyle = 'relaxed';
+// ── Route to correct worker ───────────────────────────────────────────
+async function callWorker(prompt){
+  if(aiProvider==='groq') return callGroq(prompt);
+  if(aiProvider==='gemini') return callGeminiDirect(prompt);
+  return callDeepSeek(prompt);
+}
 
-function openTripSetup(){
-  // Pre-fill from current trip
-  if(tripData){
-    const start = tripData.days?.[0];
-    const end = tripData.days?.[tripData.days.length-1];
-    if(start) document.getElementById('setup-start-date').value = wmDate(start.date)||'';
-    if(end) document.getElementById('setup-end-date').value = wmDate(end.date)||'';
-    document.getElementById('setup-start-city').value = start?.city?.split('→')[0]?.trim()||'';
-    document.getElementById('setup-end-city').value = end?.city?.split('→')[0]?.trim()||'';
-    document.getElementById('setup-party').value = tripData.party||'2 adults';
+// ── Gemini review pass (1 call per full trip) ─────────────────────────
+async function geminiReviewTrip(trip, interests){
+  const reviewPrompt = `Review this road trip JSON and improve it. For each day:
+1. Make sure the top 2 unmissable attractions have mustDo:true
+2. Set sellsOut:true for anything needing advance booking
+3. Set bookingStatus "needed" for attractions requiring reservation
+4. Fix any generic venue names with real specific ones if you know them
+5. Keep all existing structure — only update mustDo, sellsOut, bookingStatus fields and improve venue names
+Interests: ${interests||'sightseeing, food, culture'}
+Return the full improved JSON with identical structure: ${JSON.stringify(trip)}`;
+  try {
+    const text = await callGeminiDirect(reviewPrompt);
+    return parseJSON(text);
+  } catch(e) {
+    console.warn('Gemini review skipped:', e.message);
+    return trip; // return original if review fails
   }
-  loadPlacesAPI();
-  // Wire city search
-  ['start','end'].forEach(which=>{
-    const inp = document.getElementById(`setup-${which}-city`);
-    const sugg = document.getElementById(`setup-${which}-sugg`);
-    let t;
-    inp.oninput = ()=>{ clearTimeout(t); t=setTimeout(()=>showSuggestions(inp,sugg,name=>inp.value=name),300); };
-    inp.onblur = ()=>setTimeout(()=>sugg.classList.remove('show'),200);
-  });
-  // Style buttons
-  document.querySelectorAll('[data-style]').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      setupStyle=btn.dataset.style;
-      document.querySelectorAll('[data-style]').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-    });
-  });
-  showScreen('trip-setup');
 }
-window.openTripSetup = openTripSetup;
 
 async function planWithGemini(){
   const startDate = document.getElementById('setup-start-date').value;
@@ -1356,26 +1396,13 @@ async function planWithGemini(){
 
   const tripStart = new Date(startDate);
   const tripEnd   = new Date(endDate);
-  const totalDays = Math.max(1, Math.round((tripEnd - tripStart)/86400000)+1);
+  const totalDays = Math.max(1, Math.round((tripEnd-tripStart)/86400000)+1);
 
   function fmtDate(d){ return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}); }
   function addDays(d,n){ const r=new Date(d); r.setDate(r.getDate()+n); return r; }
 
-  function parseJSON(text){
-    // Extract from first { to last } to strip any trailing text
-    const first = text.indexOf('{');
-    const last  = text.lastIndexOf('}');
-    if(first === -1 || last === -1) throw new Error('No JSON found in response');
-    let s = text.slice(first, last+1);
-    // Remove trailing commas before ] or }
-    s = s.replace(/,(\s*[\]}])/g, '$1');
-    // Strip control characters
-    s = s.split('').filter(c=>c.charCodeAt(0)>=32&&c.charCodeAt(0)!==127).join('');
-    return JSON.parse(s);
-  }
-
   function setStatus(msg, progress, total){
-    const pct = total > 1 ? Math.round((progress/total)*100) : 100;
+    const pct = total>1 ? Math.round((progress/total)*100) : 100;
     statusEl.innerHTML=`<div class="setup-generating">
       <div style="font-size:24px;margin-bottom:8px;">✨</div>
       <div style="font-size:14px;font-weight:600;color:var(--text);">${msg}</div>
@@ -1386,80 +1413,62 @@ async function planWithGemini(){
   }
 
   try{
-    // ── STEP 1: Plan the route ──────────────────────────────────────────
-    setStatus('Planning your route...', 0, 1);
+    // ── STEP 1: Route plan ────────────────────────────────────────────
+    setStatus('Planning your route...', 0, 4);
+    const routePrompt = `${startCity} to ${endCity}, ${fmtDate(tripStart)}-${fmtDate(tripEnd)}, ${totalDays} days, ${party}.
+List cities to visit with nights each. JSON: {"tripName":"str","totalKm":0,"cities":[{"city":"str","country":"str","nights":0,"dayStart":0,"dayEnd":0,"dateStart":"str","dateEnd":"str","driveFromPrev":"Xkm/Xh or null","driveRoute":"str or null"}]}`;
 
-    const routePrompt = `Road trip: ${startCity} to ${endCity}, ${fmtDate(tripStart)} to ${fmtDate(tripEnd)} (${totalDays} days). Party: ${party}. Interests: ${interests||'sightseeing, food, culture'}.
-Plan the route with cities and nights per city. Return JSON only:
-{"tripName":"string","totalKm":0,"cities":[{"city":"string","country":"string","nights":0,"dayStart":0,"dayEnd":0,"dateStart":"string","dateEnd":"string","driveFromPrev":"Xkm/Xh via road or null","driveRoute":"road name or null"}]}`;
-
-    const routeText = await callGemini(routePrompt);
+    const routeText = await callWorker(routePrompt);
     const route = parseJSON(routeText);
-    const cities = route.cities || [];
-    if(!cities.length) throw new Error('Could not plan route — try again');
+    const cities = route.cities||[];
+    if(!cities.length) throw new Error('Could not plan route — please try again');
 
-    // ── STEP 2: Generate days for each city ────────────────────────────
-    let allDays = [];
-    let dayCounter = 0;
+    // ── STEP 2: City day plans (parallel) ────────────────────────────
+    setStatus(`Generating ${cities.length} cities in parallel...`, 1, 4);
 
-    // Build all city prompts first
-    const cityPromises = cities.map((city, c) => {
-      const isFirst = c===0;
-      const isLast  = c===cities.length-1;
-      const cityDays = (city.dayEnd - city.dayStart) + 1;
+    const cityPromises = cities.map((city,c)=>{
+      const isFirst=c===0, isLast=c===cities.length-1;
+      const cityDays=(city.dayEnd-city.dayStart)+1;
+      const cityPrompt=`${city.city}, ${city.dateStart}${cityDays>1?' to '+city.dateEnd:''}, ${cityDays}d, ${party}.${isFirst?' Arrival.':city.driveFromPrev?' Drive:'+city.driveFromPrev+'.':''}${isLast?' Departure.':''}
+4 activities/day, real venues, max 50 char desc.
+JSON:{"days":[{"day":"Day ${city.dayStart}","date":"${city.dateStart}","city":"${city.city}","tag":"str","driveKm":"null","driveTime":"null","driveRoute":"null","sleep":"${city.city}","hotelStatus":"tbd","timeline":[{"time":"9:00am","icon":"emoji","name":"str","desc":"str","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[]}]}`;
 
-      const cityPrompt = `${city.city} (Day ${city.dayStart}${cityDays>1?'-'+city.dayEnd:''}, ${city.dateStart}${cityDays>1?' to '+city.dateEnd:''}). ${party}. ${interests||'sightseeing, food, culture'}.${isFirst?' Arrival day.':city.driveFromPrev?' Drive in: '+city.driveFromPrev+'.':''}${isLast?' Departure last day.':''}
-${cityDays} day${cityDays>1?'s':''}, 4 activities each. Real venue names. Short desc (max 60 chars). mustDo true for top 2. sellsOut true if booking needed.
-JSON only: {"days":[{"day":"Day ${city.dayStart}","date":"${city.dateStart}","city":"${city.city}","tag":"string","driveKm":"null","driveTime":"null","driveRoute":"null","sleep":"${city.city}","hotelStatus":"tbd","timeline":[{"time":"9:00am","icon":"emoji","name":"string","desc":"string","mustDo":false,"sellsOut":false,"bookingStatus":"none"}],"bookings":[]}]}`;
-
-      // For Groq stagger slightly to avoid simultaneous rate limit hits
-      const delay = aiProvider === 'groq' ? c * 2000 : 0;
-      return new Promise(r=>setTimeout(r, delay))
-        .then(() => {
-          setStatus(`Planning ${city.city}... (${c+1} of ${cities.length})`, c+1, cities.length+1);
-          return callGemini(cityPrompt);
-        })
-        .then(text => ({ c, city, data: parseJSON(text) }));
+      const delay = aiProvider==='groq' ? c*2000 : 0;
+      return new Promise(r=>setTimeout(r,delay))
+        .then(()=>callWorker(cityPrompt))
+        .then(text=>({ c, city, data: parseJSON(text) }));
     });
 
-    setStatus('Planning all cities in parallel...', 1, cities.length+1);
     const cityResults = await Promise.all(cityPromises);
-
-    // Sort results back into order and concat days
-    cityResults.sort((a,b)=>a.c-b.c).forEach(({c, city, data})=>{
-      (data.days||[]).forEach((d,i)=>{ d.day = `Day ${city.dayStart+i}`; });
+    let allDays = [];
+    cityResults.sort((a,b)=>a.c-b.c).forEach(({c,city,data})=>{
+      (data.days||[]).forEach((d,i)=>{ d.day=`Day ${city.dayStart+i}`; });
       allDays = allDays.concat(data.days||[]);
     });
 
-    // ── STEP 3: Assemble final trip ─────────────────────────────────────
-    // Build hotels placeholder - no hotel suggestions from AI
+    // ── STEP 3: Build hotels from route data ──────────────────────────
     const allHotels = [];
-    cities.forEach(city => {
-      for(let n = city.dayStart; n <= city.dayEnd; n++){
-        const shortDate = addDays(tripStart, n-1).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
-        allHotels.push({
-          night: n,
-          date: shortDate,
-          city: city.city,
-          hotel: 'TBD',
-          status: 'tbd'
-        });
+    cities.forEach(city=>{
+      for(let n=city.dayStart; n<=city.dayEnd; n++){
+        const shortDate=addDays(tripStart,n-1).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+        allHotels.push({ night:n, date:shortDate, city:city.city, hotel:'TBD', status:'tbd' });
       }
     });
 
-    const newTrip = {
-      tripName: route.tripName || `${startCity} to ${endCity} Road Trip`,
+    let newTrip = {
+      tripName: route.tripName||`${startCity} to ${endCity} Road Trip`,
       dates: `${fmtDate(tripStart)} – ${fmtDate(tripEnd)}`,
-      totalDays,
-      totalNights: totalDays-1,
-      totalKm: route.totalKm||0,
-      cities: cities.length,
-      party,
-      days: allDays,
-      confirmedBookings: [],
-      hotels: allHotels
+      totalDays, totalNights:totalDays-1, totalKm:route.totalKm||0,
+      cities:cities.length, party, days:allDays, confirmedBookings:[], hotels:allHotels
     };
 
+    // ── STEP 4: Gemini review pass (only if worker wasn't Gemini) ─────
+    if(aiProvider !== 'gemini'){
+      setStatus('Gemini reviewing & enriching your trip...', 3, 4);
+      newTrip = await geminiReviewTrip(newTrip, interests);
+    }
+
+    setStatus('Done!', 4, 4);
     tripData = newTrip;
     save('trip_data', tripData);
     saveTripToHistory(tripData);
@@ -2640,7 +2649,7 @@ window.restoreHistoryTrip = restoreHistoryTrip;
 function updateOnline(){document.getElementById('offline-badge').classList.toggle('show',!navigator.onLine);}
 window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);updateOnline();
 if('serviceWorker' in navigator){
-  const sw=`const C='trip-v0.255';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>new Response('Offline',{status:503}))));});`;
+  const sw=`const C='trip-v0.266';self.addEventListener('install',e=>{self.skipWaiting();});self.addEventListener('activate',e=>{self.clients.claim();});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>new Response('Offline',{status:503}))));});`;
   navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{});
 }
 </script>
@@ -2722,9 +2731,10 @@ if('serviceWorker' in navigator){
         <button class="hdr-btn" id="setup-back">← Back</button>
         <div class="trip-name">Trip Setup</div>
       </div>
-      <div style="display:flex;gap:6px;">
-        <button class="hdr-btn" id="setup-plan-gemini" style="background:#1a73e8;color:#fff;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:700;">⚡ Gemini</button>
-        <button class="hdr-btn" id="setup-plan-groq" style="background:#f55036;color:#fff;border-radius:20px;padding:6px 12px;font-size:11px;font-weight:700;">🤖 Groq</button>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;">
+        <button class="hdr-btn" id="setup-plan-deepseek" style="background:#6B4FBB;color:#fff;border-radius:20px;padding:6px 11px;font-size:11px;font-weight:700;">🐋 DeepSeek</button>
+        <button class="hdr-btn" id="setup-plan-gemini" style="background:#1a73e8;color:#fff;border-radius:20px;padding:6px 11px;font-size:11px;font-weight:700;">⚡ Gemini</button>
+        <button class="hdr-btn" id="setup-plan-groq" style="background:#f55036;color:#fff;border-radius:20px;padding:6px 11px;font-size:11px;font-weight:700;">🤖 Groq</button>
       </div>
     </div>
   </div>
@@ -2783,6 +2793,11 @@ if('serviceWorker' in navigator){
       </div>
     </div>
 
+    <div id="deepseek-key-card" class="editor-card" style="margin-bottom:8px;">
+      <div class="editor-card-title">🐋 DeepSeek API Key</div>
+      <input id="deepseek-key-input" type="password" placeholder="sk-..." style="width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:13px;margin-bottom:6px;" oninput="window.DEEPSEEK_KEY=this.value;localStorage.setItem('ds_key',this.value)"/>
+      <div style="font-size:11px;color:var(--text3);">Get a free key at <strong>platform.deepseek.com</strong> → API Keys. Only needed for 🐋 DeepSeek button.</div>
+    </div>
     <div id="setup-status" style="margin-top:8px;"></div>
   </div>
 </div>
